@@ -58,12 +58,11 @@ $route['translate_uri_dashes'] = FALSE;
 $route['api/auth/login'] = 'api/auth/login';
 
 //LOGIN USER DI APK
-$route['api/patroli/login']         = 'api/Patroli/Login';
+//$route['api/patroli/login']         = 'api/Patroli/Login';
 
 //jadwal patroli per plant 
-$route['api/patroli/jadwalPatroli']      = 'api/Patroli/jadwalPatroli';
+$route['api/patroli/jadwalPatroli']   = 'api/JadwalController/jadwalUser';
 $route['api/patroli/jadwalProduksi']     = 'api/Patroli/jadwalProduksi';
-
 
 
 $route['api/patroli/zonaPatroli']   = 'api/Patroli/showZonaPatroli';
