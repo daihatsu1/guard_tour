@@ -55,7 +55,7 @@ $route['translate_uri_dashes'] = FALSE;
 
 
 // route api
-$route['api/auth/login'] = 'api/auth/login';
+$route['api/auth/login'] = 'api/AuthController/login';
 
 //LOGIN USER DI APK
 //$route['api/patroli/login']         = 'api/Patroli/Login';
