@@ -298,7 +298,7 @@ $config['rest_database_group'] = 'default';
 | The table name in your database that stores API keys
 |
 */
-$config['rest_keys_table'] = 'rest_keys';
+$config['rest_keys_table'] = 'admisecsgp_apikeys';
 
 /*
 |--------------------------------------------------------------------------
@@ -416,7 +416,7 @@ $config['rest_enable_logging'] = true;
 | table name to match e.g. my_logs
 |
 */
-$config['rest_logs_table'] = 'rest_logs';
+$config['rest_logs_table'] = 'admisecsgp_apilogs';
 
 /*
 |--------------------------------------------------------------------------
