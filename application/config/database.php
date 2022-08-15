@@ -75,18 +75,12 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn' 	   => '',
-	// 'hostname' => 'DESKTOP-SRRT0KV',
-	// 'port' 	   => '1433',
-	// 'username' => 'sa',
-	// 'password' => 'Astra123',
-	// 'database' => 'guard_patrol',
-	// 'dbdriver' => 'sqlsrv',
-
-	'hostname' => 'srv99.niagahoster.com',
-	'username' => 'u1062728_patrol',
-	'password' => '3awp_}c,%-?}',
-	'database' => 'u1062728_patrol',
-	'dbdriver' => 'mysqli',
+	'hostname' => $_ENV['DB_HOSTNAME'],
+	'username' => $_ENV['DB_USERNAME'],
+	'password' => $_ENV['DB_PASSWORD'],
+	'port' 	   => $_ENV['DB_PORT'],
+	'database' => $_ENV['DB_DATABASE'],
+	'dbdriver' => $_ENV['DB_DRIVER'],
 
 	'dbprefix' => '',
 	'pconnect' => FALSE,

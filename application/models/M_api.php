@@ -83,7 +83,6 @@ class M_api extends CI_Model
     }
 
 
-
     //tampilkan zona yang harus di patroli 
     public function ambilZonadiJadwal($idplant, $tahun, $bulan, $tanggal, $shift_id)
     {
@@ -111,4 +110,26 @@ class M_api extends CI_Model
         $query = $this->db->query("SELECT ed.id  , ed.admisecsgp_mstevent_id as event_id , e.event_name  from admisecsgp_msteventdtls ed ,  admisecsgp_mstevent e , admisecsgp_mstobj o where ed.admisecsgp_mstobj_id = '" . $objek . "' and ed.admisecsgp_mstobj_id = o.id and ed.admisecsgp_mstevent_id = e.id   and ed.status=1 ");
         return $query;
     }
+
+	function createAuthKey($id,$key){
+		$data = array('user_id' => $id,
+			'key'=>$key,
+			'level'=>2,//isi terserah ynag penting angka karena tipe data int
+			'date_created'=>date('Ymd'));
+		return $this->db->insert('rest_keys', $data);
+	}
+
+	function verifyCreate($id,$key){
+		$this->db->where('user_id', $id);
+		$this->db->where('key', $key);
+		$query = $this->db->get('rest_keys');
+		return $query;
+	}
+
+	function getByUser($user){
+		$this->db->where('user_id', $user);
+		$this->db->limit('1');
+		$query = $this->db->get('rest_keys');
+		return $query;
+	}
 }

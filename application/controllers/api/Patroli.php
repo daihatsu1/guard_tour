@@ -148,9 +148,6 @@ class Patroli extends RestController
                 $v = explode('0',  $tanggal_patroli);
                 $tanggal_patroli = $v[1];
                 // echo "Kemarin Tanggal " .  $tanggal_patroli . "\n";
-            } else {
-                // echo "Kemarin Tanggal " .  $tanggal_patroli . "\n";
-                $tanggal_patroli = $tanggal_patroli;
             }
 
             //day 
@@ -166,8 +163,6 @@ class Patroli extends RestController
             if ($patroli_next_day <= '09') {
                 $v = explode('0',  $patroli_next_day);
                 $patroli_next_day = $v[1];
-            } else {
-                $patroli_next_day = $patroli_next_day;
             }
 
             //hari besok dalam satuan hari indonesia 
@@ -177,7 +172,8 @@ class Patroli extends RestController
             // bulan 
             $bulan           = $this->bulan($np[1]);
             $bln_            = strtolower($bulan);
-        } else {
+        }
+		else {
             // echo "ambil tanggal sekarang";
             $get_tanggal             = date('Y-m-d');
             $split_get_tanggal       = explode('-', $get_tanggal);
@@ -185,8 +181,6 @@ class Patroli extends RestController
             if ($tanggal_patroli <= '09') {
                 $v = explode('0',  $tanggal_patroli);
                 $tanggal_patroli = $v[1];
-            } else {
-                $tanggal_patroli = $tanggal_patroli;
             }
 
 
@@ -197,8 +191,6 @@ class Patroli extends RestController
             if ($patroli_next_day <= '09') {
                 $v = explode('0',  $patroli_next_day);
                 $patroli_next_day = $v[1];
-            } else {
-                $patroli_next_day = $patroli_next_day;
             }
 
 
@@ -235,7 +227,7 @@ class Patroli extends RestController
         } else {
             $this->response(
                 [
-                    'status'        => 'nok',
+                    'status'        => 'ok',
                     'result'        => "tidak ada jadwal"
                 ],
                 200
