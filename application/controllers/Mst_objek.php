@@ -138,6 +138,8 @@ class Mst_objek extends CI_Controller
         $this->load->view("template/footer");
     }
 
+
+
     public function upload()
     {
         $filename = "upload_objek_" . $this->session->flashdata('id_token');
@@ -169,6 +171,79 @@ class Mst_objek extends CI_Controller
         if ($upload) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil upload data');
             redirect('Mst_objek');
+        } else {
+            $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data');
+            redirect('Mst_objek/form_upload');
+        }
+    }
+
+    public function upload2()
+    {
+        $filename = "upload_objek_" . $this->session->flashdata('id_token');
+        $path_xlsx = "./assets/path_upload/" . $filename . ".xlsx";
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $spreadsheet = $reader->load($path_xlsx);
+        $d = $spreadsheet->getSheet(0)->toArray();
+        unset($d[0]);
+        $datas = array();
+        foreach ($d as $t) {
+
+            $datazona  = $this->db->get_where("admisecsgp_mstzone", ['kode_zona' => $t[1]])->row();
+            $datackp   = $this->db->get_where("admisecsgp_mstckp", ['check_name' => $t[3], 'admisecsgp_mstzone_id' => $datazona->id])->row();
+            $dataKategori = $this->db->get_where("admisecsgp_mstkobj", ['kategori_name' => $t[4]])->row();
+
+            $params = [
+                'nama_objek'                 => strtoupper($t[5]),
+                'status'                     => 1,
+                'admisecsgp_mstkobj_id'      => $dataKategori->id,
+                'admisecsgp_mstckp_id'       => $datackp->id,
+                'created_at'                 => date('Y-m-d H:i:s'),
+                'created_by'                 => $this->session->userdata('id_token'),
+            ];
+
+            array_push($datas, $params);
+        }
+        $ids = array_column($datas, 'nama_objek');
+        $ids = array_unique($ids);
+        $datas = array_filter($datas, function ($key, $value) use ($ids) {
+            return in_array($value, array_keys($ids));
+        }, ARRAY_FILTER_USE_BOTH);
+
+        // var_dump($datas);
+        $table = "admisecsgp_mstobj";
+        $this->db->trans_begin();
+        // $upload  = $this->M_patrol->mulitple_upload($table, $datas);
+        $this->db->insert_batch($table, $datas);
+
+        $data_event = array();
+        if ($this->db->affected_rows() > 0) {
+            foreach ($d as $te) {
+                $cek_event_id = $this->db->query("select id from admisecsgp_mstevent where event_name='" . $te[6] . "'   ")->row();
+
+                $cek_zona  = $this->db->query("select id from admisecsgp_mstzone where kode_zona='" . $te[1] . "'   ")->row();
+                $cekpoint  = $this->db->query("select id from admisecsgp_mstckp where check_name='" . $te[3] . "' and admisecsgp_mstzone_id ='" . $cek_zona->id . "'  ")->row();
+                $cek_objek_id = $this->db->query("select id from admisecsgp_mstobj where nama_objek='" . $te[5] . "' and admisecsgp_mstckp_id = '" . $cekpoint->id . "'  ")->row();
+                $params3 = [
+                    'admisecsgp_mstobj_id'       => $cek_objek_id->id,
+                    'admisecsgp_mstevent_id'     => $cek_event_id->id,
+                    'status'                     => 1,
+                    'created_at'                 => date('Y-m-d H:i:s'),
+                    'created_by'                 => $this->session->userdata('id_token'),
+                ];
+                array_push($data_event, $params3);
+            }
+
+            $table2 = "admisecsgp_msteventdtls";
+            $this->db->insert_batch($table2, $data_event);
+            if ($this->db->affected_rows() > 0) {
+                $this->db->trans_commit();
+                $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil upload data');
+                redirect('Mst_objek');
+            } else {
+                $this->db->trans_rollback();
+                $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data');
+                redirect('Mst_objek/form_upload');
+            }
         } else {
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data');
             redirect('Mst_objek/form_upload');

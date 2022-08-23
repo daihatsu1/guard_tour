@@ -37,7 +37,6 @@ class PatroliController extends RestController
 			$this->dateNow = new DateTimeImmutable('- 1 day', new DateTimeZone('Asia/Jakarta'));
 			$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
 		}
-
 	}
 
 	public function jadwalUser_get()
