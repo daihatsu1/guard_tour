@@ -147,7 +147,11 @@ class M_admin extends CI_Model
             $this->db->where('id', $data[$i]);
             $this->db->delete($table);
         }
-        return $this->db->affected_rows();
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //tampilkan kategori objek

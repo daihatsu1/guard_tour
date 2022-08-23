@@ -42,15 +42,13 @@ class JadwalController extends RestController
 			$this->dateNow = new DateTimeImmutable('- 1 day', new DateTimeZone('Asia/Jakarta'));
 			$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
 		}
-		$jadwalHariIni = $this->M_restJadwal->getJadwal($this->dateNow, $this->user['id'], '43');
-		$jadwalSelanjutnya = $this->M_restJadwal->getJadwal($this->dateTomorrow, $this->user['id'], '43');
+		$jadwalHariIni = $this->M_restJadwal->getJadwal($this->dateNow, $this->user['id'], $this->user['admisecsgp_mstplant_id']);
+		$jadwalSelanjutnya = $this->M_restJadwal->getJadwal($this->dateTomorrow, $this->user['id'], $this->user['admisecsgp_mstplant_id']);
 
-
-		$response =[
-				$jadwalHariIni,
-				$jadwalSelanjutnya
-			];
+		$response = [
+			$jadwalHariIni,
+			$jadwalSelanjutnya
+		];
 		$this->response($response, 200);
 	}
-
 }

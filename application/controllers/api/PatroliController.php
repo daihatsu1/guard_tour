@@ -37,7 +37,6 @@ class PatroliController extends RestController
 			$this->dateNow = new DateTimeImmutable('- 1 day', new DateTimeZone('Asia/Jakarta'));
 			$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
 		}
-
 	}
 
 	public function jadwalUser_get()
@@ -61,11 +60,10 @@ class PatroliController extends RestController
 	 * @return void
 	 *
 	 */
-	public function dataPatroli_get(){
+	public function dataPatroli_get()
+	{
 		$jadwalHariIni = $this->M_restJadwal->getJadwal($this->dateNow, $this->user['id'], $this->user['admisecsgp_mstplant_id']);
 		$data = $this->M_restJadwal->getDataPatroli($this->dateNow, $jadwalHariIni->shift, $this->user['admisecsgp_mstplant_id']);
-
 		$this->response($data, 200);
 	}
-
 }
