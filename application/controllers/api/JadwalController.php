@@ -23,7 +23,7 @@ class JadwalController extends RestController
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model(['M_restJadwal', 'M_restAuth']);
+		$this->load->model(['M_restPatrol', 'M_restAuth']);
 		$this->dateNow = new DateTimeImmutable('now', new DateTimeZone('Asia/Jakarta'));
 		$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
 		$this->user = $this->M_restAuth->getRows(['id' => $this->_apiuser->user_id]);
@@ -42,8 +42,8 @@ class JadwalController extends RestController
 			$this->dateNow = new DateTimeImmutable('- 1 day', new DateTimeZone('Asia/Jakarta'));
 			$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
 		}
-		$jadwalHariIni = $this->M_restJadwal->getJadwal($this->dateNow, $this->user['id'], '43');
-		$jadwalSelanjutnya = $this->M_restJadwal->getJadwal($this->dateTomorrow, $this->user['id'], '43');
+		$jadwalHariIni = $this->M_restPatrol->getJadwal($this->dateNow, $this->user['id'], '43');
+		$jadwalSelanjutnya = $this->M_restPatrol->getJadwal($this->dateTomorrow, $this->user['id'], '43');
 
 
 		$response =[
