@@ -1,6 +1,6 @@
 <?php
 
-class M_restJadwal extends CI_Model
+class M_restPatrol extends CI_Model
 {
 
 	public function __construct()
@@ -9,8 +9,6 @@ class M_restJadwal extends CI_Model
 		$this->load->database();
 		$this->table = 'admisecsgp_mstjadwalpatroli';
 		$this->load->helper('date_time');
-
-
 	}
 
 	function getJadwal($dateTime, $user_id, $plant_id)
@@ -45,8 +43,13 @@ class M_restJadwal extends CI_Model
 			$checkpoint = $this->getCheckPoint($zone->id);
 			$checkpointObject = [];
 			foreach ($checkpoint as $cp) {
-				$cp->objects = $this->getObjek($cp->id);
+				$objects = $this->getObjek($cp->id);
+				foreach ($objects as $object) {
+					$event = $this->getEvent($object->id)->result();
+					$object->event = $event;;
+				}
 				$checkpointObject[] = $cp;
+				$cp->objects = $objects;
 			}
 			$zone->checkpoints = $checkpointObject;
 			$dataPatroli[] = $zone;
@@ -85,7 +88,6 @@ class M_restJadwal extends CI_Model
 				  and jp.bulan = '" . $bulan . "' 
 				  and jp.tahun = '" . $tahun . "' 
 				  and sh.nama_shift = '" . $shift_id . "'";
-//		var_dump($sql);
 		return $this->db->query($sql)->result();
 	}
 
@@ -114,11 +116,26 @@ class M_restJadwal extends CI_Model
 				  and admisecsgp_mstckp_id  ='" . $check . "'")->result();
 	}
 
-	public function ambilEvent($objek)
+	public function getEvent($objek)
 	{
-		$query = $this->db->query("SELECT ed.id, ed.admisecsgp_mstevent_id as event_id, e.event_name  from admisecsgp_msteventdtls ed,  admisecsgp_mstevent e, admisecsgp_mstobj o where ed.admisecsgp_mstobj_id = '" . $objek . "' and ed.admisecsgp_mstobj_id = o.id and ed.admisecsgp_mstevent_id = e.id   and ed.status=1 ");
+		$query = $this->db->query("SELECT ed.id, o.id as object_id, ed.admisecsgp_mstevent_id as event_id, e.event_name  from admisecsgp_msteventdtls ed,  admisecsgp_mstevent e, admisecsgp_mstobj o where ed.admisecsgp_mstobj_id = '" . $objek . "' and ed.admisecsgp_mstobj_id = o.id and ed.admisecsgp_mstevent_id = e.id   and ed.status=1 ");
 		return $query;
 	}
 
+	public function saveData($table, $data)
+	{
+		$this->db->insert($table, $data);
+		return $this->db->insert_id();
+	}
+
+	public function getDataTemuan($id)
+	{
+		$sql = "select * from admisecsgp_tr_headers where id ='" . $id . "' limit 1";
+		$data = $this->db->query($sql)->row();
+		$sqlDetail = "select * from admisecsg_tr_details where tr_dpg_headers_id ='" . $id . "'";
+		$dataDetail = $this->db->query($sqlDetail)->result();;
+		$data->detail_temuan = $dataDetail;
+		return $data;
+	}
 
 }

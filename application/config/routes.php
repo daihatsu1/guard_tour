@@ -61,8 +61,9 @@ $route['api/auth/login'] = 'api/AuthController/login';
 //$route['api/patroli/login']         = 'api/Patroli/Login';
 
 //jadwal patroli per plant 
-$route['api/patroli/jadwalPatroli']        = 'api/JadwalController/jadwalUser';
-$route['api/patroli/dataPatroli']        = 'api/PatroliController/dataPatroli';
+$route['api/patroli/jadwalPatroli']		= 'api/JadwalController/jadwalUser';
+$route['api/patroli/dataPatroli']		= 'api/PatroliController/dataPatroli';
+$route['api/patroli/dataTemuan']		= 'api/PatroliController/dataTemuan';
 $route['api/patroli/jadwalProduksi']    = 'api/Patroli/jadwalProduksi';
 
 
