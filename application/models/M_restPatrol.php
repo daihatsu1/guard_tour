@@ -88,7 +88,6 @@ class M_restPatrol extends CI_Model
 				  and jp.bulan = '" . $bulan . "' 
 				  and jp.tahun = '" . $tahun . "' 
 				  and sh.nama_shift = '" . $shift_id . "'";
-//		var_dump($sql);
 		return $this->db->query($sql)->result();
 	}
 
