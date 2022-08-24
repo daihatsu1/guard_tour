@@ -44,7 +44,6 @@ class Mst_objek extends CI_Controller
     {
         $data = [
             'link'       => $this->uri->segment(1),
-            "zona"      => $this->M_patrol->zonePlant(),
             'plant'     => $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1]),
             "kategori"  => $this->M_patrol->ambilData("admisecsgp_mstkobj", ['status' => 1])
         ];
@@ -58,7 +57,7 @@ class Mst_objek extends CI_Controller
     public function show_zona(Type $var = null)
     {
         $idplant = $this->input->post("plant_id");
-        $zona    = $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_id' => $idplant, 'status' => 1]);
+        $zona    = $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $idplant, 'status' => 1]);
         if ($zona->num_rows() > 0) {
             echo json_encode($zona->result_array());
         } else {
@@ -70,16 +69,12 @@ class Mst_objek extends CI_Controller
     public function show_kategori(Type $var = null)
     {
         $idzona = $this->input->post("zone_id");
-        $kategori    = $this->db->query("SELECT id ,kategori_name from admisecsgp_mstkobj WHERE admisecsgp_mstzone_id = '" . $idzona . "'   and  status = 1 ");
-        $checkpoint    = $this->db->query("SELECT id ,check_name from admisecsgp_mstckp WHERE admisecsgp_mstzone_id =  '" . $idzona . "'  and  status = 1 ");
-        $data = array();
-
-        $data =
-            [
-                [$kategori->result()],
-                [$checkpoint->result()]
-            ];
-        echo json_encode($data);
+        $checkpoint    = $this->db->query("SELECT checkpoint_id ,check_name from admisecsgp_mstckp WHERE admisecsgp_mstzone_zone_id =  '" . $idzona . "'  and  status = 1 ");
+        if ($checkpoint->num_rows() > 0) {
+            echo json_encode($checkpoint->result_array());
+        } else {
+            echo "tidak ada checkpoint";
+        }
     }
 
     public function input()
@@ -89,15 +84,16 @@ class Mst_objek extends CI_Controller
         $kategori_id        = $this->input->post("kategori_id");
         $status             = $this->input->post("status");
         $others             = $this->input->post("others");
-
+        $id                 = 'ADMO' . substr(uniqid(rand(), true), 4, 4);
         $data = [
-            'nama_objek'             => strtoupper($nama_objek),
-            'admisecsgp_mstckp_id'   => $check_id,
-            'admisecsgp_mstkobj_id'  => $kategori_id,
-            'status'                 => $status,
-            'others'                 => $others,
-            'created_at'             => date('Y-m-d H:i:s'),
-            'created_by'             => $this->session->userdata('id_token'),
+            'objek_id'                          => $id,
+            'nama_objek'                        => strtoupper($nama_objek),
+            'admisecsgp_mstckp_checkpoint_id'   => $check_id,
+            'admisecsgp_mstkobj_kategori_id'    => $kategori_id,
+            'status'                            => $status,
+            'others'                            => $others,
+            'created_at'                        => date('Y-m-d H:i:s'),
+            'created_by'                        => $this->session->userdata('id_token'),
         ];
         $input = $this->M_patrol->inputData($data, "admisecsgp_mstobj");
         if ($input) {
@@ -152,16 +148,17 @@ class Mst_objek extends CI_Controller
         foreach ($d as $t) {
 
             $datazona  = $this->db->get_where("admisecsgp_mstzone", ['kode_zona' => $t[1]])->row();
-            $datackp   = $this->db->get_where("admisecsgp_mstckp", ['check_name' => $t[3], 'admisecsgp_mstzone_id' => $datazona->id])->row();
+            $datackp   = $this->db->get_where("admisecsgp_mstckp", ['check_name' => $t[3], 'admisecsgp_mstzone_zone_id' => $datazona->zone_id])->row();
             $dataKategori = $this->db->get_where("admisecsgp_mstkobj", ['kategori_name' => $t[4]])->row();
-
+            $id                 = 'ADMO' . substr(uniqid(rand(), true), 4, 4);
             $params = [
-                'nama_objek'                 => strtoupper($t[5]),
-                'status'                     => 1,
-                'admisecsgp_mstkobj_id'      => $dataKategori->id,
-                'admisecsgp_mstckp_id'       => $datackp->id,
-                'created_at'                 => date('Y-m-d H:i:s'),
-                'created_by'                 => $this->session->userdata('id_token'),
+                'objek_id'                              => $id,
+                'nama_objek'                            => strtoupper($t[5]),
+                'status'                                => 1,
+                'admisecsgp_mstkobj_kategori_id'        => $dataKategori->kategori_id,
+                'admisecsgp_mstckp_checkpoint_id'       => $datackp->checkpoint_id,
+                'created_at'                            => date('Y-m-d H:i:s'),
+                'created_by'                            => $this->session->userdata('id_token'),
             ];
 
             array_push($datas, $params);
@@ -177,83 +174,11 @@ class Mst_objek extends CI_Controller
         }
     }
 
-    public function upload2()
-    {
-        $filename = "upload_objek_" . $this->session->flashdata('id_token');
-        $path_xlsx = "./assets/path_upload/" . $filename . ".xlsx";
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $spreadsheet = $reader->load($path_xlsx);
-        $d = $spreadsheet->getSheet(0)->toArray();
-        unset($d[0]);
-        $datas = array();
-        foreach ($d as $t) {
-
-            $datazona  = $this->db->get_where("admisecsgp_mstzone", ['kode_zona' => $t[1]])->row();
-            $datackp   = $this->db->get_where("admisecsgp_mstckp", ['check_name' => $t[3], 'admisecsgp_mstzone_id' => $datazona->id])->row();
-            $dataKategori = $this->db->get_where("admisecsgp_mstkobj", ['kategori_name' => $t[4]])->row();
-
-            $params = [
-                'nama_objek'                 => strtoupper($t[5]),
-                'status'                     => 1,
-                'admisecsgp_mstkobj_id'      => $dataKategori->id,
-                'admisecsgp_mstckp_id'       => $datackp->id,
-                'created_at'                 => date('Y-m-d H:i:s'),
-                'created_by'                 => $this->session->userdata('id_token'),
-            ];
-
-            array_push($datas, $params);
-        }
-        $ids = array_column($datas, 'nama_objek');
-        $ids = array_unique($ids);
-        $datas = array_filter($datas, function ($key, $value) use ($ids) {
-            return in_array($value, array_keys($ids));
-        }, ARRAY_FILTER_USE_BOTH);
-
-        // var_dump($datas);
-        $table = "admisecsgp_mstobj";
-        $this->db->trans_begin();
-        // $upload  = $this->M_patrol->mulitple_upload($table, $datas);
-        $this->db->insert_batch($table, $datas);
-
-        $data_event = array();
-        if ($this->db->affected_rows() > 0) {
-            foreach ($d as $te) {
-                $cek_event_id = $this->db->query("select id from admisecsgp_mstevent where event_name='" . $te[6] . "'   ")->row();
-
-                $cek_zona  = $this->db->query("select id from admisecsgp_mstzone where kode_zona='" . $te[1] . "'   ")->row();
-                $cekpoint  = $this->db->query("select id from admisecsgp_mstckp where check_name='" . $te[3] . "' and admisecsgp_mstzone_id ='" . $cek_zona->id . "'  ")->row();
-                $cek_objek_id = $this->db->query("select id from admisecsgp_mstobj where nama_objek='" . $te[5] . "' and admisecsgp_mstckp_id = '" . $cekpoint->id . "'  ")->row();
-                $params3 = [
-                    'admisecsgp_mstobj_id'       => $cek_objek_id->id,
-                    'admisecsgp_mstevent_id'     => $cek_event_id->id,
-                    'status'                     => 1,
-                    'created_at'                 => date('Y-m-d H:i:s'),
-                    'created_by'                 => $this->session->userdata('id_token'),
-                ];
-                array_push($data_event, $params3);
-            }
-
-            $table2 = "admisecsgp_msteventdtls";
-            $this->db->insert_batch($table2, $data_event);
-            if ($this->db->affected_rows() > 0) {
-                $this->db->trans_commit();
-                $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil upload data');
-                redirect('Mst_objek');
-            } else {
-                $this->db->trans_rollback();
-                $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data');
-                redirect('Mst_objek/form_upload');
-            }
-        } else {
-            $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data');
-            redirect('Mst_objek/form_upload');
-        }
-    }
 
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['objek_id' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstobj", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus objek');
@@ -267,8 +192,8 @@ class Mst_objek extends CI_Controller
     //multiple delete
     public function multipleDelete()
     {
-        $id_event = $this->input->post("id_event", true);
-        $delete = $this->M_patrol->multiple_delete("admisecsgp_mstobj", $id_event);
+        $id_objek = $this->input->post("id_objek", true);
+        $delete = $this->M_patrol->multiple_delete("admisecsgp_mstobj", $id_objek, "objek_id");
 
         if ($delete) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -288,9 +213,9 @@ class Mst_objek extends CI_Controller
             'link'              => $this->uri->segment(1),
             'data'              => $this->M_patrol->detailObjek($id)->row(),
             "plant"             => $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1]),
-            'zone'              => $this->M_patrol->ambilData("admisecsgp_mstzone", ['status' => 1, 'admisecsgp_mstplant_id' => $plant_id]),
-            'checkpoint'        => $this->M_patrol->ambilData("admisecsgp_mstckp", ['status' => 1, 'admisecsgp_mstzone_id' => $zona_id]),
-            'kategori_objek'    => $this->M_patrol->ambilData("admisecsgp_mstkobj", ['status' => 1, 'admisecsgp_mstzone_id' => $zona_id])
+            'zone'              => $this->M_patrol->ambilData("admisecsgp_mstzone", ['status' => 1, 'admisecsgp_mstplant_plant_id' => $plant_id]),
+            'checkpoint'        => $this->M_patrol->ambilData("admisecsgp_mstckp", ['status' => 1, 'admisecsgp_mstzone_zone_id' => $zona_id]),
+            'kategori_objek'    => $this->M_patrol->ambilData("admisecsgp_mstkobj", ['status' => 1])
         ];
         $this->load->view("template/sidebar", $data);
         $this->load->view("edit_mst_objek", $data);
@@ -309,16 +234,16 @@ class Mst_objek extends CI_Controller
         $others             = $this->input->post("others");
 
         $data = [
-            'nama_objek'             => strtoupper($nama_objek),
-            'admisecsgp_mstckp_id'   => $check_id,
-            'admisecsgp_mstkobj_id'  => $kategori_id,
-            'status'                 => $status,
-            'others'                 => $others,
-            'updated_at'             => date('Y-m-d H:i:s'),
-            'updated_by'             => $this->session->userdata('id_token'),
+            'nama_objek'                        => strtoupper($nama_objek),
+            'admisecsgp_mstckp_checkpoint_id'   => $check_id,
+            'admisecsgp_mstkobj_kategori_id'    => $kategori_id,
+            'status'                            => $status,
+            'others'                            => $others,
+            'updated_at'                        => date('Y-m-d H:i:s'),
+            'updated_by'                        => $this->session->userdata('id_token'),
         ];
 
-        $where = ['id' => $id];
+        $where = ['objek_id' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstobj", $data, $where);
 
         if ($update) {
@@ -349,7 +274,7 @@ class Mst_objek extends CI_Controller
 
         $id = $this->input->post("id");
         $data = [
-            'data'  => $this->db->get_where("admisecsgp_mstckp", ['admisecsgp_mstzone_id' => $id, 'status' => 1])
+            'data'  => $this->db->get_where("admisecsgp_mstckp", ['admisecsgp_mstzone_zone_id' => $id, 'status' => 1])
         ];
         $this->load->view("ajax/list_check", $data);
     }

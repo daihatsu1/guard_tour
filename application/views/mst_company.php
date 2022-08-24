@@ -79,11 +79,11 @@
                                             <?php } ?>
                                         </td>
                                         <td>
-                                            <a title="hapus data" href="<?= base_url('Mst_Company/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger'><i class="fa fa-trash"></i></a>
+                                            <a title="hapus data" href="<?= base_url('Mst_Company/hapus/' . $zn->company_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger'><i class="fa fa-trash"></i></a>
 
-                                            <a href='' title="lihat data" data-toggle="modal" data-target="#edit-data" class="ml-2 text-primary" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-comp_name="<?= $zn->comp_name ?>" data-address="<?= $zn->address1 ?>" data-telepon="<?= $zn->comp_phone ?>"><i class="fa fa-eye"></i></a>
+                                            <a href='' title="lihat data" data-toggle="modal" data-target="#edit-data" class="ml-2 text-primary" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->company_id ?>" data-comp_name="<?= $zn->comp_name ?>" data-address="<?= $zn->address1 ?>" data-telepon="<?= $zn->comp_phone ?>"><i class="fa fa-eye"></i></a>
 
-                                            <a title="edit data" href="<?= base_url('Mst_Company/edit?comp_id=' . $zn->id) ?>" class='ml-2  text-success'><i class="fa fa-edit"></i></a>
+                                            <a title="edit data" href="<?= base_url('Mst_Company/edit?comp_id=' . $zn->company_id) ?>" class='ml-2  text-success'><i class="fa fa-edit"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

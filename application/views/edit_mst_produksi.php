@@ -45,7 +45,7 @@
                     <form onsubmit="return cek()" action="<?= base_url('Mst_Produksi/update') ?>" method="post" id="inputEvent">
 
                         <div class="card-body">
-                            <input type="hidden" name="id" id="id" value="<?= $data->id ?>">
+                            <input type="hidden" name="id" id="id" value="<?= $data->produksi_id ?>">
                             <div class="form-group">
                                 <label for="">NAMA</label>
                                 <input type="text" name="name" value="<?= $data->name ?>" autocomplete="off" id="name" class="form-control">

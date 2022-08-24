@@ -55,7 +55,6 @@
                             </select>
                             <div class="form group">
                                 <label for="">Upload File</label>
-
                                 <input onchange="return exe()" id="file" accept=".xlsx" type="file" name="file" class="form-control form-control-sm">
                                 <span class="text-danger font-italic small">* hanya file dengan ekstensi xlsx yang boleh di upload *</span>
                             </div>
@@ -106,6 +105,18 @@
                                         </button>
                                     </div>';
                                         $count += 1;
+                                    } else {
+                                        //cek id checkpoint 
+                                        $checkpoint_name =  $this->db->get_where('admisecsgp_mstckp', ['check_name' => $sh[4]]);
+                                        if ($checkpoint_name->num_rows() >= 1) {
+                                            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        checkpoint <b class="font-italice"> ' . $sh[4] . ' </b> sudah terdaftar di zona ' . $sh[2] . '
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>';
+                                            $count += 1;
+                                        }
                                     }
 
 
@@ -113,7 +124,7 @@
                                     $checkpoint_id =  $this->db->get_where('admisecsgp_mstckp', ['check_no' => $sh[3]]);
                                     if ($checkpoint_id->num_rows() >= 1) {
                                         echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        id checkpoint <b class="font-italice"> ' . $sh[2] . ' </b> sudah terdaftar di database
+                                        id checkpoint <b class="font-italice"> ' . $sh[3] . ' </b> sudah terdaftar di database
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>

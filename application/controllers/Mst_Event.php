@@ -23,7 +23,7 @@ class Mst_Event extends CI_Controller
     {
         $data = [
             'link'          => $this->uri->segment(1),
-            'event'         => $this->M_patrol->ambilData('admisecsgp_mstevent')
+            'event'         => $this->M_patrol->showEvent(),
         ];
         // $this->template->load("template/template", "mst_event", $data);
         $this->load->view("template/sidebar", $data);
@@ -44,6 +44,7 @@ class Mst_Event extends CI_Controller
 
         $data = [
             'link'          => $this->uri->segment(1),
+            'kategori'      => $this->M_patrol->ambilData('admisecsgp_mstkobj', ['status'    => 1]),
             'plant'         => $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1])
         ];
         // $this->template->load("template/template", "add_mst_event", $data);
@@ -57,37 +58,44 @@ class Mst_Event extends CI_Controller
     {
         $status            = $this->input->post("status");
         $event_name        = $this->input->post("event_name");
-        // $kategori_id       = $this->input->post("kategori_id");
+        $kategori_id       = $this->input->post("kategori_id");
 
 
-        $data = [
-            'status'                => $status,
-            'event_name'            => strtoupper($event_name),
-            // 'admisecsgp_mstkobj_id' => $kategori_id,
-            'created_at'            => date('Y-m-d H:i:s'),
-            'created_by'            => $this->session->userdata('id_token'),
-        ];
+        $d = explode(";", $event_name);
+        $params = array();
+        for ($i = 0; $i < count($d) - 1; $i++) {
+            $id                   = 'ADMEV' . substr(uniqid(rand(), true), 4, 4);
+            $ev_name = $d[$i];
+            $data = [
+                'event_id'                       => $id,
+                'status'                         => $status,
+                'event_name'                     => strtoupper($ev_name),
+                'admisecsgp_mstkobj_kategori_id' => $kategori_id,
+                'created_at'                     => date('Y-m-d H:i:s'),
+                'created_by'                     => $this->session->userdata('id_token'),
+            ];
+            array_push($params, $data);
+        }
 
-        $cek = $this->db->get_where("admisecsgp_mstevent", ['event_name' => $event_name])->num_rows();
-        if ($cek >= 1) {
-            $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> nama ' . $event_name . ' ini sudah digunakan');
+        $upload = $this->M_patrol->mulitple_upload("admisecsgp_mstevent", $params);
+        if ($upload) {
+            $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil input data');
             redirect('Mst_Event');
         } else {
-            $input = $this->M_patrol->inputData($data, "admisecsgp_mstevent");
-            if ($input) {
-                $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil input data');
-                redirect('Mst_Event');
-            } else {
-                $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal input data');
-                redirect('Mst_Event');
-            }
+            $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal input data');
+            redirect('Mst_Event');
         }
+        // $cek = $this->db->get_where("admisecsgp_mstevent", ['event_name' => $event_name])->num_rows();
+        // if ($cek >= 1) {
+        //     $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> nama ' . $event_name . ' ini sudah digunakan');
+        //     redirect('Mst_Event');
+        // } 
     }
 
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['event_id' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstevent", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -100,16 +108,11 @@ class Mst_Event extends CI_Controller
 
     public function edit()
     {
-        $id_wil_user = $this->session->userdata("site_id");
         $id             =  $this->input->get('event_id');
-        $zona_id        =  $this->input->get('zona_id');
-        $plant_id       =  $this->input->get('plant_id');
         $data = [
             'link'       => $this->uri->segment(1),
-            'data'       => $this->M_patrol->ambilData("admisecsgp_mstevent", ['id' => $id])->row(),
-            'plant'      => $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1]),
-            'zone'       => $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_id' => $plant_id]),
-            'kategori_objek'       => $this->M_patrol->ambilData("admisecsgp_mstkobj", ['admisecsgp_mstzone_id' => $zona_id]),
+            'data'       => $this->M_patrol->detailEvent($id)->row(),
+            'kategori_objek'       => $this->M_patrol->ambilData("admisecsgp_mstkobj", ['status' => 1]),
         ];
         // $this->template->load("template/template", "edit_mst_event", $data);
         $this->load->view("template/sidebar", $data);
@@ -123,16 +126,16 @@ class Mst_Event extends CI_Controller
         $id                 = $this->input->post("id");
         $event_name         = $this->input->post("event_name");
         $status             = $this->input->post("status");
-        // $kategori_id       = $this->input->post("kategori_id");
+        $kategori_id       = $this->input->post("kategori_id");
         $data = [
-            'event_name'            => strtoupper($event_name),
-            'status'                => $status,
-            // 'admisecsgp_mstkobj_id' => $kategori_id,
-            'updated_at'            => date('Y-m-d H:i:s'),
-            'updated_by'            => $this->session->userdata('id_token'),
+            'event_name'                     => strtoupper($event_name),
+            'status'                         => $status,
+            'admisecsgp_mstkobj_kategori_id' => $kategori_id,
+            'updated_at'                     => date('Y-m-d H:i:s'),
+            'updated_by'                     => $this->session->userdata('id_token'),
         ];
 
-        $where = ['id' => $id];
+        $where = ['event_id' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstevent", $data, $where);
         if ($update) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');

@@ -48,9 +48,9 @@
                             <div class="form-group">
                                 <label for="">COMPANY</label>
                                 <select class="form-control" name="comp_id" id="comp_id">
+                                    <option selected value="">Pilih Company</option>
                                     <?php foreach ($company->result() as $cmp) : ?>
-                                        <option selected value="">Pilih Company</option>
-                                        <option value="<?= $cmp->id ?>"><?= $cmp->comp_name ?></option>
+                                        <option value="<?= $cmp->company_id ?>"><?= $cmp->comp_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info" style="display: none;" class="text-danger font-italic small">load data wilayah . . .</span>

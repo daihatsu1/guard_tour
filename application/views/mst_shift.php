@@ -51,7 +51,7 @@
                     <div class="card-body">
                         <a href="<?= base_url('Mst_Shift/form_add') ?>" class="btn btn-sm btn-primary">
                             <i class="fa fa-plus"></i> Tambah Shift</a>
-                        <table id="example2" class="mt-1 table table-striped table-bordered">
+                        <table id="example2" class="table-sm mt-1 table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>NO</th>
@@ -73,11 +73,11 @@
                                         <td><?= $zn->status  == 1 ? 'ACTIVE'  : 'INACTIVE' ?></td>
                                         <td>
 
-                                            <a href="<?= base_url('Mst_Shift/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger'><i class="fas fa-trash"></i></a>
+                                            <a href="<?= base_url('Mst_Shift/hapus/' . $zn->shift_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger'><i class="fas fa-trash"></i></a>
 
-                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2 " data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-status="<?= $zn->status ?>" data-shift="<?= $zn->nama_shift ?>" data-jam_masuk="<?= $zn->nama_shift == 'LIBUR' ? '-' :  $zn->jam_masuk ?>" data-jam_pulang="<?= $zn->nama_shift == 'LIBUR' ? '-' : $zn->jam_pulang ?>"><i class="fas fa-eye"></i></a>
+                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2 " data-backdrop="static" data-keyboard="false" data-id="<?= $zn->shift_id ?>" data-status="<?= $zn->status ?>" data-shift="<?= $zn->nama_shift ?>" data-jam_masuk="<?= $zn->nama_shift == 'LIBUR' ? '-' :  $zn->jam_masuk ?>" data-jam_pulang="<?= $zn->nama_shift == 'LIBUR' ? '-' : $zn->jam_pulang ?>"><i class="fas fa-eye"></i></a>
 
-                                            <a href="<?= base_url('Mst_Shift/edit?shift_id=' . $zn->id) ?>" class='text-success ml-2 '><i class="fas fa-edit"></i></a>
+                                            <a href="<?= base_url('Mst_Shift/edit?shift_id=' . $zn->shift_id) ?>" class='text-success ml-2 '><i class="fas fa-edit"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

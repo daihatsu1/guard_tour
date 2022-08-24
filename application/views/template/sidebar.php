@@ -43,6 +43,9 @@ date_default_timezone_set('Asia/Jakarta');
     <!-- filtter -->
     <script src="https://cdn.datatables.net/fixedheader/3.2.3/js/dataTables.fixedHeader.min.js"></script>
 
+    <!-- tags input -->
+    <link rel="stylesheet" type="text/css" href="<?= base_url('assets') ?>/dist/css/jquery-tagsinput.min.css" />
+    <script src="<?= base_url('assets') ?>/dist/js/jquery-tagsinput.min.js" defer></script>
 </head>
 
 <body class="hold-transition sidebar-mini sidebar-collapse">
@@ -225,7 +228,7 @@ date_default_timezone_set('Asia/Jakarta');
                                     </a>
                                 </li>
 
-                                <li class="nav-item">
+                                <!-- <li class="nav-item">
                                     <a href="<?= base_url('Mst_Event_Detail') ?>" class="nav-link
                                     <?php if ($link == 'Mst_Event_Detail') {
                                         echo 'active';
@@ -233,7 +236,7 @@ date_default_timezone_set('Asia/Jakarta');
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Master Event Detail</p>
                                     </a>
-                                </li>
+                                </li> -->
 
                                 <!-- <li class="nav-item">
                                     <a href="<?= base_url('Mst_Periode') ?>" class="nav-link 

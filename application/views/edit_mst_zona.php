@@ -43,15 +43,15 @@
                         </div>
                     </div>
                     <form onsubmit="return cek()" action="<?= base_url('Mst_Zona/update') ?>" method="post" id="inputZona">
-                        <input type="hidden" name="id" value="<?= $data->id ?>">
+                        <input type="hidden" name="id" value="<?= $data->zone_id ?>">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">WILAYAH</label>
                                 <select class="form-control" name="site_id" id="site_id">
-                                    <option selected value="<?= $data->admisecsgp_mstsite_id ?>"><?= $data->site_name ?></option>
+                                    <option selected value="<?= $data->admisecsgp_mstsite_site_id ?>"><?= $data->site_name ?></option>
                                     <option value="">Pilih Wilayah</option>
                                     <?php foreach ($wilayah->result() as $cmp) : ?>
-                                        <option value="<?= $cmp->id ?>"><?= $cmp->site_name ?></option>
+                                        <option value="<?= $cmp->site_id ?>"><?= $cmp->site_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info" style="display: none;" class="text-danger font-italic small">load data plant . . .</span>
@@ -61,7 +61,7 @@
                                 <div class="form-group">
                                     <label for="">PLANT</label>
                                     <select class="form-control" name="plant_id" id="plant_id">
-                                        <option value="<?= $data->admisecsgp_mstplant_id ?>"><?= $data->plant_name ?></option>
+                                        <option value="<?= $data->admisecsgp_mstplant_plant_id ?>"><?= $data->plant_name ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -76,10 +76,7 @@
                                 <input type="text" value="<?= $data->kode_zona ?>" name="kode_zona" autocomplete="off" id="kode_zona" class="form-control">
                             </div>
 
-                            <div class="form-group">
-                                <label for="">DURASI</label>
-                                <input type="number" value="<?= $data->durasi ?>" name="durasi" autocomplete="off" id="durasi" class="form-control">
-                            </div>
+
 
 
                             <div class="form-group">
@@ -139,7 +136,7 @@
         var id = $("select[name=site_id] option:selected").val();
         // console.log(id)
         if (id == null || id == "") {
-            document.getElementById('list_plant').innerHTML = '<div class="form-group"><label for="">PLANT</label><select class="form-control" name="plant_id" id="plant_id"><option value="<?= $data->admisecsgp_mstplant_id ?>"><?= $data->plant_name ?></option></select></div>';
+            document.getElementById('list_plant').innerHTML = '<div class="form-group"><label for="">PLANT</label><select class="form-control" name="plant_id" id="plant_id"><option value="<?= $data->admisecsgp_mstplant_plant_id ?>"><?= $data->plant_name ?></option></select></div>';
         } else {
             $.ajax({
                 url: "<?= base_url('Mst_Zona/showPlant') ?>",
@@ -150,11 +147,10 @@
                 },
                 complete: function() {
                     document.getElementById('info').style.display = "none"
-
                 },
                 success: function(e) {
                     document.getElementById('list_plant').innerHTML = e;
-                    console.log(e);
+                    // console.log(e);
                 }
             })
         }

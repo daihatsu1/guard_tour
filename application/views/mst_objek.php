@@ -78,7 +78,7 @@
                                     <?php $no = 1;
                                     foreach ($objek->result() as $zn) : ?>
                                         <tr>
-                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_event[]" value="<?= $zn->id ?>"> </td>
+                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_objek[]" value="<?= $zn->objek_id ?>"> </td>
                                             <td><?= $no++ ?></td>
                                             <td><?= $zn->plant_name ?></td>
                                             <td><?= $zn->zone_name ?></td>
@@ -88,11 +88,11 @@
                                             <td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
                                             <td>
                                                 <!-- data-kategori="<?= $zn->kategori_name ?> -->
-                                                <a href="<?= base_url('Mst_objek/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
+                                                <a href="<?= base_url('Mst_objek/hapus/' . $zn->objek_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
-                                                <a data-toggle="modal" data-target="#edit-data" class=" ml-2 text-primary" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-plant="<?= $zn->plant_name ?>" data-check="<?= $zn->check_name ?>" data-zone="<?= $zn->zone_name ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>" data-objek_name="<?= $zn->nama_objek ?>" data-kategori="<?= $zn->kategori_name ?>"><i class="fa fa-eye"></i></a>
+                                                <a data-toggle="modal" data-target="#edit-data" class=" ml-2 text-primary" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->objek_id ?>" data-plant="<?= $zn->plant_name ?>" data-check="<?= $zn->check_name ?>" data-zone="<?= $zn->zone_name ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>" data-objek_name="<?= $zn->nama_objek ?>" data-kategori="<?= $zn->kategori_name ?>"><i class="fa fa-eye"></i></a>
 
-                                                <a href=" <?= base_url('Mst_objek/edit?check_id=' . $zn->id) ?>&zona_id=<?= $zn->zona_id ?>&id_checkpoint=<?= $zn->id_check ?>&plant_id=<?= $zn->plant_id ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
+                                                <a href=" <?= base_url('Mst_objek/edit?check_id=' . $zn->objek_id) ?>&zona_id=<?= $zn->zona_id ?>&id_checkpoint=<?= $zn->id_check ?>&plant_id=<?= $zn->plant_id ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>
@@ -195,7 +195,7 @@
         });
 
         $(".check-item").click(function() {
-            var panjang = $('[name="id_event[]"]:checked').length;
+            var panjang = $('[name="id_objek[]"]:checked').length;
             if (panjang > 0) {
                 document.getElementById('btn_delete_all').style.display = "block";
             } else {
@@ -208,7 +208,7 @@
             if ($(this).is(":checked")) {
                 $(".check-item").prop("checked", true);
                 document.getElementById('btn_delete_all').style.display = "block";
-                var panjang = $('[name="id_event[]"]:checked').length;
+                var panjang = $('[name="id_objek[]"]:checked').length;
             } else {
                 $(".check-item").prop("checked", false);
                 document.getElementById('btn_delete_all').style.display = "none";

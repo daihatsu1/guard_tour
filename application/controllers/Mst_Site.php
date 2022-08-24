@@ -53,12 +53,13 @@ class Mst_Site extends CI_Controller
         $status         = $this->input->post("status");
 
         $data = [
-            'admisecsgp_mstcmp_id'       => $comp_id,
-            'site_name'                  => strtoupper($site_name),
-            'others'                     => $others,
-            'created_at'                 => date('Y-m-d H:i:s'),
-            'created_by'                 => $this->session->userdata('id_token'),
-            'status'                     => $status
+            'site_id'                           => 'ADMWIL' . substr(uniqid(rand(), true), 4, 4),
+            'admisecsgp_mstcmp_company_id'      => $comp_id,
+            'site_name'                         => strtoupper($site_name),
+            'others'                            => $others,
+            'created_at'                        => date('Y-m-d H:i:s'),
+            'created_by'                        => $this->session->userdata('id_token'),
+            'status'                            => $status
         ];
         $cekname = $this->db->get_where("admisecsgp_mstsite", ['site_name' => $site_name]);
         if ($cekname->num_rows() > 0) {
@@ -94,7 +95,7 @@ class Mst_Site extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['site_id' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstsite", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -114,15 +115,15 @@ class Mst_Site extends CI_Controller
         $others         = $this->input->post("others");
         $status         = $this->input->post("status");
         $data = [
-            'admisecsgp_mstcmp_id'      => $comp_id,
-            'site_name'                 => strtoupper($site_name),
-            'others'                    => $others,
-            'updated_at'                => date('Y-m-d H:i:s'),
-            'updated_by'                => $this->session->userdata('id_token'),
-            'status'                    => $status
+            'admisecsgp_mstcmp_company_id'      => $comp_id,
+            'site_name'                         => strtoupper($site_name),
+            'others'                            => $others,
+            'updated_at'                        => date('Y-m-d H:i:s'),
+            'updated_by'                        => $this->session->userdata('id_token'),
+            'status'                            => $status
         ];
 
-        $where = ['id' => $id];
+        $where = ['site_id' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstsite", $data, $where);
         if ($update) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');

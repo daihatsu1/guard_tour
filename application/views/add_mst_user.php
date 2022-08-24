@@ -58,7 +58,7 @@
                                 <select class="form-control" name="site_id" id="site_id">
                                     <option selected value="">Pilih Wilayah</option>
                                     <?php foreach ($wilayah->result() as $cmp) : ?>
-                                        <option value="<?= $cmp->id ?>"><?= $cmp->site_name ?></option>
+                                        <option value="<?= $cmp->site_id ?>"><?= $cmp->site_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info" style="display: none;" class="text-danger font-italic small">load data plant . . .</span>
@@ -85,7 +85,7 @@
                                 <label for="">LEVEL</label>
                                 <select name="level" class="form-control" id="">
                                     <?php foreach ($role->result() as $rl) : ?>
-                                        <option value="<?= $rl->id ?>"><?= $rl->level ?></option>
+                                        <option value="<?= $rl->role_id ?>"><?= $rl->level ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>

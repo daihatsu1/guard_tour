@@ -38,17 +38,17 @@ class M_patrol extends CI_Model
     //tampilkan wilayah()
     public function showWilayah()
     {
-        $query =  $this->db->query("SELECT c.id , c.comp_name  , w.others ,  w.site_name , w.id  , w.status 
+        $query =  $this->db->query("SELECT c.company_id  , c.comp_name  , w.others ,  w.site_name , w.site_id  , w.status 
         FROM admisecsgp_mstcmp c , admisecsgp_mstsite w 
-        WHERE c.id = w.admisecsgp_mstcmp_id  ");
+        WHERE c.company_id = w.admisecsgp_mstcmp_company_id  ");
         return $query;
     }
 
     public function detailWilayah($id)
     {
-        $query =  $this->db->query("SELECT c.id , c.comp_name , w.others, w.site_name , w.id  , w.status  , w.admisecsgp_mstcmp_id
+        $query =  $this->db->query("SELECT c.company_id , c.comp_name , w.others, w.site_name , w.site_id  , w.status  , w.admisecsgp_mstcmp_company_id
         FROM admisecsgp_mstcmp c , admisecsgp_mstsite w  
-        WHERE c.id = w.admisecsgp_mstcmp_id  and w.id = " . $id . " ");
+        WHERE c.company_id = w.admisecsgp_mstcmp_company_id  and w.site_id = '" . $id . "' ");
         return $query;
     }
 
@@ -56,18 +56,18 @@ class M_patrol extends CI_Model
     //tampilkan plant
     public function showPlant()
     {
-        $query =  $this->db->query("SELECT c.comp_name , p.id ,  p.plant_name ,  w.site_name , p.admisecsgp_mstsite_id , p.status  , p.others , p.kode_plant
+        $query =  $this->db->query("SELECT c.comp_name , p.plant_id ,  p.plant_name ,  w.site_name , p.admisecsgp_mstsite_site_id , p.status  , p.others , p.kode_plant
         FROM admisecsgp_mstplant p , admisecsgp_mstsite w  , admisecsgp_mstcmp c
-        WHERE p.admisecsgp_mstsite_id = w.id and w.admisecsgp_mstcmp_id = c.id ");
+        WHERE p.admisecsgp_mstsite_site_id = w.site_id and w.admisecsgp_mstcmp_company_id = c.company_id ");
         return $query;
     }
 
     public function detailPlant($id)
     {
-        $query =  $this->db->query("SELECT c.comp_name , c.id , w.site_name , p.id , p.plant_name , p.status , p.others , p.admisecsgp_mstsite_id  , w.admisecsgp_mstcmp_id , p.kode_plant 
+        $query =  $this->db->query("SELECT c.comp_name , c.company_id , w.site_name , p.plant_id , p.plant_name , p.status , p.others , p.admisecsgp_mstsite_site_id  , w.admisecsgp_mstcmp_company_id , p.kode_plant 
         FROM admisecsgp_mstplant p , admisecsgp_mstsite w  , admisecsgp_mstcmp c 
-        WHERE w.admisecsgp_mstcmp_id = c.id and p.admisecsgp_mstsite_id = w.id and w.admisecsgp_mstcmp_id = c.id 
-         and p.id = " . $id . "   ");
+        WHERE w.admisecsgp_mstcmp_company_id = c.company_id and p.admisecsgp_mstsite_site_id = w.site_id
+         and p.plant_id = '" . $id . "'   ");
         return $query;
     }
     //
@@ -77,34 +77,34 @@ class M_patrol extends CI_Model
     //tampilkan data zona
     public function showZona()
     {
-        $query =  $this->db->query("SELECT z.id , z.zone_name,  z.others , z.status , z.status,  p.plant_name , w.site_name , z.kode_zona ,z.durasi FROM admisecsgp_mstplant p, admisecsgp_mstzone z   ,  admisecsgp_mstsite w
-        WHERE z.admisecsgp_mstplant_id = p.id and w.id = p.admisecsgp_mstsite_id");
+        $query =  $this->db->query("SELECT z.zone_id , z.zone_name,  z.others , z.status , z.status,  p.plant_name , w.site_name , z.kode_zona FROM admisecsgp_mstplant p, admisecsgp_mstzone z   ,  admisecsgp_mstsite w
+        WHERE z.admisecsgp_mstplant_plant_id = p.plant_id and w.site_id = p.admisecsgp_mstsite_site_id order by z.created_at desc");
         return $query;
     }
 
     public function detailZona($id)
     {
-        $query =  $this->db->query("SELECT z.zone_name , z.id , z.kode_zona , w.site_name ,p.plant_name , z.status , z.others , z.admisecsgp_mstplant_id ,z.durasi , p.plant_name , p.admisecsgp_mstsite_id
+        $query =  $this->db->query("SELECT z.zone_name , z.zone_id , z.kode_zona , w.site_name ,p.plant_name , z.status , z.others , z.admisecsgp_mstplant_plant_id ,z.durasi_batas_atas , z.durasi_batas_bawah , p.plant_name , p.admisecsgp_mstsite_site_id
         FROM admisecsgp_mstplant p , admisecsgp_mstsite w  , admisecsgp_mstzone z
-        WHERE   z.admisecsgp_mstplant_id = p.id and w.id = p.admisecsgp_mstsite_id  and p.id = z.admisecsgp_mstplant_id  and z.id = " . $id . "    ");
+        WHERE   z.admisecsgp_mstplant_plant_id = p.plant_id and w.site_id = p.admisecsgp_mstsite_site_id and z.zone_id = '" . $id . "'    ");
         return $query;
     }
 
     //tampilkan checkPoint()
     public function showCheckpoint()
     {
-        $query =  $this->db->query("SELECT c.id ,  c.check_name ,  c.others  , c.status , c.durasi, z.zone_name,  p.plant_name  , c.check_no , z.admisecsgp_mstplant_id  as plant_id , c.admisecsgp_mstzone_id as zona_id , c.durasi
+        $query =  $this->db->query("SELECT c.checkpoint_id ,  c.check_name ,  c.others  , c.status , z.zone_name,  p.plant_name  , c.check_no , z.admisecsgp_mstplant_plant_id  as plant_id , c.admisecsgp_mstzone_zone_id as zona_id , c.durasi_batas_atas , c.durasi_batas_bawah 
         FROM admisecsgp_mstplant p, admisecsgp_mstzone z  , admisecsgp_mstckp c 
-        WHERE z.admisecsgp_mstplant_id = p.id AND z.id = c.admisecsgp_mstzone_id order by c.id DESC ");
+        WHERE z.admisecsgp_mstplant_plant_id = p.plant_id AND z.zone_id = c.admisecsgp_mstzone_zone_id order by c.created_at DESC ");
         return $query;
     }
 
     public function detailCheckpoint($id)
     {
-        $query =  $this->db->query("SELECT z.zone_name , c.id  , w.site_name ,p.plant_name , z.status , z.others , z.admisecsgp_mstplant_id , p.plant_name , 
-        c.check_name , c.check_no , c.admisecsgp_mstzone_id , c.status ,  c.durasi
+        $query =  $this->db->query("SELECT z.zone_name , c.checkpoint_id  , w.site_name ,p.plant_name , z.status , z.others , z.admisecsgp_mstplant_plant_id , p.plant_name , 
+        c.check_name , c.check_no , c.admisecsgp_mstzone_zone_id , c.status ,  c.durasi_batas_atas , c.durasi_batas_bawah
         FROM admisecsgp_mstplant p , admisecsgp_mstsite w  , admisecsgp_mstzone z , admisecsgp_mstckp c
-        WHERE   z.admisecsgp_mstplant_id = p.id and c.admisecsgp_mstzone_id = z.id and c.id = " . $id . "  ");
+        WHERE   z.admisecsgp_mstplant_plant_id = p.plant_id and c.admisecsgp_mstzone_zone_id = z.zone_id and c.checkpoint_id = '" . $id . "'  ");
         return $query;
     }
 
@@ -159,11 +159,11 @@ class M_patrol extends CI_Model
     }
 
     //multiple delete 
-    public function multiple_delete($table, $data)
+    public function multiple_delete($table, $data, $kolom)
     {
         $total = count($data);
         for ($i = 0; $i < $total; $i++) {
-            $this->db->where('id', $data[$i]);
+            $this->db->where($kolom, $data[$i]);
             $this->db->delete($table);
         }
 
@@ -177,21 +177,23 @@ class M_patrol extends CI_Model
     //tampilkan kategori objek
     public function kategoriObjek()
     {
-        $query =  $this->db->query("SELECT ko.id , ko.kategori_name , ko.status, ko.others, ko.admisecsgp_mstzone_id as zona_id , zn.zone_name , pl.plant_name , zn.admisecsgp_mstplant_id as plant_id from admisecsgp_mstkobj ko , admisecsgp_mstzone zn , admisecsgp_mstplant pl WHERE ko.admisecsgp_mstzone_id = zn.id AND zn.admisecsgp_mstplant_id = pl.id ");
+        $query =  $this->db->query("SELECT ko.kategori_id , ko.kategori_name , ko.status, ko.others  from admisecsgp_mstkobj ko");
         return $query;
     }
 
     //tampilkan kategori objek
     public function detailkategoriObjek($id)
     {
-        $query =  $this->db->query("SELECT ko.id , ko.kategori_name , ko.status, ko.others, ko.admisecsgp_mstzone_id as zona_id , zn.zone_name , pl.plant_name  , zn.admisecsgp_mstplant_id as plant_id from admisecsgp_mstkobj ko , admisecsgp_mstzone zn , admisecsgp_mstplant pl WHERE ko.admisecsgp_mstzone_id = zn.id AND zn.admisecsgp_mstplant_id = pl.id AND ko.id='" . $id . "' ");
+        $query =  $this->db->query("SELECT ko.kategori_id , ko.kategori_name , ko.status, ko.others from admisecsgp_mstkobj ko  WHERE ko.kategori_id='" . $id . "' ");
         return $query;
     }
 
     // tampilkan event 
     public function showEvent()
     {
-        $query = $this->db->query("SELECT ed.id , e.event_name , c.check_name , o.nama_objek, zn.zone_name , pl.plant_name , zn.admisecsgp_mstplant_id as plant_id , c.admisecsgp_mstzone_id as zona_id  , o.admisecsgp_mstckp_id as check_id , ed.admisecsgp_mstobj_id as objek_id , ed.status from admisecsgp_msteventdtls ed , admisecsgp_mstevent e , admisecsgp_mstplant pl  , admisecsgp_mstzone zn , admisecsgp_mstckp c , admisecsgp_mstobj o  WHERE ed.admisecsgp_mstevent_id = e.id and ed.admisecsgp_mstobj_id = o.id and zn.admisecsgp_mstplant_id = pl.id and c.admisecsgp_mstzone_id = zn.id and o.admisecsgp_mstckp_id = c.id  order by ed.id desc ");
+        $query = $this->db->query("SELECT ev.event_id , ko.kategori_name , ev.status ,ev.event_name  from admisecsgp_mstevent ev , admisecsgp_mstkobj ko
+        where ev.admisecsgp_mstkobj_kategori_id = ko.kategori_id 
+         order by ko.kategori_name ");
         return $query;
     }
 
@@ -199,25 +201,26 @@ class M_patrol extends CI_Model
     //detail event 
     public function detailEvent($id)
     {
-        $query = $this->db->query("SELECT ed.id , e.event_name , c.check_name , o.nama_objek, zn.zone_name , pl.plant_name , zn.admisecsgp_mstplant_id as plant_id , c.admisecsgp_mstzone_id as zona_id  , o.admisecsgp_mstckp_id as check_id , ed.admisecsgp_mstobj_id as objek_id , ed.admisecsgp_mstevent_id as event_id , ed.status from admisecsgp_msteventdtls ed , admisecsgp_mstevent e , admisecsgp_mstplant pl  , admisecsgp_mstzone zn , admisecsgp_mstckp c , admisecsgp_mstobj o  WHERE ed.admisecsgp_mstevent_id = e.id and ed.admisecsgp_mstobj_id = o.id and zn.admisecsgp_mstplant_id = pl.id and c.admisecsgp_mstzone_id = zn.id and o.admisecsgp_mstckp_id = c.id   and ed.id = '" . $id . "' ");
+        $query = $this->db->query("SELECT ev.event_id , ko.kategori_name , ev.status ,ev.event_name , ko.kategori_id    from admisecsgp_mstevent ev , admisecsgp_mstkobj ko
+        where ev.admisecsgp_mstkobj_kategori_id = ko.kategori_id  and ev.event_id = '" . $id . "' ");
         return $query;
     }
 
     //tampilkan object
     public function showObject()
     {
-        $query =  $this->db->query("SELECT o.id , o.nama_objek  , z.zone_name , k.kategori_name ,  c.check_name  , o.status , o.others  , p.plant_name , z.admisecsgp_mstplant_id as plant_id ,o.admisecsgp_mstckp_id as id_check , c.admisecsgp_mstzone_id as zona_id 
+        $query =  $this->db->query("SELECT o.objek_id , o.nama_objek  , z.zone_name , k.kategori_name ,  c.check_name  , o.status , o.others  , p.plant_name , z.admisecsgp_mstplant_plant_id as plant_id ,o.admisecsgp_mstckp_checkpoint_id as id_check , c.admisecsgp_mstzone_zone_id as zona_id 
         FROM  admisecsgp_mstobj o , admisecsgp_mstzone z , admisecsgp_mstkobj k  , admisecsgp_mstckp c , admisecsgp_mstplant p 
-        WHERE  o.admisecsgp_mstckp_id = c.id and k.id = o.admisecsgp_mstkobj_id and  
-        z.id = c.admisecsgp_mstzone_id  and p.id = z.admisecsgp_mstplant_id  order by o.id desc ");
+        WHERE  o.admisecsgp_mstckp_checkpoint_id = c.checkpoint_id and k.kategori_id = o.admisecsgp_mstkobj_kategori_id and  
+        z.zone_id = c.admisecsgp_mstzone_zone_id  and p.plant_id = z.admisecsgp_mstplant_plant_id  order by o.created_at desc ");
         return $query;
     }
 
     public function detailObjek($id)
     {
-        $query =  $this->db->query("SELECT o.id , o.nama_objek  , z.zone_name, z.id as zona_id  ,  k.kategori_name  , o.admisecsgp_mstkobj_id as kategori_id,  c.check_name , c.id as check_id  , o.status , o.others  , p.plant_name , z.admisecsgp_mstplant_id as plant_id , o.admisecsgp_mstckp_id , o.admisecsgp_mstkobj_id , c.admisecsgp_mstzone_id 
+        $query =  $this->db->query("SELECT o.objek_id , o.nama_objek  , z.zone_name, z.zone_id as zona_id  ,  k.kategori_name  , o.admisecsgp_mstkobj_kategori_id as kategori_id,  c.check_name , c.checkpoint_id as check_id  , o.status , o.others  , p.plant_name , z.admisecsgp_mstplant_plant_id as plant_id , o.admisecsgp_mstckp_checkpoint_id , o.admisecsgp_mstkobj_kategori_id , c.admisecsgp_mstzone_zone_id 
         FROM  admisecsgp_mstobj o , admisecsgp_mstzone z , admisecsgp_mstkobj k , admisecsgp_mstckp c  , admisecsgp_mstplant p 
-        WHERE  o.admisecsgp_mstckp_id = c.id   and k.id = o.admisecsgp_mstkobj_id  and z.id = c.admisecsgp_mstzone_id  and p.id = z.admisecsgp_mstplant_id and k.admisecsgp_mstzone_id = z.id and o.id = " . $id . "  ");
+        WHERE  o.admisecsgp_mstckp_checkpoint_id = c.checkpoint_id   and k.kategori_id = o.admisecsgp_mstkobj_kategori_id  and z.zone_id = c.admisecsgp_mstzone_zone_id  and p.plant_id = z.admisecsgp_mstplant_plant_id and o.objek_id = '" . $id . "'  ");
         return $query;
     }
 
@@ -236,19 +239,19 @@ class M_patrol extends CI_Model
     //tampilkan user
     public function showUser()
     {
-        $query =  $this->db->query("SELECT u.id , u.name , u.npk , u.admisecsgp_mstroleusr_id , r.level , c.comp_name , s.site_name , p.plant_name  , u.status , u.admisecsgp_mstsite_id as site_id
+        $query =  $this->db->query("SELECT  u.name , u.npk , u.admisecsgp_mstroleusr_role_id , r.level , c.comp_name , s.site_name , p.plant_name  , u.status , u.admisecsgp_mstsite_site_id as site_id
         FROM admisecsgp_mstusr u , admisecsgp_mstroleusr r , admisecsgp_mstcmp c , admisecsgp_mstsite s
         , admisecsgp_mstplant p
-        WHERE u.admisecsgp_mstroleusr_id = r.id and c.id = s.admisecsgp_mstcmp_id and u.admisecsgp_mstsite_id = s.id and p.id = u.admisecsgp_mstplant_id ");
+        WHERE u.admisecsgp_mstroleusr_role_id = r.role_id and c.company_id = s.admisecsgp_mstcmp_company_id and u.admisecsgp_mstsite_site_id = s.site_id and p.plant_id = u.admisecsgp_mstplant_plant_id ");
         return $query;
     }
 
     public function detailUser($id)
     {
-        $query =  $this->db->query("SELECT u.id , u.name , u.npk , u.admisecsgp_mstroleusr_id , r.level , c.comp_name , s.site_name , p.plant_name  , u.status , u.admisecsgp_mstplant_id , u.admisecsgp_mstsite_id 
+        $query =  $this->db->query("SELECT  u.name , u.npk , u.admisecsgp_mstroleusr_role_id , r.level , c.comp_name , s.site_name , p.plant_name  , u.status , u.admisecsgp_mstplant_plant_id , u.admisecsgp_mstsite_site_id 
         FROM admisecsgp_mstusr u , admisecsgp_mstroleusr r , admisecsgp_mstcmp c , admisecsgp_mstsite s
         , admisecsgp_mstplant p
-        WHERE u.admisecsgp_mstroleusr_id = r.id and c.id = s.admisecsgp_mstcmp_id and u.admisecsgp_mstsite_id = s.id and p.id = u.admisecsgp_mstplant_id and u.id = '" . $id . "' ");
+        WHERE u.admisecsgp_mstroleusr_role_id = r.role_id and c.company_id = s.admisecsgp_mstcmp_company_id and u.admisecsgp_mstsite_site_id = s.site_id and p.plant_id = u.admisecsgp_mstplant_plant_id and u.npk = '" . $id . "' ");
         return $query;
     }
 
