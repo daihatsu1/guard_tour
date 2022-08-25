@@ -59,10 +59,10 @@
                                         <label for="">PLANT </label>
                                         <select name="plant_id" class="form-control" id="plant">
                                             <?php foreach ($plant->result() as $pl) :
-                                                if ($session_plant == $pl->id) { ?>
-                                                    <option selected value="<?= $pl->id ?>"><?= $pl->plant_name ?></option>
+                                                if ($session_plant == $pl->plant_id) { ?>
+                                                    <option selected value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
                                                 <?php } else { ?>
-                                                    <option value="<?= $pl->id ?>"><?= $pl->plant_name ?></option>
+                                                    <option value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
                                             <?php    }
                                             endforeach ?>
                                         </select>

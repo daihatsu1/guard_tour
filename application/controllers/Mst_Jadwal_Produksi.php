@@ -95,34 +95,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         $this->load->view("template/footer");
     }
 
-    // input zona tambahan
-    public function input()
-    {
-        $tahun              = $this->input->post("tahun_2");
-        $bulan              = $this->input->post("bulan_2");
-        $tanggal            = $this->input->post("tanggal_2");
-        $status_zona        = $this->input->post("tahun_2");
-        $kolom_tanggal      = "tanggal_" . $tanggal;
-        $kolom_stat_zona    = "ss_" . $tanggal;
-        $shift_id           = $this->input->post("shift_2");
-        $produksi_id        = $this->input->post("status_produksi_2");
-        $zona_id            = $this->input->post("zone_id");
-        $plant_id           = $this->input->post("plant_id3");
 
-        //cari data zona di bulan itu 
-        $cekzona = $this->M_patrol->ambilData("admisecsgp_mstproductiondtls", [
-            'admisecsgp_mstzone_id'     => $zona_id,
-            'admisecsgp_mstshift_id'    => $shift_id,
-            'bulan'                     => $bulan,
-            'tahun'                     => $tahun
-        ]);
-
-        if ($cekzona->num_rows() > 0) {
-            echo "zona sudah ada jadwal di bulan ini";
-        } else {
-            echo "tambah zona";
-        }
-    }
 
     public function load_data_produksi(Type $var = null)
     {

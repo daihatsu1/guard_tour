@@ -328,7 +328,7 @@ class M_patrol extends CI_Model
 
     public function headerjadwalProduksi($plant_id, $date)
     {
-        $query = $this->db->query("SELECT  pl.plant_name AS plant , zn.zone_name AS zona  , sh.nama_shift AS shift  , sh.shift_id AS shift_id ,
+        $query = $this->db->query("SELECT jp.id_zona_patroli, pl.plant_name AS plant , zn.zone_name AS zona  , sh.nama_shift AS shift  , sh.shift_id AS shift_id ,
         jp.admisecsgp_mstzone_zone_id  AS zona_id 
         FROM admisecsgp_trans_zona_patroli jp , admisecsgp_mstzone zn, admisecsgp_mstplant pl , admisecsgp_mstshift sh
         WHERE jp.admisecsgp_mstplant_plant_id = pl.plant_id AND zn.zone_id = jp.admisecsgp_mstzone_zone_id AND sh.shift_id = jp.admisecsgp_mstshift_shift_id AND date_format(jp.date_patroli,'%Y-%m') = '" . $date . "' AND jp.status = 1 
@@ -340,7 +340,7 @@ class M_patrol extends CI_Model
 
     public function detailJadwalProduksi($plant_id, $shift_id, $date, $zona_id)
     {
-        $query = $this->db->query("SELECT jp.date_patroli AS tanggal , zn.zone_name  ,  sh.nama_shift , IF(jp.status_zona=0, 'OFF' , 'ON') AS zona_status ,
+        $query = $this->db->query("SELECT jp.id_zona_patroli, jp.date_patroli AS tanggal , zn.zone_name  ,  sh.nama_shift , IF(jp.status_zona=0, 'OFF' , 'ON') AS zona_status ,
         jp.status_zona
           FROM admisecsgp_trans_zona_patroli jp , admisecsgp_mstshift sh  , 
         admisecsgp_mstzone zn 
@@ -352,7 +352,7 @@ class M_patrol extends CI_Model
 
     public function petugasPerTanggal($date, $plant_id)
     {
-        $query = $this->db->query("SELECT jp.date_patroli AS tanggal , sh.nama_shift as shift , pl.plant_name AS plant , usr.name as nama , usr.npk , jp.admisecsgp_mstplant_plant_id as plant_id ,
+        $query = $this->db->query("SELECT jp.id_jadwal_patroli, jp.date_patroli AS tanggal , sh.nama_shift as shift , pl.plant_name AS plant , usr.name as nama , usr.npk , jp.admisecsgp_mstplant_plant_id as plant_id ,
         jp.admisecsgp_mstshift_shift_id as shift_id , jp.admisecsgp_mstusr_npk as user_id 
         FROM admisecsgp_trans_jadwal_patroli jp , admisecsgp_mstplant pl , admisecsgp_mstusr usr , admisecsgp_mstshift sh
         WHERE jp.date_patroli = '" . $date . "' AND jp.admisecsgp_mstplant_plant_id= pl.plant_id AND jp.admisecsgp_mstshift_shift_id = sh.shift_id AND
@@ -365,10 +365,10 @@ class M_patrol extends CI_Model
 
     public function produksiPerTanggal($date, $plant_id)
     {
-        $query = $this->db->query("SELECT spt.id , pl.plant_name as plant , spt.date_patroli as tanggal , zn.zone_name as zona  , sh.nama_shift  AS shift , IF(spt.status_zona = 0 , 'INACTIVE' ,'ACTIVE') AS zona_status , spt.status_zona , prd.name  AS stat_produksi  , spt.ms_produksi_id as id_produksi
+        $query = $this->db->query("SELECT spt.id_zona_patroli , pl.plant_name as plant , spt.date_patroli as tanggal , zn.zone_name as zona  , sh.nama_shift  AS shift , IF(spt.status_zona = 0 , 'INACTIVE' ,'ACTIVE') AS zona_status , spt.status_zona , prd.name  AS stat_produksi  , spt.admisecsgp_mstproduction_produksi_id as id_produksi
         FROM admisecsgp_trans_zona_patroli spt , admisecsgp_mstzone zn , admisecsgp_mstshift sh , admisecsgp_mstproduction prd , admisecsgp_mstplant pl
-        WHERE spt.ms_zona_id = zn.id  AND sh.id = spt.ms_shift_id AND spt.date_patroli = '" . $date . "' AND spt.ms_plant_id = '" . $plant_id . "' and spt.ms_plant_id = pl.id 
-        AND prd.id = spt.ms_produksi_id  and spt.status = 1  ORDER BY spt.ms_shift_id");
+        WHERE spt.admisecsgp_mstzone_zone_id = zn.zone_id  AND sh.shift_id = spt.admisecsgp_mstshift_shift_id AND spt.date_patroli = '" . $date . "' AND spt.admisecsgp_mstplant_plant_id = '" . $plant_id . "' and spt.admisecsgp_mstplant_plant_id = pl.plant_id 
+        AND prd.produksi_id = spt.admisecsgp_mstproduction_produksi_id  and spt.status = 1  ORDER BY spt.admisecsgp_mstshift_shift_id");
         return $query;
     }
 

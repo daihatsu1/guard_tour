@@ -106,13 +106,15 @@ class Upload_Jadwal_Produksi extends CI_Controller
             $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' ")->row();
             $var_shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift . "' ")->row();
             for ($p = 2; $p <= count($datajadwal[7]) - 2; $p += 2) {
+                $id                 = 'ADMZNP' . substr(uniqid(rand(), true), 4, 5);
                 $produksi = $this->db->query("select produksi_id from admisecsgp_mstproduction where name='" . $jdl[$p] . "' ")->row();
                 $data =  [
+                    'id_zona_patroli'                    => $id . '1',
                     'date_patroli'                       => $date . "-" . $prt,
                     'admisecsgp_mstplant_plant_id'       => $plant->plant_id,
                     'admisecsgp_mstshift_shift_id'       => $var_shift->shift_id,
                     'admisecsgp_mstzone_zone_id'         => $var_zona->zone_id,
-                    'admisecsgp_mstproduksi_produksi_id' => $produksi->produksi_id,
+                    'admisecsgp_mstproduction_produksi_id' => $produksi->produksi_id,
                     'status_zona'                        => $jdl[$var] == 'on' ? 1 : 0,
                     'status'                             => 1,
                     'created_at'                         => date('Y-m-d H:i:s'),
