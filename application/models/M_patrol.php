@@ -233,7 +233,6 @@ class M_patrol extends CI_Model
     }
 
 
-
     //show event
 
     //tampilkan user
@@ -311,74 +310,72 @@ class M_patrol extends CI_Model
         }
     }
 
-    //show jadwal patroli 
-    public function showJadwal($tahun, $bulan, $plant)
+    public function headerjadwalPatroli($plant_id, $date)
     {
-        $query = $this->db->query("SELECT pl.plant_name , usr.name , usr.npk , jdl.tanggal_1 , jdl.tanggal_2 , jdl.tanggal_3  , jdl.tanggal_4 , jdl.tanggal_5 , jdl.tanggal_6  , jdl.tanggal_7 , jdl.tanggal_8 , jdl.tanggal_9  , jdl.tanggal_10 , jdl.tanggal_11 , jdl.tanggal_12, jdl.tanggal_13 , jdl.tanggal_14 , jdl.tanggal_15  , jdl.tanggal_16 , jdl.tanggal_17 , jdl.tanggal_18  , jdl.tanggal_19 , jdl.tanggal_20 , jdl.tanggal_21  , jdl.tanggal_22 , jdl.tanggal_23 , jdl.tanggal_24 , jdl.tanggal_25 , jdl.tanggal_26 , jdl.tanggal_27  , jdl.tanggal_28 , jdl.tanggal_29 , jdl.tanggal_30, jdl.tanggal_31 from admisecsgp_mstjadwalpatroli jdl , admisecsgp_mstusr usr , admisecsgp_mstplant pl  
-        where  jdl.admisecsgp_mstplant_id = pl.id and jdl.admisecsgp_mstusr_id = usr.id and jdl.bulan = '" . $bulan . "' and tahun = '" . $tahun . "' 
-        and pl.kode_plant = '" . $plant . "' and jdl.status = 1 
-        ");
+        $query = $this->db->query("SELECT pl.plant_name AS plant , jp.admisecsgp_mstplant_plant_id as id_plant , usr.name AS nama , usr.npk  , jp.admisecsgp_mstusr_npk as user_id  FROM admisecsgp_trans_jadwal_patroli jp , admisecsgp_mstusr usr, admisecsgp_mstplant pl 
+        WHERE jp.admisecsgp_mstplant_plant_id = pl.plant_id AND usr.npk = jp.admisecsgp_mstusr_npk AND date_format(jp.date_patroli,'%Y-%m') = '" . $date . "' AND jp.admisecsgp_mstplant_plant_id = '" . $plant_id . "' GROUP BY jp.admisecsgp_mstusr_npk  ");
+        return $query;
+    }
+
+    public function detailJadwalPatroli($plant_id, $user_id, $date)
+    {
+        $query = $this->db->query("SELECT  sh.nama_shift as shift FROM admisecsgp_trans_jadwal_patroli jp , admisecsgp_mstshift sh  , admisecsgp_mstusr usr
+        WHERE jp.admisecsgp_mstshift_shift_id = sh.shift_id AND usr.npk = jp.admisecsgp_mstusr_npk AND jp.admisecsgp_mstplant_plant_id = '" . $plant_id . "' AND admisecsgp_mstusr_npk = '" . $user_id . "' AND
+        jp.date_patroli = '" . $date . "' ");
         return $query;
     }
 
 
-
-    //tampil petugas patroli per tanggal
-    public function petugasPerTanggal($col_tanggal, $bulan, $tahun, $plant_id)
+    public function headerjadwalProduksi($plant_id, $date)
     {
-        $query = $this->db->query("SELECT ptr.id ,   $col_tanggal , u.name ,u.npk  , p.plant_name ,p.id as id_plant , u.id as id_user from admisecsgp_mstjadwalpatroli ptr  , admisecsgp_mstusr u , admisecsgp_mstplant p   where ptr.admisecsgp_mstusr_id = u.id  and p.id = ptr.admisecsgp_mstplant_id and ptr.admisecsgp_mstplant_id = $plant_id and ptr.bulan ='" . $bulan . "' and ptr.tahun ='" . $tahun . "'  ");
+        $query = $this->db->query("SELECT  pl.plant_name AS plant , zn.zone_name AS zona  , sh.nama_shift AS shift  , sh.shift_id AS shift_id ,
+        jp.admisecsgp_mstzone_zone_id  AS zona_id 
+        FROM admisecsgp_trans_zona_patroli jp , admisecsgp_mstzone zn, admisecsgp_mstplant pl , admisecsgp_mstshift sh
+        WHERE jp.admisecsgp_mstplant_plant_id = pl.plant_id AND zn.zone_id = jp.admisecsgp_mstzone_zone_id AND sh.shift_id = jp.admisecsgp_mstshift_shift_id AND date_format(jp.date_patroli,'%Y-%m') = '" . $date . "' AND jp.status = 1 
+        AND jp.admisecsgp_mstplant_plant_id = '" . $plant_id . "' AND zn.admisecsgp_mstplant_plant_id = pl.plant_id
+        GROUP BY jp.admisecsgp_mstzone_zone_id  , admisecsgp_mstshift_shift_id
+        ORDER BY sh.nama_shift  ASC ");
         return $query;
     }
 
-    //show jadwal produksi 
-    public function showProduksi($tahun, $bulan, $plant)
+    public function detailJadwalProduksi($plant_id, $shift_id, $date, $zona_id)
     {
-        $query = $this->db->query("SELECT
-        prd.tahun ,prd.bulan ,
-        plt.plant_name ,
-        zn.zone_name , 
-        sh.nama_shift,
-        IF(ss_1 = 1 , 'ON','OFF') AS TGL_1 ,IF(ss_2 = 1 , 'ON','OFF') AS TGL_2 ,IF(ss_3 = 1 , 'ON','OFF') AS TGL_3,
-        IF(ss_4 = 1 , 'ON','OFF') AS TGL_4 ,IF(ss_5 = 1 , 'ON','OFF') AS TGL_5 ,IF(ss_6 = 1 , 'ON','OFF') AS TGL_6 ,
-        IF(ss_7 = 1 , 'ON','OFF') AS TGL_7 ,IF(ss_8 = 1 , 'ON','OFF') AS TGL_8 ,IF(ss_9 = 1 , 'ON','OFF') AS TGL_9 ,
-        IF(ss_10 = 1 ,'ON','OFF') AS TGL_10 ,IF(ss_11 = 1 ,'ON','OFF') AS TGL_11 ,IF(ss_12 = 1 ,'ON','OFF') AS TGL_12 ,
-        IF(ss_13 = 1 , 'ON','OFF') AS TGL_13 ,IF(ss_14 = 1 , 'ON','OFF') AS TGL_14 ,IF(ss_15 = 1 , 'ON','OFF') AS TGL_15,IF(ss_16 = 1 , 'ON','OFF') AS TGL_16 ,
-        IF(ss_17 = 1 , 'ON','OFF') AS TGL_17 ,IF(ss_18 = 1 , 'ON','OFF') AS TGL_18 ,IF(ss_19 = 1 , 'ON','OFF') AS TGL_19 ,
-        IF(ss_20 = 1 , 'ON','OFF') AS TGL_20 ,IF(ss_21 = 1 , 'ON','OFF') AS TGL_21 ,IF(ss_22 = 1 , 'ON','OFF') AS TGL_22 ,
-        IF(ss_23 = 1 ,'ON','OFF') AS TGL_23 ,IF(ss_24 = 1 ,'ON','OFF') AS TGL_24 ,IF(ss_25 = 1 ,'ON','OFF') AS TGL_25 ,
-        IF(ss_26 = 1 , 'ON','OFF') AS TGL_26 ,IF(ss_27 = 1 , 'ON','OFF') AS TGL_27 ,IF(ss_28 = 1 , 'ON','OFF') AS TGL_28 ,
-        IF(ss_29 = 1 ,'ON','OFF') AS TGL_29 ,IF(ss_30 = 1 ,'ON','OFF') AS TGL_30 ,IF(ss_31 = 1 ,'ON','OFF') AS TGL_31 
-        FROM `admisecsgp_mstproductiondtls` prd , `admisecsgp_mstplant` plt , `admisecsgp_mstzone` zn ,`admisecsgp_mstshift` sh 
-        WHERE prd.admisecsgp_mstplant_id = plt.id 
-        AND prd.admisecsgp_mstzone_id = zn.id 
-        AND prd.admisecsgp_mstshift_id = sh.id 
-        and prd.status = 1
-        AND prd.admisecsgp_mstplant_id =  '" . $plant . "'
-        AND tahun = '" . $tahun . "' AND bulan = '" . $bulan . "' ");
+        $query = $this->db->query("SELECT jp.date_patroli AS tanggal , zn.zone_name  ,  sh.nama_shift , IF(jp.status_zona=0, 'OFF' , 'ON') AS zona_status ,
+        jp.status_zona
+          FROM admisecsgp_trans_zona_patroli jp , admisecsgp_mstshift sh  , 
+        admisecsgp_mstzone zn 
+        WHERE  jp.admisecsgp_mstshift_shift_id = sh.shift_id AND zn.zone_id = admisecsgp_mstzone_zone_id AND jp.admisecsgp_mstplant_plant_id = '" . $plant_id . "' AND admisecsgp_mstzone_zone_id = '" . $zona_id . "' AND jp.admisecsgp_mstshift_shift_id = '" . $shift_id . "'
+        AND jp.admisecsgp_mstshift_shift_id = sh.shift_id AND  
+        jp.date_patroli = '" . $date . "' and jp.status = 1 ");
         return $query;
     }
 
-    //tampilkan jadwal produksi per tanggal
-    public function produksiPerTanggal($colom_stat_zona, $tahun, $bulan,  $col_tanggal, $plant_id, $colom_select_tgl)
+    public function petugasPerTanggal($date, $plant_id)
     {
-        $query = $this->db->query("SELECT prd.id , bulan , tahun , plt.plant_name , zn.zone_name , sh.nama_shift , $colom_stat_zona , $colom_select_tgl , plt.id as id_plant , zn.id as id_zona , mstprd.id as id_produksi , sh.id as id_shift ,
-        IF($colom_stat_zona = 1 , 'ACTIVE','INACTIVE') AS status_zona , mstprd.name AS status_produksi 
-        FROM `admisecsgp_mstproductiondtls` prd , `admisecsgp_mstplant` plt , `admisecsgp_mstzone` zn ,`admisecsgp_mstshift` sh ,
-        `admisecsgp_mstproduction` mstprd 
-        WHERE prd.admisecsgp_mstplant_id = plt.id 
-        AND prd.admisecsgp_mstplant_id = $plant_id
-        AND prd.admisecsgp_mstzone_id = zn.id 
-        AND prd.admisecsgp_mstshift_id = sh.id
-        AND $col_tanggal = mstprd.id 
-        and prd.status = 1
-        AND tahun = '" . $tahun . "' AND bulan = '" . $bulan . "' ORDER BY sh.nama_shift ASC  ");
+        $query = $this->db->query("SELECT jp.date_patroli AS tanggal , sh.nama_shift as shift , pl.plant_name AS plant , usr.name as nama , usr.npk , jp.admisecsgp_mstplant_plant_id as plant_id ,
+        jp.admisecsgp_mstshift_shift_id as shift_id , jp.admisecsgp_mstusr_npk as user_id 
+        FROM admisecsgp_trans_jadwal_patroli jp , admisecsgp_mstplant pl , admisecsgp_mstusr usr , admisecsgp_mstshift sh
+        WHERE jp.date_patroli = '" . $date . "' AND jp.admisecsgp_mstplant_plant_id= pl.plant_id AND jp.admisecsgp_mstshift_shift_id = sh.shift_id AND
+        jp.admisecsgp_mstusr_npk =  usr.npk and jp.status = 1 
+        and jp.admisecsgp_mstplant_plant_id = '" . $plant_id . "'
+        GROUP BY jp.admisecsgp_mstshift_shift_id , jp.admisecsgp_mstusr_npk ");
+        return $query;
+    }
+
+
+    public function produksiPerTanggal($date, $plant_id)
+    {
+        $query = $this->db->query("SELECT spt.id , pl.plant_name as plant , spt.date_patroli as tanggal , zn.zone_name as zona  , sh.nama_shift  AS shift , IF(spt.status_zona = 0 , 'INACTIVE' ,'ACTIVE') AS zona_status , spt.status_zona , prd.name  AS stat_produksi  , spt.ms_produksi_id as id_produksi
+        FROM admisecsgp_trans_zona_patroli spt , admisecsgp_mstzone zn , admisecsgp_mstshift sh , admisecsgp_mstproduction prd , admisecsgp_mstplant pl
+        WHERE spt.ms_zona_id = zn.id  AND sh.id = spt.ms_shift_id AND spt.date_patroli = '" . $date . "' AND spt.ms_plant_id = '" . $plant_id . "' and spt.ms_plant_id = pl.id 
+        AND prd.id = spt.ms_produksi_id  and spt.status = 1  ORDER BY spt.ms_shift_id");
         return $query;
     }
 
     // daftar security per plant
     public function daftarSecurity($id_plant)
     {
-        $query = $this->db->query("SELECT usr.id , usr.name , usr.npk , rl.level from admisecsgp_mstusr usr , admisecsgp_mstroleusr rl WHERE usr.admisecsgp_mstplant_id = '" . $id_plant . "'  and rl.level = 'SECURITY' and usr.admisecsgp_mstroleusr_id = rl.id ");
+        $query = $this->db->query("SELECT  usr.name , usr.npk , rl.level from admisecsgp_mstusr usr , admisecsgp_mstroleusr rl WHERE usr.admisecsgp_mstplant_plant_id = '" . $id_plant . "'  and rl.level = 'SECURITY' and usr.admisecsgp_mstroleusr_role_id = rl.role_id ");
         return $query;
     }
 }
