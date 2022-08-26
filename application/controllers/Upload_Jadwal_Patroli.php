@@ -106,7 +106,6 @@ class Upload_Jadwal_Patroli extends CI_Controller
             $npk       = $jdl[2];
             $nama      = $jdl[3];
             $plant = $this->db->query("select plant_id from admisecsgp_mstplant where kode_plant = '" . $kodePlant . "' AND plant_name='" . $plantName . "' ")->row();
-
             $k = 4;
             $shift = array();
             for ($i = 1; $i <= (count($datajadwal[7]) - 4); $i++) {
@@ -118,10 +117,14 @@ class Upload_Jadwal_Patroli extends CI_Controller
             }
 
             $o = 1;
+            $l = 1;
             for ($t = 0; $t < count($shift); $t++) {
+                $query = $this->db->query('SELECT CAST(RAND()*1100 AS INT) AS random')->row();
+                $id                 = 'ADMJP' . $query->random . $l;
                 $Shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift[$t]['tanggal_' . $o] . "' ")->row();
                 $User = $this->db->query("select npk from admisecsgp_mstusr where npk ='" . $npk .  "' and name='" . $nama . "' and admisecsgp_mstplant_plant_id = '" . $plant->plant_id . "' ")->row();
                 $var = [
+                    'id_jadwal_patroli'                 => $id,
                     'admisecsgp_mstusr_npk'             => $User->npk,
                     'admisecsgp_mstplant_plant_id'      => $plant->plant_id,
                     'admisecsgp_mstshift_shift_id'      => $Shift->shift_id,
@@ -132,6 +135,7 @@ class Upload_Jadwal_Patroli extends CI_Controller
                 ];
                 array_push($data_jadwal, $var);
                 $o++;
+                $l++;
             }
         }
 

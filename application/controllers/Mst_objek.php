@@ -11,6 +11,7 @@ class Mst_objek extends CI_Controller
         parent::__construct();
         $id = $this->session->userdata('id_token');
         date_default_timezone_set('Asia/Jakarta');
+        $this->load->helper('generate');
         if ($id = null || $id = "") {
             $this->session->set_flashdata('info_login', 'anda harus login dulu');
             redirect('Login');
@@ -145,12 +146,15 @@ class Mst_objek extends CI_Controller
         $d = $spreadsheet->getSheet(0)->toArray();
         unset($d[0]);
         $datas = array();
+        $m = 1;
         foreach ($d as $t) {
+            $query = $this->db->query('SELECT CAST(RAND()*1100 AS INT) AS random')->row();
 
             $datazona  = $this->db->get_where("admisecsgp_mstzone", ['kode_zona' => $t[1]])->row();
             $datackp   = $this->db->get_where("admisecsgp_mstckp", ['check_name' => $t[3], 'admisecsgp_mstzone_zone_id' => $datazona->zone_id])->row();
             $dataKategori = $this->db->get_where("admisecsgp_mstkobj", ['kategori_name' => $t[4]])->row();
-            $id                 = 'ADMO' . substr(uniqid(rand(), true), 4, 4);
+
+            $id                 = 'ADMO' . $query->random . $m;
             $params = [
                 'objek_id'                              => $id,
                 'nama_objek'                            => strtoupper($t[5]),
@@ -160,7 +164,7 @@ class Mst_objek extends CI_Controller
                 'created_at'                            => date('Y-m-d H:i:s'),
                 'created_by'                            => $this->session->userdata('id_token'),
             ];
-
+            $m++;
             array_push($datas, $params);
         }
         $table = "admisecsgp_mstobj";
