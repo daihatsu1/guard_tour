@@ -26,7 +26,7 @@ class JadwalController extends RestController
 		$this->load->model(['M_restPatrol', 'M_restAuth']);
 		$this->dateNow = new DateTimeImmutable('now', new DateTimeZone('Asia/Jakarta'));
 		$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
-		$this->user = $this->M_restAuth->getRows(['id' => $this->_apiuser->user_id]);
+		$this->user = $this->M_restAuth->getRows(['npk' => $this->_apiuser->user_id]);
 	}
 
 	public function jadwalUser_get()
@@ -42,12 +42,16 @@ class JadwalController extends RestController
 			$this->dateNow = new DateTimeImmutable('- 1 day', new DateTimeZone('Asia/Jakarta'));
 			$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
 		}
-		$jadwalHariIni = $this->M_restPatrol->getJadwal($this->dateNow, $this->user['id'], $this->user['admisecsgp_mstplant_id']);
-		$jadwalSelanjutnya = $this->M_restPatrol->getJadwal($this->dateTomorrow, $this->user['id'], $this->user['admisecsgp_mstplant_id']);
-		$response = [
-			$jadwalHariIni,
-			$jadwalSelanjutnya
-		];
+		$response = [];
+
+		$jadwalHariIni = $this->M_restPatrol->getJadwal($this->dateNow, $this->user['npk'], $this->user['admisecsgp_mstplant_plant_id']);
+		if($jadwalHariIni!=null) {
+			$response[] = $jadwalHariIni;
+		}
+		$jadwalSelanjutnya = $this->M_restPatrol->getJadwal($this->dateTomorrow, $this->user['npk'], $this->user['admisecsgp_mstplant_plant_id']);
+		if($jadwalSelanjutnya!=null){
+			$response[] = $jadwalSelanjutnya;
+		}
 		$this->response($response, 200);
 	}
 }

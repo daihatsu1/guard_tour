@@ -30,8 +30,8 @@ class M_restAuth extends CI_Model
 			}
 		}
 
-		if (array_key_exists("id", $params)) {
-			$this->db->where('id', $params['id']);
+		if (array_key_exists("npk", $params)) {
+			$this->db->where('npk', $params['npk']);
 			$query = $this->db->get();
 			$result = $query->row_array();
 		} else {
@@ -88,7 +88,7 @@ class M_restAuth extends CI_Model
 		}
 
 		//update user data in users table
-		return $this->db->update($this->userTbl, $data, array('id' => $id));
+		return $this->db->update($this->userTbl, $data, array('npk' => $id));
 	}
 
 	/*
@@ -98,7 +98,7 @@ class M_restAuth extends CI_Model
 	{
 		//update user from users table
 		//return the status
-		return $this->db->delete($this->userTbl, array('id' => $id));
+		return $this->db->delete($this->userTbl, array('npk' => $id));
 	}
 
 	public function generateApiKey($userId){

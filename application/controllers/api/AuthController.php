@@ -37,8 +37,8 @@ class AuthController extends RestController
 
 			if ($user) {
 				// Set the response and exit
-				//				var_dump($user['id']);
-				$key = $this->_regenerate_key($user['id']);
+				//				var_dump($user['npk']);
+				$key = $this->_regenerate_key($user['npk']);
 				if ($key) {
 					$this->response([
 						'status'  => TRUE,
@@ -115,7 +115,7 @@ class AuthController extends RestController
 	{
 		// Returns all the users data if the id not specified,
 		// Otherwise, a single user will be returned.
-		$con = $id ? array('id' => $id) : '';
+		$con = $id ? array('npk' => $id) : '';
 		$users = $this->M_restAuth->getRows($con);
 
 		// Check if the user data exists
@@ -135,7 +135,7 @@ class AuthController extends RestController
 
 	public function user_put()
 	{
-		$id = $this->put('id');
+		$id = $this->put('npk');
 
 		// Get the post data
 		$first_name = strip_tags($this->put('first_name'));

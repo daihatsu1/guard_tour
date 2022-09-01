@@ -7,31 +7,30 @@ class M_restPatrol extends CI_Model
 	{
 		parent::__construct();
 		$this->load->database();
-		$this->table = 'admisecsgp_mstjadwalpatroli';
+		$this->table = 'admisecsgp_trans_jadwal_patroli';
 		$this->load->helper('date_time');
 	}
 
 	function getJadwal($dateTime, $user_id, $plant_id)
 	{
-		$tanggal = $dateTime->format('j');
-		$bulan = get_bulan($dateTime->format('m'));
-		$tahun = $dateTime->format('Y');
+		$date = $dateTime->format('d-m-Y');
 
-		$sql = "select tanggal_" . $tanggal . " as shift, p.plant_name, p.id as plant_id
-					from admisecsgp_mstjadwalpatroli,         
-					admisecsgp_mstplant p 
+		$sql = "select s.nama_shift as shift, s.shift_id, p.plant_name, p.plant_id as plant_id
+					from admisecsgp_trans_jadwal_patroli,         
+					admisecsgp_mstplant p ,
+					admisecsgp_mstshift s
 				where          
-				admisecsgp_mstplant_id = p.id
-				AND bulan = '" . $bulan . "' 
-					AND tahun = '" . $tahun . "'
-					AND admisecsgp_mstplant_id = '" . $plant_id . "'
-  					AND admisecsgp_mstusr_id = '" . $user_id . "'";
+				admisecsgp_mstplant_plant_id = p.plant_id
+				and admisecsgp_mstshift_shift_id  = s.shift_id
+				AND date_patroli = '".$date."'
+				AND admisecsgp_mstplant_plant_id = '" . $plant_id . "'
+				AND admisecsgp_mstusr_npk = '" . $user_id . "'";
+
 		$result = $this->db->query($sql)->row();
 		if ($result) {
 			$result->date = $dateTime->format('d-m-Y');
 		}
 		return $result;
-
 	}
 
 	function getDataPatroli($dateTime, $shift_id, $plant_id)
@@ -81,9 +80,9 @@ class M_restPatrol extends CI_Model
 					 admisecsgp_mstshift sh 
 				WHERE jp.status = 1  
 				  and zn.id = jp.admisecsgp_mstzone_id  
-				  and jp.admisecsgp_mstplant_id = pl.id 
+				  and jp.admisecsgp_mstplant_plant_id = pl.id 
 				  and sh.id = jp.admisecsgp_mstshift_id  
-				  and jp.admisecsgp_mstplant_id = '" . $plant_id . "'  
+				  and jp.admisecsgp_mstplant_plant_id = '" . $plant_id . "'  
 				  and $kolom_stat_zona  = 1 
 				  and jp.bulan = '" . $bulan . "' 
 				  and jp.tahun = '" . $tahun . "' 
