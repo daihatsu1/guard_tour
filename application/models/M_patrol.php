@@ -365,10 +365,10 @@ class M_patrol extends CI_Model
 
     public function produksiPerTanggal($date, $plant_id)
     {
-        $query = $this->db->query("SELECT spt.id_zona_patroli , pl.plant_name as plant , spt.date_patroli as tanggal , zn.zone_name as zona  , sh.nama_shift  AS shift , IF(spt.status_zona = 0 , 'INACTIVE' ,'ACTIVE') AS zona_status , spt.status_zona , prd.name  AS stat_produksi  , spt.admisecsgp_mstproduction_produksi_id as id_produksi
+        $query = $this->db->query("SELECT spt.id_zona_patroli as id , pl.plant_name as plant , spt.date_patroli as tanggal , zn.zone_name as zona  , sh.nama_shift  AS shift , IF(spt.status_zona = 0 , 'INACTIVE' ,'ACTIVE') AS zona_status , spt.status_zona , prd.name  AS stat_produksi  , spt.admisecsgp_mstproduction_produksi_id as id_produksi
         FROM admisecsgp_trans_zona_patroli spt , admisecsgp_mstzone zn , admisecsgp_mstshift sh , admisecsgp_mstproduction prd , admisecsgp_mstplant pl
         WHERE spt.admisecsgp_mstzone_zone_id = zn.zone_id  AND sh.shift_id = spt.admisecsgp_mstshift_shift_id AND spt.date_patroli = '" . $date . "' AND spt.admisecsgp_mstplant_plant_id = '" . $plant_id . "' and spt.admisecsgp_mstplant_plant_id = pl.plant_id 
-        AND prd.produksi_id = spt.admisecsgp_mstproduction_produksi_id  and spt.status = 1  ORDER BY spt.admisecsgp_mstshift_shift_id");
+        AND prd.produksi_id = spt.admisecsgp_mstproduction_produksi_id  and spt.status = 1  ORDER BY sh.nama_shift ASC  ");
         return $query;
     }
 

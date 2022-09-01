@@ -50,7 +50,11 @@
                     </div>
                     <div class="card-body">
                         <a href="<?= base_url('Mst_Event/form_add') ?>" class="btn btn-sm btn-primary">
-                            <i class="fa fa-plus"></i> Tambah Event</a>
+                            <i class="fa fa-plus"></i> Tambah Event
+                        </a>
+                        <a href="<?= base_url('Mst_Event/form_upload_event') ?>" class="btn btn-sm btn-success">
+                            <i class="fa fa-file-excel"></i> Upload Event
+                        </a>
                         <table id="example" class="table-sm mt-1 table table-striped table-bordered">
                             <thead>
                                 <tr>

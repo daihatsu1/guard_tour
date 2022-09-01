@@ -19,7 +19,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
             redirect('Login');
         }
         $role = $this->session->userdata('role');
-        if ($role != "SUPERADMIN") {
+        if ($role != "ADMIN") {
             redirect('Login');
         }
     }
@@ -53,7 +53,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
                 $data['plant_name']       = $nama_plant;
                 $data['bulan_patroli']    = strtoupper($bulan_jadwal_patroli);
                 $data['tahun_patroli']    = $tahun_jadwal_patroli;
-                $data['date']             = $tahun_jadwal_patroli . '-' . convert_bulan($bulan_jadwal_patroli);
+                $data['date']             = $tahun_jadwal_patroli . convert_bulan($bulan_jadwal_patroli);
                 $data['bulan_input']      = strtoupper($this->input->post("bulan_input"));
                 $data['tahun_input']      = strtoupper($this->input->post("tahun_input"));
 
@@ -64,12 +64,12 @@ class Upload_Jadwal_Produksi extends CI_Controller
                 $data['upload_error'] = $e;
             }
         }
-        $data['link'] =  $this->uri->segment(1);
-        $data['plant_master']  = $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1]);
+        $data['link'] =  $this->uri->segment(2);
+        $data['plant_master']  = $this->M_admin->ambilData("admisecsgp_mstplant", ['status' => 1]);
 
-        $this->load->view("template/sidebar", $data);
-        $this->load->view("upload_jadwal_produksi", $data);
-        $this->load->view("template/footer");
+        $this->load->view("template/admin/sidebar", $data);
+        $this->load->view("admin/upload_jadwal_produksi", $data);
+        $this->load->view("template/admin/footer");
     }
 
 
@@ -124,7 +124,6 @@ class Upload_Jadwal_Produksi extends CI_Controller
                     'created_at'                         => date('Y-m-d H:i:s'),
                     'created_by'                         => 1
                 ];
-
                 array_push($dataprd, $data);
                 $var += 2;
                 $prt++;
@@ -132,15 +131,16 @@ class Upload_Jadwal_Produksi extends CI_Controller
             $l++;
         }
 
+
         $this->db->insert_batch('admisecsgp_trans_zona_patroli', $dataprd);
         if ($this->db->affected_rows() > 0) {
             $this->db->trans_commit();
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil upload data');
-            redirect('Upload_Jadwal_Produksi');
+            redirect('Admin/Upload_Jadwal_Produksi');
         } else {
             $this->db->trans_rollback();
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data');
-            redirect('Upload_Jadwal_Produksi');
+            redirect('Admin/Upload_Jadwal_Produksi');
         }
     }
 }

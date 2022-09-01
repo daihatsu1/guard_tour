@@ -6,13 +6,12 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_Jadwal_Produksi') ?>">Jadwal</a></li>
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_Jadwal_Produksi') ?>">Jadwal Produksi</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_Jadwal_Patroli') ?>">Jadwal</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_Jadwal_Patroli') ?>">Jadwal Patroli</a></li>
                 </ol>
             </div>
         </div>
-    </div>
-    <!-- /.container-fluid -->
+    </div><!-- /.container-fluid -->
 </section>
 
 <section class="content">
@@ -37,11 +36,8 @@
                         </button>
                     </div>
                 <?php } ?>
-                <a href="<?= base_url('Admin/Mst_Jadwal_Produksi/form_rubah_jadwal_produksi') ?>" class="btn btn-sm btn-success">
-                    <i class="fa fa-calendar"></i> Koreksi Jadwal Per Tanggal
-                </a>
-                <a href="<?= base_url('Admin/Mst_Jadwal_Produksi/form_revisi_upload_jadwal') ?>" class="btn btn-sm btn-info">
-                    <i class="fa fa-file-excel"></i> Upload Koreksi Jadwal
+                <a href="<?= base_url('Admin/Mst_Jadwal_Patroli/form_rubah_jadwal_petugas') ?>" class="btn btn-sm btn-success">
+                    <i class="fa fa-file-excel"></i> Koreksi Jadwal Patroli
                 </a>
                 <div class="card mt-2">
                     <div class="card-header">
@@ -54,7 +50,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="<?= base_url('Admin/Mst_Jadwal_Produksi') ?>" method="post">
+                        <form action="<?= base_url('Admin/Mst_Jadwal_Patroli') ?>" method="post">
                             <div class="row">
                                 <div class="col-lg-3">
                                     <div class="form-group">
@@ -74,9 +70,14 @@
                                     <div class="form-group">
                                         <label for="">TAHUN</label>
                                         <select name="tahun" class="form-control" id="tahun">
-                                            <?php for ($i = 22; $i <= 35; $i++) { ?>
-                                                <option>20<?= $i ?></option>
-                                            <?php  } ?>
+                                            <?php for ($i = 22; $i <= 35; $i++) {
+
+                                                if ($tahun == '20' . $i) { ?>
+                                                    <option selected>20<?= $i ?></option>
+                                                <?php  } else { ?>
+                                                    <option>20<?= $i ?></option>
+                                            <?php   }
+                                            } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -107,46 +108,42 @@
                 </div>
                 <!-- /.card -->
 
+
                 <?php
                 if (isset($_POST['lihat'])) {
-
-                    if ($jadwal->num_rows() > 0) { ?>
+                    if ($user->num_rows() > 0) { ?>
                         <div class="card">
                             <div class="card-body">
-                                <table class="small">
+                                <table>
                                     <tr>
-                                        <td>TIPE</td>
+                                        <td>Tahun</td>
                                         <td>:</td>
-                                        <td><?= strtoupper('Jadwal Produksi') ?></td>
+                                        <td><?= $tahun  ?></td>
                                     </tr>
                                     <tr>
-                                        <td>TAHUN</td>
-                                        <td>:</td>
-                                        <td><?= $tahun ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>BULAN</td>
+                                        <td>Bulan</td>
                                         <td>:</td>
                                         <td><?= $bulan ?></td>
                                     </tr>
                                 </table>
-                                <table id="jadwal_produksi" class="table table-sm small table-striped  table-bordered" style="width:100%">
+                                <!-- <a target="_blank" href="<?= base_url('Mst_Jadwal/download_jadwal?bulan=' . $bulan . '&tahun=' . $tahun . '&plant_id=' . $plant_id . '') ?>" class="btn btn-success btn-sm "><i class="fas fa-download"></i> Download Jadwal</a> -->
+                                <table id="jadwal_patroli" class="table table-bordered small table-sm">
                                     <thead>
                                         <tr>
-                                            <th width="120px">PLANT</th>
-                                            <th>ZONA</th>
-                                            <th>SHIFT</th>
+                                            <th width="90px">PLANT</th>
+                                            <th>NPK</th>
+                                            <th width="120px">NAMA</th>
                                             <?php for ($i = 1; $i <= 31; $i++) {  ?>
                                                 <th><?= $i ?></th>
                                             <?php } ?>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($jadwal->result() as $jwl) : ?>
+                                        <?php foreach ($user->result() as $us) : ?>
                                             <tr>
-                                                <td><?= $jwl->plant ?></td>
-                                                <td><?= $jwl->zona ?></td>
-                                                <td><?= $jwl->shift ?></td>
+                                                <td><?= $us->plant  ?></td>
+                                                <td><?= $us->npk  ?></td>
+                                                <td><?= $us->nama  ?></td>
                                                 <?php for ($i = 1; $i <= 31; $i++) :
                                                     if ($i <= 9) {
                                                         $i = "0" . $i;
@@ -157,13 +154,12 @@
                                                     <td>
                                                         <?php
                                                         $date = $tahun . "-" . $month . "-" . $i;
-                                                        $zone_ = $this->M_patrol->detailJadwalProduksi($plant_id, $jwl->shift_id, $date, $jwl->zona_id);
-
-                                                        if ($zone_->num_rows() > 0) {
-                                                            $zonadata = $zone_->row();
-                                                            echo  $zonadata->zona_status == "OFF" ?  "<span class='text-danger'>" .  $zonadata->zona_status . "</span>" :  "<span>" .  $zonadata->zona_status . "</span>";
+                                                        $shift = $this->M_admin->detailJadwalPatroli($us->id_plant, $us->user_id, $date);
+                                                        if ($shift->num_rows() > 0) {
+                                                            $sh = $shift->row();
+                                                            echo $sh->shift == "LIBUR" ?  "<span class='text-danger'>" . $sh->shift . "</span>" :  "<span>" . $sh->shift . "</span>";
                                                         } else {
-                                                            echo '-';
+                                                            echo    '-';
                                                         }
                                                         ?>
                                                     </td>
@@ -176,7 +172,7 @@
                         </div>
                     <?php  } else { ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            Tidak ada jadwal di bulan ini
+                            Tidak ada jadwal patroli di bulan ini
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -197,7 +193,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#jadwal_produksi').DataTable({
+        $('#jadwal_patroli').DataTable({
             fixedHeader: true,
             scrollX: "200px",
             scrollCollapse: false,

@@ -159,14 +159,15 @@
                                 } else {
                                     //cek data jadwal di bulan ini 
                                     $plt = $cekplant->row();
+
                                     // cek data jadwal produksi
                                     foreach ($jadwal as $jdl) {
                                         $prt   = 1;
                                         $var   = 3;
                                         $zona  = $jdl[0];
                                         $shift = $jdl[1];
-                                        $var_zona  = $this->db->query("select id from admisecsgp_mstzone where zone_name='" . $zona . "' ");
-                                        $var_shift = $this->db->query("select id from admisecsgp_mstshift where nama_shift='" . $shift . "' ");
+                                        $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' ");
+                                        $var_shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift . "' ");
 
                                         if ($var_zona->num_rows() <= 0) {
                                             echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -188,7 +189,7 @@
                                             $count += 1;
                                         }
                                         for ($p = 2; $p <= count($jadwal[7]) - 2; $p += 2) {
-                                            $produksi = $this->db->query("select id from admisecsgp_mstproduction where name='" . $jdl[$p] . "' ");
+                                            $produksi = $this->db->query("select produksi_id from admisecsgp_mstproduction where name='" . $jdl[$p] . "' ");
 
                                             if ($produksi->num_rows() <= 0) {
                                                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">

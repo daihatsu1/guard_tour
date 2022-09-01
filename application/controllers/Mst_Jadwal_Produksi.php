@@ -127,13 +127,13 @@ class Mst_Jadwal_Produksi extends CI_Controller
         $idProduksi       = $this->input->post("status_produksi");
         $statusZona       = $this->input->post("status_zona");
         $data = [
-            'ms_produksi_id'  => $idProduksi,
+            'admisecsgp_mstproduction_produksi_id'  => $idProduksi,
             'status_zona'     => $statusZona,
             'updated_by'      => $this->session->userdata('id_token'),
             'updated_at'      => date('Y-m-d H:i:s')
         ];
 
-        $update = $this->M_patrol->update("admisecsgp_mst_zona_patroli", $data, ['id' => $id]);
+        $update = $this->M_patrol->update("admisecsgp_trans_zona_patroli", $data, ['id_zona_patroli' => $id]);
         if ($update) {
             echo "1";
         } else {
@@ -216,29 +216,32 @@ class Mst_Jadwal_Produksi extends CI_Controller
         unset($datajadwal[5]);
         unset($datajadwal[6]);
         $date  = $tahun_jadwal_patroli . '-' . convert_bulan($bulan_jadwal_patroli);
-        $plant = $this->db->query("select id from admisecsgp_mstplant where kode_plant = '" . $kodePlant . "' AND plant_name='" . $plantName . "' ")->row();
+        $plant = $this->db->query("select plant_id from admisecsgp_mstplant where kode_plant = '" . $kodePlant . "' AND plant_name='" . $plantName . "' ")->row();
         $dataprd = array();
         foreach ($datajadwal as $jdl) {
             $prt   = 1;
             $var   = 3;
             $zona  = $jdl[0];
             $shift = $jdl[1];
-            $var_zona  = $this->db->query("select id from admisecsgp_mstzone where zone_name='" . $zona . "' ")->row();
-            $var_shift = $this->db->query("select id from admisecsgp_mstshift where nama_shift='" . $shift . "' ")->row();
+            $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' ")->row();
+            $var_shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift . "' ")->row();
             for ($p = 2; $p <= count($datajadwal[7]) - 2; $p += 2) {
-                $produksi = $this->db->query("select id from admisecsgp_mstproduction where name='" . $jdl[$p] . "' ")->row();
+                $produksi = $this->db->query("select produksi_id from admisecsgp_mstproduction where name='" . $jdl[$p] . "' ")->row();
+                $d = new DateTime();
+                $uniq = $d->format("dmyHisv");
+                $id                 = uniqid($uniq);
+                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10);
                 $data =  [
-                    'bulan'                     => $bulan_jadwal_patroli,
-                    'tahun'                     => $tahun_jadwal_patroli,
-                    'date_patroli'              => $date . "-" . $prt,
-                    'ms_plant_id'               => $plant->id,
-                    'ms_shift_id'               => $var_shift->id,
-                    'ms_zona_id'                => $var_zona->id,
-                    'ms_produksi_id'            => $produksi->id,
-                    'status_zona'               => $jdl[$var] == 'on' ? 1 : 0,
-                    'status'                    => 1,
-                    'created_at'                => date('Y-m-d H:i:s'),
-                    'created_by'                => 1
+                    'id_zona_patroli'                        => $gen,
+                    'date_patroli'                           => $date . "-" . $prt,
+                    'admisecsgp_mstplant_plant_id'           => $plant->plant_id,
+                    'admisecsgp_mstshift_shift_id'           => $var_shift->shift_id,
+                    'admisecsgp_mstzone_zone_id'             => $var_zona->zone_id,
+                    'admisecsgp_mstproduction_produksi_id'   => $produksi->produksi_id,
+                    'status_zona'                            => $jdl[$var] == 'on' ? 1 : 0,
+                    'status'                                 => 1,
+                    'created_at'                             => date('Y-m-d H:i:s'),
+                    'created_by'                             => 1
                 ];
 
                 array_push($dataprd, $data);
@@ -248,18 +251,17 @@ class Mst_Jadwal_Produksi extends CI_Controller
         }
 
 
-        $where_del = ['tahun' => $tahun_jadwal_patroli, 'bulan' => $bulan_jadwal_patroli, 'ms_plant_id' => $plant->id];
-        $this->db->where($where_del);
-        $this->db->delete("admisecsgp_mst_zona_patroli");
+        $this->db->query("DELETE FROM admisecsgp_trans_zona_patroli WHERE admisecsgp_mstplant_plant_id='" . $plant->plant_id . "' AND date_format(date_patroli,'%Y-%m') = '" . $date . "' ");
+        // $this->db->delete("admisecsgp_trans_zona_patroli");
         if ($this->db->affected_rows() > 0) {
-            $this->db->insert_batch('admisecsgp_mst_zona_patroli', $dataprd);
+            $this->db->insert_batch('admisecsgp_trans_zona_patroli', $dataprd);
             if ($this->db->affected_rows() > 0) {
                 $this->db->trans_commit();
                 $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil upload revisi jadwal');
                 redirect('Mst_Jadwal_Produksi/form_revisi_upload_jadwal');
             } else {
                 $this->db->trans_rollback();
-                $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data');
+                $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data s');
                 redirect('Mst_Jadwal_Produksi/form_revisi_upload_jadwal');
             }
         } else {

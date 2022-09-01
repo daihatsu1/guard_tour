@@ -85,11 +85,6 @@ class Mst_Event extends CI_Controller
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal input data');
             redirect('Mst_Event');
         }
-        // $cek = $this->db->get_where("admisecsgp_mstevent", ['event_name' => $event_name])->num_rows();
-        // if ($cek >= 1) {
-        //     $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> nama ' . $event_name . ' ini sudah digunakan');
-        //     redirect('Mst_Event');
-        // } 
     }
 
 
@@ -143,6 +138,65 @@ class Mst_Event extends CI_Controller
         } else {
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal update data');
             redirect('Mst_Event');
+        }
+    }
+
+
+    public function form_upload_event(Type $var = null)
+    {
+        $filename = "upload_event_" . $this->session->flashdata('id_token');
+        $data['plant_kode_input'] = "";
+        if (isset($_POST['view'])) {
+            $upload = $this->M_patrol->uploadCheckpoint($filename);
+            if ($upload['result'] == "success") {
+                $path_xlsx = "./assets/path_upload/" . $filename . ".xlsx";
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                $spreadsheet = $reader->load($path_xlsx);
+                $d = $spreadsheet->getSheet(0)->toArray();
+                unset($d[0]);
+                $data['sheet'] = $d;
+            } else {
+                $e = $upload['error'];
+                $data['upload_error'] = $e;
+            }
+        }
+        $data['link']   = $this->uri->segment(1);
+        // $this->template->load("template/template", "mst_event", $data);
+        $this->load->view("template/sidebar", $data);
+        $this->load->view("upload_mst_event", $data);
+        $this->load->view("template/footer");
+    }
+
+    public function upload(Type $var = null)
+    {
+        $filename = "upload_event_" . $this->session->flashdata('id_token');
+        $path_xlsx = "./assets/path_upload/" . $filename . ".xlsx";
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $spreadsheet = $reader->load($path_xlsx);
+        $d = $spreadsheet->getSheet(0)->toArray();
+        unset($d[0]);
+        $datas = array();
+        foreach ($d as $t) {
+            $cek_id = $this->db->query("select kategori_id from admisecsgp_mstkobj where kategori_name='" . $t[0] . "' ")->row();
+            $params = [
+                'event_id'                          => 'ADMC' . substr(uniqid(rand(), true), 4, 4),
+                'event_name'                        => $t[1],
+                'admisecsgp_mstkobj_kategori_id'    => $cek_id->kategori_id,
+                'status'                            => 1,
+                'created_at'                        => date('Y-m-d H:i:s'),
+                'created_by'                        => $this->session->userdata('id_token'),
+            ];
+
+            array_push($datas, $params);
+        }
+        $table = "admisecsgp_mstevent";
+        $upload  = $this->M_patrol->mulitple_upload($table, $datas);
+        if ($upload) {
+            $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil upload data');
+            redirect('Mst_Event');
+        } else {
+            $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data');
+            redirect('Mst_Event/form_upload_event');
         }
     }
 }

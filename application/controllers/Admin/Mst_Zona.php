@@ -40,7 +40,7 @@ class Mst_Zona extends CI_Controller
         $id_plt_user = $this->session->userdata("plant_id");
         $data = [
             'link'       => $this->uri->segment(2),
-            "wilayah"    => $this->M_admin->ambilData("admisecsgp_mstsite", ['status' => 1, 'id' => $id_wil_user])
+            "wilayah"    => $this->M_admin->ambilData("admisecsgp_mstsite", ['status' => 1, 'site_id' => $id_wil_user])
         ];
         // $this->template->load("template/template", "add_mst_zone", $data);
         $this->load->view("template/admin/sidebar", $data);
@@ -53,7 +53,7 @@ class Mst_Zona extends CI_Controller
     {
         $id = $this->input->post('id');
         $data = [
-            'plant'  =>  $this->M_admin->ambilData("admisecsgp_mstplant", ['admisecsgp_mstsite_id' => $id, 'status' => 1])
+            'plant'  =>  $this->M_admin->ambilData("admisecsgp_mstplant", ['admisecsgp_mstsite_site_id' => $id, 'status' => 1])
         ];
         $this->load->view('ajax/list_plant', $data);
     }
@@ -66,24 +66,25 @@ class Mst_Zona extends CI_Controller
         $plant_id       = $this->input->post("plant_id");
         $others         = $this->input->post("others");
         $status         = $this->input->post("status");
-
+        $id             = 'ADMZ' . substr(uniqid(rand(), true), 4, 4);
         $data = [
-            'admisecsgp_mstplant_id'     => $plant_id,
-            'zone_name'                  => strtoupper($zone_name),
-            'kode_zona'                  => strtoupper($kode_zona),
-            'others'                     => $others,
-            'status'                     => $status,
-            'created_at'                 => date('Y-m-d H:i:s'),
-            'created_by'                 => $this->session->userdata('id_token'),
+            'zone_id'                       => $id,
+            'admisecsgp_mstplant_plant_id'  => $plant_id,
+            'zone_name'                     => strtoupper($zone_name),
+            'kode_zona'                     => strtoupper($kode_zona),
+            'others'                        => $others,
+            'status'                        => $status,
+            'created_at'                    => date('Y-m-d H:i:s'),
+            'created_by'                    => $this->session->userdata('id_token'),
         ];
-        $cari = $this->db->get_where("admisecsgp_mstzone", ['admisecsgp_mstplant_id' => $plant_id, 'zone_name' => $zone_name]);
-        $cariKode = $this->db->get_where("admisecsgp_mstzone", ['admisecsgp_mstplant_id' => $plant_id, 'kode_zona' => $kode_zona]);
+        $cari = $this->db->get_where("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $plant_id, 'zone_name' => $zone_name]);
+        $cariKode = $this->db->get_where("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $plant_id, 'kode_zona' => $kode_zona]);
         if ($cari->num_rows() > 0) {
-            $plant = $this->db->get_where("admisecsgp_mstplant", ['id' => $plant_id])->row();
+            $plant = $this->db->get_where("admisecsgp_mstplant", ['plant_id' => $plant_id])->row();
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> ' . $zone_name . ' sudah ada di ' . $plant->plant_name . ' ');
             redirect('Admin/Mst_Zona');
         } else  if ($cariKode->num_rows() > 0) {
-            $plant = $this->db->get_where("admisecsgp_mstplant", ['id' => $plant_id])->row();
+            $plant = $this->db->get_where("admisecsgp_mstplant", ['plant_id' => $plant_id])->row();
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> ' . $kode_zona . ' sudah ada di ' . $plant->plant_name . ' ');
             redirect('Admin/Mst_Zona');
         } else {
@@ -101,7 +102,7 @@ class Mst_Zona extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['zone_id' => $id];
         $del = $this->M_admin->delete("admisecsgp_mstzone", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -121,7 +122,7 @@ class Mst_Zona extends CI_Controller
             'link'       => $this->uri->segment(2),
             'data'       => $this->M_admin->detailZona($id)->row(),
             "plant"      => $this->M_admin->ambilData("admisecsgp_mstplant"),
-            "wilayah"    => $this->M_admin->ambilData("admisecsgp_mstsite", ['status' => 1, 'id' => $id_wil_user]),
+            "wilayah"    => $this->M_admin->ambilData("admisecsgp_mstsite", ['status' => 1, 'site_id' => $id_wil_user]),
         ];
         // $this->template->load("template/template", "edit_mst_zona", $data);
         $this->load->view("template/admin/sidebar", $data);
@@ -138,7 +139,7 @@ class Mst_Zona extends CI_Controller
         $others      = $this->input->post("others");
         $status      = $this->input->post("status");
         $data = [
-            'admisecsgp_mstplant_id'    => $plantid,
+            'admisecsgp_mstplant_plant_id'    => $plantid,
             'zone_name'                 => $zone_name,
             'kode_zona'                 => $kode_zona,
             'others'                    => $others,
@@ -147,7 +148,7 @@ class Mst_Zona extends CI_Controller
             'updated_by'                => $this->session->userdata('id_token'),
         ];
 
-        $where = ['id' => $id];
+        $where = ['zone_id' => $id];
         $update = $this->M_admin->update("admisecsgp_mstzone", $data, $where);
 
         if ($update) {

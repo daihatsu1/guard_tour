@@ -4,7 +4,9 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 require FCPATH . 'vendor/autoload.php';
-class Upload_Jadwal_Produksi extends CI_Controller
+
+
+class Upload_Jadwal_Patroli extends CI_Controller
 {
 
     public function __construct(Type $var = null)
@@ -19,17 +21,19 @@ class Upload_Jadwal_Produksi extends CI_Controller
             redirect('Login');
         }
         $role = $this->session->userdata('role');
-        if ($role != "SUPERADMIN") {
+        if ($role != "ADMIN") {
             redirect('Login');
         }
     }
+
     public function index()
     {
-        $filename = "upload_jadwal_produksi_" . $this->session->userdata("id_token");
+
+        $filename = "upload_jadwal_patroli_" . $this->session->userdata("id_token");
         $data['plant_3'] = "";
         // $filename = "upload_jadwal-format";
         if (isset($_POST['view'])) {
-            $upload = $this->M_patrol->uploadJadwal($filename);
+            $upload = $this->M_admin->uploadJadwal($filename);
 
             if ($upload['result'] == "success") {
                 $path_xlsx        = "./assets/path_upload/" . $filename . ".xlsx";
@@ -64,29 +68,27 @@ class Upload_Jadwal_Produksi extends CI_Controller
                 $data['upload_error'] = $e;
             }
         }
-        $data['link'] =  $this->uri->segment(1);
-        $data['plant_master']  = $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1]);
+        $data['link'] =  $this->uri->segment(2);
+        $data['plant_master']  = $this->M_admin->ambilData("admisecsgp_mstplant", ['status' => 1]);
 
-        $this->load->view("template/sidebar", $data);
-        $this->load->view("upload_jadwal_produksi", $data);
-        $this->load->view("template/footer");
+        $this->load->view("template/admin/sidebar", $data);
+        $this->load->view("admin/upload_jadwal_patroli", $data);
+        $this->load->view("template/admin/footer");
     }
 
 
-
-    public function upload(Type $var = null)
+    public function uploadjadwalPatroli()
     {
-        $filename = "upload_jadwal_produksi_" . $this->session->userdata("id_token");
+        # code...
+        $filename = "upload_jadwal_patroli_" . $this->session->userdata("id_token");
         $path_xlsx        = "./assets/path_upload/" . $filename . ".xlsx";
         $reader           = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet      = $reader->load($path_xlsx);
         $datajadwal       = $spreadsheet->getSheet(0)->toArray();
-        //sheet 1 jadwal produksi
-        $sheet1         = $spreadsheet->getSheet(0);
-        $kodePlant     = $sheet1->getCell('B4');
-        $plantName     = $sheet1->getCell('B5');
-        $bulan_jadwal_patroli  = $sheet1->getCell('B2');
-        $tahun_jadwal_patroli  = $sheet1->getCell('B3');
+
+        $sheet1 = $spreadsheet->getSheet(0);
+        $data_jadwal = array();
+        // echo "<pre>";
         unset($datajadwal[0]);
         unset($datajadwal[1]);
         unset($datajadwal[2]);
@@ -94,53 +96,60 @@ class Upload_Jadwal_Produksi extends CI_Controller
         unset($datajadwal[4]);
         unset($datajadwal[5]);
         unset($datajadwal[6]);
-        $date  = $tahun_jadwal_patroli . '-' . convert_bulan($bulan_jadwal_patroli);
+        $bulan_jadwal_patroli  = $sheet1->getCell('B2');
+        $tahun_jadwal_patroli  = $sheet1->getCell('B3');
 
-        $plant = $this->db->query("select plant_id from admisecsgp_mstplant where kode_plant = '" . $kodePlant . "' AND plant_name='" . $plantName . "' ")->row();
-        $dataprd = array();
+        $date_patroli =  $tahun_jadwal_patroli . '-' . convert_bulan($bulan_jadwal_patroli) . '-';
         foreach ($datajadwal as $jdl) {
-            $prt   = 1;
-            $var   = 3;
-            $zona  = $jdl[0];
-            $shift = $jdl[1];
-            $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' ")->row();
-            $var_shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift . "' ")->row();
+            $kodePlant = $jdl[0];
+            $plantName = $jdl[1];
+            $npk       = $jdl[2];
+            $nama      = $jdl[3];
+            $plant = $this->db->query("select plant_id from admisecsgp_mstplant where kode_plant = '" . $kodePlant . "' AND plant_name='" . $plantName . "' ")->row();
+            $k = 4;
+            $shift = array();
+            for ($i = 1; $i <= (count($datajadwal[7]) - 4); $i++) {
+                $sh = [
+                    'tanggal_' . $i => $jdl[$k]
+                ];
+                array_push($shift, $sh);
+                $k++;
+            }
+
+            $o = 1;
             $l = 1;
-            for ($p = 2; $p <= count($datajadwal[7]) - 2; $p += 2) {
-                $produksi = $this->db->query("select produksi_id from admisecsgp_mstproduction where name='" . $jdl[$p] . "' ")->row();
+            for ($t = 0; $t < count($shift); $t++) {
                 $d = new DateTime();
                 $uniq = $d->format("dmyHisv");
                 $id                 = uniqid($uniq);
-                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10);
-                $data =  [
-                    'id_zona_patroli'                    => $gen,
-                    'date_patroli'                       => $date . "-" . $prt,
-                    'admisecsgp_mstplant_plant_id'       => $plant->plant_id,
-                    'admisecsgp_mstshift_shift_id'       => $var_shift->shift_id,
-                    'admisecsgp_mstzone_zone_id'         => $var_zona->zone_id,
-                    'admisecsgp_mstproduction_produksi_id' => $produksi->produksi_id,
-                    'status_zona'                        => $jdl[$var] == 'on' ? 1 : 0,
-                    'status'                             => 1,
-                    'created_at'                         => date('Y-m-d H:i:s'),
-                    'created_by'                         => 1
+                $gen = 'ADMJP' . substr($id, 0, 6) . substr($id, 22, 10);
+                $Shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift[$t]['tanggal_' . $o] . "' ")->row();
+                $User = $this->db->query("select npk from admisecsgp_mstusr where npk ='" . $npk .  "' and name='" . $nama . "' and admisecsgp_mstplant_plant_id = '" . $plant->plant_id . "' ")->row();
+                $var = [
+                    'id_jadwal_patroli'                 => $gen,
+                    'admisecsgp_mstusr_npk'             => $User->npk,
+                    'admisecsgp_mstplant_plant_id'      => $plant->plant_id,
+                    'admisecsgp_mstshift_shift_id'      => $Shift->shift_id,
+                    'status'                            => 1,
+                    'date_patroli'                      => $date_patroli . $o,
+                    'created_at'                        => date('Y-m-d H:i:s'),
+                    'created_by'                        => $this->session->userdata('id_token')
                 ];
-
-                array_push($dataprd, $data);
-                $var += 2;
-                $prt++;
+                array_push($data_jadwal, $var);
+                $o++;
+                $l++;
             }
-            $l++;
         }
 
-        $this->db->insert_batch('admisecsgp_trans_zona_patroli', $dataprd);
+        $this->db->insert_batch('admisecsgp_trans_jadwal_patroli', $data_jadwal);
         if ($this->db->affected_rows() > 0) {
             $this->db->trans_commit();
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil upload data');
-            redirect('Upload_Jadwal_Produksi');
+            redirect('Admin/Upload_Jadwal_Patroli');
         } else {
             $this->db->trans_rollback();
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal upload data');
-            redirect('Upload_Jadwal_Produksi');
+            redirect('Admin/Upload_Jadwal_Patroli');
         }
     }
 }

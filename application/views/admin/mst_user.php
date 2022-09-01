@@ -6,8 +6,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_user') ?>">Master</a></li>
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_user') ?>">User</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_User') ?>">Master</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_User') ?>">User</a></li>
                 </ol>
             </div>
         </div>
@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-12">
                 <!-- Default box -->
-                <?php if ($this->session->flashdata("info")) { ?>
+                <?php if ($this->session->flashdata("info")) : ?>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <?= $this->session->flashdata('info') ?>
                         <?= $this->session->unset_userdata('info') ?>
@@ -27,15 +27,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                <?php } else if ($this->session->flashdata("fail")) { ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <?= $this->session->flashdata('fail') ?>
-                        <?= $this->session->unset_userdata('fail') ?>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                <?php } ?>
+                <?php endif ?>
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Master User</h3>
@@ -43,9 +35,9 @@
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                            <!-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
                                 <i class="fas fa-times"></i>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                     <div class="card-body">
@@ -53,14 +45,14 @@
                             <i class="fa fa-plus"></i> Tambah User
                         </a>
 
-                        <table id="example" class="mt-1 table table-sm   table table-striped table-bordered">
+                        <table id="example" class="mt-1 table table-sm   table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th style="width: 50px;">NO</th>
                                     <th>NPK</th>
                                     <th>NAMA</th>
-                                    <th>PLANT</th>
-                                    <th>ROLE</th>
+                                    <th>ROLE AKSES</th>
+                                    <th>LEVEL</th>
                                     <th>STATUS</th>
                                     <th>OPSI</th>
                                 </tr>
@@ -72,18 +64,33 @@
                                         <td><?= $no++ ?></td>
                                         <td><?= $zn->npk  ?></td>
                                         <td><?= strtoupper($zn->name) ?></td>
-                                        <td><?= strtoupper($zn->plant_name) ?></td>
+                                        <td>
+                                            <?php
+                                            $plant = $this->db->query("select plant_name from admisecsgp_mstplant where admisecsgp_mstsite_site_id = '" . $zn->site_id . "'");
+                                            if ($zn->level == 'SUPERADMIN') {
+                                                echo 'ALL PLANT';
+                                            } else if ($zn->level == 'ADMIN') {
+                                                foreach ($plant->result() as $pln) {
+                                                    echo $pln->plant_name . '<br>';
+                                                }
+                                            } else if ($zn->level == 'SECURITY') {
+                                                echo $zn->plant_name;
+                                            } else if ($zn->level == 'SECTION HEAD 1') {
+                                                echo $zn->plant_name;
+                                            }
+                                            ?>
+                                        </td>
                                         <td><?= $zn->level ?></td>
                                         <td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
                                         <td>
 
-                                            <a href="<?= base_url('Admin/Mst_user/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
+                                            <a href="<?= base_url('Admin/Mst_user/hapus/' . $zn->npk) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
-                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-3" title="lihat data" data-backdrop="static" data-keyboard="false" data-level="<?= $zn->level ?>" data-npk="<?= $zn->npk ?>" data-status="<?= $zn->status ?>" data-plant="<?= strtoupper($zn->plant_name)  ?>" data-site="<?= strtoupper($zn->site_name) ?>" data-nama="<?= strtoupper($zn->name) ?>"><i class="fa fa-eye"></i></a>
+                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2 " title="lihat data" data-backdrop="static" data-keyboard="false" data-level="<?= $zn->level ?>" data-npk="<?= $zn->npk ?>" data-status="<?= $zn->status ?>" data-plant="<?= strtoupper($zn->plant_name)  ?>" data-site="<?= strtoupper($zn->site_name) ?>" data-nama="<?= strtoupper($zn->name) ?>"><i class="fa fa-eye"></i></a>
 
-                                            <a href="<?= base_url('Admin/Mst_user/edit?user_id=' . $zn->id) ?>" class='text-success ml-3' title="edit data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>"><i class="fa fa-edit"></i></a>
+                                            <a href="<?= base_url('Admin/Mst_user/edit?user_id=' . $zn->npk) ?>" class='text-success  ml-2 ' title="edit data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->npk ?>"><i class="fa fa-edit"></i></a>
 
-                                            <a href="<?= base_url('Admin/Mst_user/edit_pwd?user_id=' . $zn->id) ?>" class="text-warning ml-3" title="rubah password"><i class="fas fa-lock"></i></a>
+                                            <a href="<?= base_url('Admin/Mst_user/edit_pwd?user_id=' . $zn->npk) ?>" class="text-warning  ml-2 " title="rubah password"><i class="fas fa-lock"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>
@@ -106,9 +113,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Detail</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                </button> -->
             </div>
             <div class="modal-body">
                 <div class="card-body">
@@ -161,7 +168,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="post" onsubmit="return cekpassword()" action="<?= base_url('Master_user/resetPasword') ?>">
+                <form method="post" onsubmit="return cekpassword()" action="<?= base_url('Admin/Master_user/resetPasword') ?>">
                     <div class="modal-body">
                         <div class="form-group">
                             <input type="hidden" id="id_user2" name="id_3">

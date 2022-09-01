@@ -50,14 +50,19 @@
                     </div>
                     <div class="card-body">
                         <a href="<?= base_url('Admin/Mst_Event/form_add') ?>" class="btn btn-sm btn-primary">
-                            <i class="fa fa-plus"></i> Tambah Event</a>
+                            <i class="fa fa-plus"></i> Tambah Event
+                        </a>
+                        <a href="<?= base_url('Admin/Mst_Event/form_upload_event') ?>" class="btn btn-sm btn-success">
+                            <i class="fa fa-file-excel"></i> Upload Event
+                        </a>
                         <table id="example" class="table-sm mt-1 table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th style="width: 80px">NO</th>
+                                    <th style="width: 50px;">NO</th>
+                                    <th>KATEGORI</th>
                                     <th>EVENT</th>
-                                    <th style="width: 70px">STATUS</th>
-                                    <th style="width:80px">OPSI</th>
+                                    <th>STATUS</th>
+                                    <th>OPSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,17 +70,18 @@
                                 foreach ($event->result() as $zn) : ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
+                                        <td><?= $zn->kategori_name ?></td>
                                         <td><?= $zn->event_name ?></td>
                                         <td><?= $zn->status  == 1 ? 'ACTIVE'  : 'INACTIVE' ?></td>
                                         <td>
 
-                                            <a href="<?= base_url('Admin/Mst_Event/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
+                                            <a href="<?= base_url('Admin/Mst_Event/hapus/' . $zn->event_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
 
-                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-status="<?= $zn->status ?>" data-event_name="<?= $zn->event_name ?>"><i class="fa fa-eye"></i></a>
+                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2 " title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->event_id ?>" data-status="<?= $zn->status ?>" data-event_name="<?= $zn->event_name ?>" data-kategori="<?= $zn->kategori_name ?>"><i class="fa fa-eye"></i></a>
 
 
-                                            <a href="<?= base_url('Admin/Mst_Event/edit?event_id=' . $zn->id) ?>" class='text-success ml-2' title="edit data"><i class="fa fa-edit"></i></a>
+                                            <a href="<?= base_url('Admin/Mst_Event/edit?event_id=' . $zn->event_id) ?>" class='text-success ml-2 ' title="edit data"><i class="fa fa-edit"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>
@@ -111,10 +117,11 @@
                     <label>ZONA</label>
                     <input type="text" readonly class="form-control" id="zona2">
                 </div>
+                 -->
                 <div class="form-group">
                     <label>KATEGORI OBJEK</label>
                     <input type="text" readonly class="form-control" id="kategori2">
-                </div> -->
+                </div>
                 <div class="form-group">
                     <label>NAMA EVENT</label>
                     <input type="text" readonly class="form-control" id="event_name2">
@@ -142,7 +149,7 @@
         modal.find("#event_name2").attr("value", div.data("event_name"));
         // modal.find("#plant2").attr("value", div.data("plant"));
         // modal.find("#zona2").attr("value", div.data("zona"));
-        // modal.find("#kategori2").attr("value", div.data("kategori"));
+        modal.find("#kategori2").attr("value", div.data("kategori"));
         if (div.data("status") == 1) {
             modal.find("#status2").attr("value", "ACTIVE");
         } else {

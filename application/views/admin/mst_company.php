@@ -48,9 +48,9 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <a class="btn btn-sm btn-primary" href="<?= base_url('Mst_Company/form_add') ?>"><i class="fa fa-plus"></i>
+                        <!-- <a class="btn btn-sm btn-primary" href="<?= base_url('Mst_Company/form_add') ?>"><i class="fa fa-plus"></i>
                             Tambah Perusahaan
-                        </a>
+                        </a> -->
 
                         <table class="table-sm mt-1 table table-striped table-bordered">
                             <thead>
@@ -79,7 +79,7 @@
                                             <?php } ?>
                                         </td>
                                         <td>
-                                            <a href='' title="lihat data" data-toggle="modal" data-target="#edit-data" class="text-primary" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-comp_name="<?= $zn->comp_name ?>" data-address="<?= $zn->address1 ?>" data-telepon="<?= $zn->comp_phone ?>"><i class="fa fa-eye"></i></a>
+                                            <a href='' title="lihat data" data-toggle="modal" data-target="#edit-data" class="text-primary" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->company_id ?>" data-comp_name="<?= $zn->comp_name ?>" data-address="<?= $zn->address1 ?>" data-telepon="<?= $zn->comp_phone ?>"><i class="fa fa-eye"></i></a>
 
                                         </td>
                                     </tr>

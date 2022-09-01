@@ -119,12 +119,14 @@ class Upload_Jadwal_Patroli extends CI_Controller
             $o = 1;
             $l = 1;
             for ($t = 0; $t < count($shift); $t++) {
-                $query = $this->db->query('SELECT CAST(RAND()*1100 AS INT) AS random')->row();
-                $id                 = 'ADMJP' . $query->random . $l;
+                $d = new DateTime();
+                $uniq = $d->format("dmyHisv");
+                $id                 = uniqid($uniq);
+                $gen = 'ADMJP' . substr($id, 0, 6) . substr($id, 22, 10);
                 $Shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift[$t]['tanggal_' . $o] . "' ")->row();
                 $User = $this->db->query("select npk from admisecsgp_mstusr where npk ='" . $npk .  "' and name='" . $nama . "' and admisecsgp_mstplant_plant_id = '" . $plant->plant_id . "' ")->row();
                 $var = [
-                    'id_jadwal_patroli'                 => $id,
+                    'id_jadwal_patroli'                 => $gen,
                     'admisecsgp_mstusr_npk'             => $User->npk,
                     'admisecsgp_mstplant_plant_id'      => $plant->plant_id,
                     'admisecsgp_mstshift_shift_id'      => $Shift->shift_id,
@@ -140,6 +142,7 @@ class Upload_Jadwal_Patroli extends CI_Controller
         }
 
         // var_dump($data_jadwal);
+
 
         $this->db->insert_batch('admisecsgp_trans_jadwal_patroli', $data_jadwal);
         if ($this->db->affected_rows() > 0) {

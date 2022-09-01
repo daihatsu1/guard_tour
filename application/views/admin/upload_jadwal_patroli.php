@@ -6,8 +6,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_Jadwal_Produksi') ?>">Jadwal Produksi</a></li>
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_Jadwal_Produksi/form_revisi_upload_jadwal') ?>">Upload Koreksi Jadwal</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Upload_Jadwal_Patroli') ?>">Upload Jadwal Patroli</a></li>
                 </ol>
             </div>
         </div>
@@ -36,10 +35,10 @@
                         </button>
                     </div>
                 <?php } ?>
-                <a href="<?= base_url('assets/format_upload/upload_jadwal_produksi.xlsx')  ?>" class="ml-2 btn btn-primary btn-sm"> <i class="fas fa-download"></i> Download Format Upload</a>
+                <a href="<?= base_url('assets/format_upload/upload_jadwal_patroli.xlsx')  ?>" class="ml-2 btn btn-primary btn-sm"> <i class="fas fa-download"></i> Download Format Upload</a>
                 <div class="card mt-2">
                     <div class="card-body">
-                        <form method="post" action="<?= base_url('Admin/Mst_Jadwal_Produksi/form_revisi_upload_jadwal') ?>" onsubmit="return cekExe()" enctype="multipart/form-data">
+                        <form method="post" action="<?= base_url('Admin/Upload_Jadwal_Patroli') ?>" onsubmit="return cekExe()" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="">PLANT</label>
                                 <select class="form-control" name="plant_3" id="plant_3">
@@ -52,7 +51,6 @@
                                     <?php endforeach ?>
                                 </select>
                             </div>
-
                             <div class="form-group">
                                 <label for="">PILIH TAHUN</label>
                                 <select name="tahun_input" id="tahun_input" class="form-control">
@@ -93,12 +91,12 @@
                             </div>
 
                             <div class="form-inline mt-2">
-                                <a href="<?= base_url('Admin/Mst_Jadwal_Produksi') ?>" class="mr-2 btn btn-success btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
-                                <input type="submit" value="Upload Koreksi Jadwal" name="view" class="btn btn-info btn-sm"></input>
+
+                                <input type="submit" value="Upload Jadwal Patroli" name="view" class="btn btn-info btn-sm"></input>
                             </div>
                         </form>
                         <hr>
-                        <form action="<?= base_url('Admin/Mst_Jadwal_Produksi/upload_ulang') ?>" method="post" enctype="multipart/form-data" class="mt-2">
+                        <form action="#" method="post" enctype="multipart/form-data" class="mt-2">
                             <?php
                             $count = 0;
                             if (isset($_POST['view'])) {
@@ -107,41 +105,41 @@
 
                                 if (!$cek_bulan_patrol) {
                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Format penulisan bulan di sheet jadwal produksi tidak sesuai
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>';
+                                        Format penulisan bulan di sheet jadwal patroli tidak sesuai
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>';
                                     $count += 1;
                                 }
 
                                 if ("$plant_3" != "$plant") {
                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Plant yang di pilih tidak sama dengan plant yang di upload , periksa kembali file excel anda
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>';
+                                        Plant yang di pilih tidak sama dengan plant yang di upload , periksa kembali file excel anda
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>';
                                     $count += 1;
                                 }
 
                                 if ($bulan_input != $bulan_patroli) {
                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Bulan yang di pilih tidak sama dengan bulan yang di upload , periksa kembali file excel anda
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>';
+                                        Bulan yang di pilih tidak sama dengan bulan yang di upload , periksa kembali file excel anda
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>';
                                     $count += 1;
                                 }
 
                                 if ($tahun_input != $tahun_patroli) {
                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        Tahun yang di pilih tidak sama dengan tahun yang di upload , periksa  kembali file excel anda
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>';
+                                        Tahun yang di pilih tidak sama dengan tahun yang di upload , periksa  kembali file excel anda
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>';
                                     $count += 1;
                                 }
 
@@ -150,84 +148,94 @@
                                 //jika tidak maka muncul alert 
                                 if ($cekplant->num_rows() <= 0) {
                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <b class="font-italice">' . $plant_name . '-' .  $plant . '</b> tidak terdaftar di database
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>';
+                                        <b class="font-italice">' . $plant_name . '-' .  $plant . '</b> tidak terdaftar di database
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>';
                                     $count += 1;
                                 } else {
                                     //cek data jadwal di bulan ini 
                                     $plt = $cekplant->row();
+                                    $cekJadwalPatroli = $this->db->query('SELECT date_patroli FROM `admisecsgp_trans_jadwal_patroli`
+                                    WHERE DATE_FORMAT(date_patroli,"%Y-%m") = "' . $date . '" 
+                                    GROUP BY DATE_FORMAT(date_patroli,"%Y-%m")');
 
-                                    // cek data jadwal produksi
+
+                                    if ($cekJadwalPatroli->num_rows() >= 1) {
+                                        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        Jadwal Patroli Bulan ' . $bulan_patroli . ' - ' .  $tahun_patroli . ' sudah pernah terupload
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>';
+                                        $count += 1;
+                                    }
+
+
+                                    // cek data jadwal patroli
                                     foreach ($jadwal as $jdl) {
-                                        $prt   = 1;
-                                        $var   = 3;
-                                        $zona  = $jdl[0];
-                                        $shift = $jdl[1];
-                                        $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' ");
-                                        $var_shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift . "' ");
+                                        //cek data npk user 
+                                        $cekplantuser = $this->db->get_where("admisecsgp_mstplant", ['kode_plant' => $jdl[0], 'plant_name' => $jdl[1]]);
 
-                                        if ($var_zona->num_rows() <= 0) {
-                                            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <b class="font-italice">' . $zona . ' di ' .  $plant . '</b> tidak terdaftar di database
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>';
-                                            $count += 1;
-                                        }
-
-                                        if ($var_shift->num_rows() <= 0) {
-                                            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <b class="font-italice">shift ' . $shift . ' </b> tidak terdaftar di database
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>';
-                                            $count += 1;
-                                        }
-                                        for ($p = 2; $p <= count($jadwal[7]) - 2; $p += 2) {
-                                            $produksi = $this->db->query("select produksi_id from admisecsgp_mstproduction where name='" . $jdl[$p] . "' ");
-
-                                            if ($produksi->num_rows() <= 0) {
+                                        if ($cekplantuser->num_rows() > 0) {
+                                            $pk = $cekplantuser->row();
+                                            $cek_user = $this->db->get_where("admisecsgp_mstusr", ['npk' => $jdl[2], 'name' => $jdl[3], 'admisecsgp_mstplant_plant_id' => $pk->plant_id]);
+                                            //jika tidak maka muncul alert 
+                                            if ($cek_user->num_rows() <= 0) {
                                                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                <b class="font-italice">status produksi ' . $jdl[$p] . ' </b> tidak sesuai , hanya ada produksi dan non-produksi di kolom tanggal
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>';
-                                                $count += 1;
-                                            }
-
-
-                                            if (strval($jdl[$var]) == "on" || strval($jdl[$var]) == "off") {
-                                            } else {
-                                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                    <b class="font-italice">status zona ' . $jdl[$var] . ' </b> tidak sesuai , hanya ada on dan off di status zona
+                                                username <b class="font-italice">' . $jdl[3] . '-' . $jdl[2] . '</b> tidak terdaftar di database
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>';
                                                 $count += 1;
                                             }
+                                        } else {
+                                            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <b class="font-italice">' . $jdl[1] . ' dengan kode plant ' . $jdl[0] . '</b> tidak terdaftar di database
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>';
+                                            $count += 1;
+                                        }
 
-                                            $var += 2;
-                                            $prt++;
+                                        $shift = array();
+                                        $k = 4;
+                                        for ($i = 1; $i <= (count($jadwal[7]) - 4); $i++) {
+                                            $sh = [
+                                                'tanggal_' . $i => $jdl[$k]
+                                            ];
+                                            array_push($shift, $sh);
+                                            $k++;
+                                        }
+                                        $o = 1;
+                                        for ($l = 0; $l < count($shift); $l++) {
+                                            //cek shift 
+                                            if ($shift[$l]['tanggal_' . $o] != 'LIBUR') {
+                                                $cekshift = $this->db->get_where("admisecsgp_mstshift", ['nama_shift' => $shift[$l]['tanggal_' . $o], 'status' => 1]);
+                                                //jika tidak maka muncul alert 
+                                                if ($cekshift->num_rows() <= 0) {
+                                                    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">SHIFT <b class="font-italice">' . $shift[$l]['tanggal_' . $o] . '</b> tidak terdaftar di database<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+                                                    $count += 1;
+                                                }
+                                            } else {
+                                                //no action
+                                            }
+                                            $o++;
                                         }
                                     }
                                 }
 
                                 //hitung total kesalahan input
                                 if ($count <= 0) {
-                                    redirect('Admin/Mst_Jadwal_Produksi/revisi_upload_jadwal');
+                                    redirect('Admin/Upload_Jadwal_Patroli/uploadjadwalPatroli');
                                 }
                             } ?>
+
                         </form>
                     </div>
-
-
                 </div>
             </div>
         </div>

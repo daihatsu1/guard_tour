@@ -6,8 +6,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_Jadwal_Produksi') ?>">Jadwal Produksi</a></li>
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_Jadwal_Produksi/form_revisi_upload_jadwal') ?>">Upload Koreksi Jadwal</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Upload_Jadwal_Produksi') ?>">Upload Jadwal Produksi</a></li>
                 </ol>
             </div>
         </div>
@@ -39,7 +38,7 @@
                 <a href="<?= base_url('assets/format_upload/upload_jadwal_produksi.xlsx')  ?>" class="ml-2 btn btn-primary btn-sm"> <i class="fas fa-download"></i> Download Format Upload</a>
                 <div class="card mt-2">
                     <div class="card-body">
-                        <form method="post" action="<?= base_url('Admin/Mst_Jadwal_Produksi/form_revisi_upload_jadwal') ?>" onsubmit="return cekExe()" enctype="multipart/form-data">
+                        <form method="post" action="<?= base_url('Admin/Upload_Jadwal_Produksi') ?>" onsubmit="return cekExe()" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="">PLANT</label>
                                 <select class="form-control" name="plant_3" id="plant_3">
@@ -52,7 +51,6 @@
                                     <?php endforeach ?>
                                 </select>
                             </div>
-
                             <div class="form-group">
                                 <label for="">PILIH TAHUN</label>
                                 <select name="tahun_input" id="tahun_input" class="form-control">
@@ -93,12 +91,12 @@
                             </div>
 
                             <div class="form-inline mt-2">
-                                <a href="<?= base_url('Admin/Mst_Jadwal_Produksi') ?>" class="mr-2 btn btn-success btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
-                                <input type="submit" value="Upload Koreksi Jadwal" name="view" class="btn btn-info btn-sm"></input>
+
+                                <input type="submit" value="Upload Jadwal Produksi" name="view" class="btn btn-info btn-sm"></input>
                             </div>
                         </form>
                         <hr>
-                        <form action="<?= base_url('Admin/Mst_Jadwal_Produksi/upload_ulang') ?>" method="post" enctype="multipart/form-data" class="mt-2">
+                        <form action="#" method="post" enctype="multipart/form-data" class="mt-2">
                             <?php
                             $count = 0;
                             if (isset($_POST['view'])) {
@@ -159,6 +157,20 @@
                                 } else {
                                     //cek data jadwal di bulan ini 
                                     $plt = $cekplant->row();
+                                    $cekJadwalPatroli = $this->db->query('SELECT date_patroli FROM `admisecsgp_trans_zona_patroli`
+                                    WHERE DATE_FORMAT(date_patroli,"%Y-%m") = "' . $date . '" 
+                                    GROUP BY DATE_FORMAT(date_patroli,"%Y-%m")');
+
+                                    if ($cekJadwalPatroli->num_rows() >= 1) {
+                                        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Jadwal Produksi Bulan ' . $bulan_patroli . '-' .  $tahun_patroli . ' sudah pernah terupload
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>';
+                                        $count += 1;
+                                    }
+
 
                                     // cek data jadwal produksi
                                     foreach ($jadwal as $jdl) {
@@ -221,13 +233,12 @@
 
                                 //hitung total kesalahan input
                                 if ($count <= 0) {
-                                    redirect('Admin/Mst_Jadwal_Produksi/revisi_upload_jadwal');
+                                    redirect('Admin/Upload_Jadwal_Produksi/upload');
                                 }
                             } ?>
+
                         </form>
                     </div>
-
-
                 </div>
             </div>
         </div>

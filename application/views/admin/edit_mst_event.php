@@ -46,9 +46,20 @@
 
                         <div class="card-body">
 
+                            <div class="form-group mt-2 ">
+                                <label for="">KATEGORI OBJEK</label>
+                                <select class="form-control" name="kategori_id" id="kategori_id">
+                                    <option selected value="<?= $data->kategori_id ?>"><?= $data->kategori_name ?></option>
+                                    <option value="">Pilih Kategori Objek</option>
+                                    <?php foreach ($kategori_objek->result() as $ktr) : ?>
+                                        <option value="<?= $ktr->kategori_id ?>"><?= $ktr->kategori_name ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+
                             <div class="form-group">
                                 <label for="">NAMA EVENT</label>
-                                <input type="hidden" name="id" value="<?= $data->id ?>">
+                                <input type="hidden" name="id" value="<?= $data->event_id ?>">
                                 <input type="text" name="event_name" value="<?= $data->event_name ?>" autocomplete="off" id="event_name" class="form-control">
                             </div>
 
@@ -79,33 +90,32 @@
 </section>
 <script>
     function cek() {
-        // if (document.getElementById("plant_id").value == "") {
-        //     Swal.fire({
-        //         title: 'Perhatian!',
-        //         text: 'pilih plant',
-        //         icon: 'error',
-        //     }).then((result) => {
-        //         // $("#site_name").focus();
-        //     })
-        //     return false
-        // } else if (document.getElementById("zone_id").value == "") {
-        //     Swal.fire({
-        //         title: 'Perhatian!',
-        //         text: 'pilih zona',
-        //         icon: 'error',
-        //     }).then((result) => {})
-        //     return false
-        // } else if (document.getElementById("kategori_id").value == "") {
-        //     Swal.fire({
-        //         title: 'Perhatian!',
-        //         text: 'pilih kategori objek',
-        //         icon: 'error',
-        //     }).then((result) => {
-        //         // $("#site_name").focus();
-        //     })
-        //     return false
-        // } else 
-        if (document.getElementById("event_name").value == "") {
+        if (document.getElementById("plant_id").value == "") {
+            Swal.fire({
+                title: 'Perhatian!',
+                text: 'pilih plant',
+                icon: 'error',
+            }).then((result) => {
+                // $("#site_name").focus();
+            })
+            return false
+        } else if (document.getElementById("zone_id").value == "") {
+            Swal.fire({
+                title: 'Perhatian!',
+                text: 'pilih zona',
+                icon: 'error',
+            }).then((result) => {})
+            return false
+        } else if (document.getElementById("kategori_id").value == "") {
+            Swal.fire({
+                title: 'Perhatian!',
+                text: 'pilih kategori objek',
+                icon: 'error',
+            }).then((result) => {
+                // $("#site_name").focus();
+            })
+            return false
+        } else if (document.getElementById("event_name").value == "") {
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'event harus di isi',
