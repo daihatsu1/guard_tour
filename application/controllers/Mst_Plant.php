@@ -50,7 +50,7 @@ class Mst_Plant extends CI_Controller
     {
         $id = $this->input->post('id');
         $data = [
-            'wilayah'  =>  $this->M_patrol->ambilData("admisecsgp_mstsite", ['admisecsgp_mstcmp_id' => $id, 'status' => 1])
+            'wilayah'  =>  $this->M_patrol->ambilData("admisecsgp_mstsite", ['admisecsgp_mstcmp_company_id' => $id, 'status' => 1])
         ];
         $this->load->view('ajax/list_wilayah', $data);
     }
@@ -76,9 +76,10 @@ class Mst_Plant extends CI_Controller
         $status          = $this->input->post("status");
         $kodeplant       = $this->input->post("kodeplant");
         $others          = $this->input->post("others");
-
+        $id              = 'ADMP' . substr(uniqid(rand(), true), 4, 4);
         $data = [
-            'admisecsgp_mstsite_id'       => $site_id,
+            'plant_id'                    => $id,
+            'admisecsgp_mstsite_site_id'  => $site_id,
             'plant_name'                  => strtoupper($plant_name),
             'kode_plant'                  => strtoupper($kodeplant),
             'created_at'                  => date('Y-m-d H:i:s'),
@@ -105,7 +106,7 @@ class Mst_Plant extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['plant_id' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstplant", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -126,16 +127,16 @@ class Mst_Plant extends CI_Controller
         $kodeplant       = $this->input->post("kodeplant");
         $others          = $this->input->post("others");
         $data = [
-            'admisecsgp_mstsite_id'        => $site_id,
-            'plant_name'                   => strtoupper($plant_name),
-            'kode_plant'                   => strtoupper($kodeplant),
-            'updated_at'                   => date('Y-m-d H:i:s'),
-            'updated_by'                   => $this->session->userdata('id_token'),
-            'status'                       => $status,
-            'others'                       => $others,
+            'admisecsgp_mstsite_site_id'        => $site_id,
+            'plant_name'                        => strtoupper($plant_name),
+            'kode_plant'                        => strtoupper($kodeplant),
+            'updated_at'                        => date('Y-m-d H:i:s'),
+            'updated_by'                        => $this->session->userdata('id_token'),
+            'status'                            => $status,
+            'others'                            => $others,
         ];
 
-        $where = ['id' => $id];
+        $where = ['plant_id' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstplant", $data, $where);
         if ($update) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');

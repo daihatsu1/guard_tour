@@ -45,7 +45,7 @@
                     <form onsubmit="return cek()" action="<?= base_url('Mst_Shift/update') ?>" method="post" id="inputEvent">
 
                         <div class="card-body">
-                            <input type="hidden" name="id" value="<?= $data->id ?>">
+                            <input type="hidden" name="id" value="<?= $data->shift_id ?>">
                             <div class="form-group">
                                 <label for="">NAMA SHIFT</label>
                                 <input type="text" value="<?= $data->nama_shift ?>" name="shift" autocomplete="off" id="shift" class="form-control">

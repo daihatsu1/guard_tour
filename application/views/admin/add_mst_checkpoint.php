@@ -50,7 +50,7 @@
                                 <select class="form-control" name="plant_id" id="plant_id">
                                     <option selected value="">Pilih Plant</option>
                                     <?php foreach ($plant->result() as $plt) : ?>
-                                        <option value="<?= $plt->id ?>"><?= $plt->plant_name ?></option>
+                                        <option value="<?= $plt->plant_id ?>"><?= $plt->plant_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info" style="display: none;" class="text-danger font-italic small">load data zone . . .</span>
@@ -69,9 +69,15 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="">DURASI</label>
-                                <input type="number" name="durasi" autocomplete="off" id="durasi" class="form-control">
+                                <label for="">DURASI BATAS BAWAH</label>
+                                <input type="number" name="durasi_batas_bawah" autocomplete="off" id="durasi" class="form-control">
                             </div>
+
+                            <div class="form-group">
+                                <label for="">DURASI BATAS ATAS</label>
+                                <input type="number" name="durasi_batas_atas" autocomplete="off" id="durasi2" class="form-control">
+                            </div>
+
 
 
                             <div class="form-group">
@@ -120,6 +126,20 @@
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'nama checkpoint harus di isi',
+                icon: 'error',
+            }).then((result) => {})
+            return false
+        } else if (document.getElementById("durasi").value == "") {
+            Swal.fire({
+                title: 'Perhatian!',
+                text: 'durasi batas bawah harus di isi',
+                icon: 'error',
+            }).then((result) => {})
+            return false
+        } else if (document.getElementById("durasi2").value == "") {
+            Swal.fire({
+                title: 'Perhatian!',
+                text: 'durasi batas atas harus di isi',
                 icon: 'error',
             }).then((result) => {})
             return false

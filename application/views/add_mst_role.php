@@ -46,10 +46,10 @@
 
                         <div class="card-body">
 
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="">ID ROLE</label>
                                 <input type="text" name="id_role" id="id_role" class="form-control">
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="">LEVEL</label>
                                 <input type="text" name="level" autocomplete="off" id="level" class="form-control">

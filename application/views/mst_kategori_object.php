@@ -60,8 +60,6 @@
                                             <input id="check-all" type="checkbox">
                                         </th>
                                         <th style="width: 50px;">NO</th>
-                                        <th>PLANT</th>
-                                        <th>ZONA</th>
                                         <th>NAMA KATEGORI</th>
                                         <th>STATUS</th>
                                         <th>OPSI</th>
@@ -71,21 +69,19 @@
                                     <?php $no = 1;
                                     foreach ($kategori_obj->result() as $zn) : ?>
                                         <tr>
-                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_event[]" value="<?= $zn->id ?>"> </td>
+                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_kategori[]" value="<?= $zn->kategori_id ?>"> </td>
                                             <td><?= $no++ ?></td>
-                                            <td><?= $zn->plant_name ?></td>
-                                            <td><?= $zn->zone_name ?></td>
                                             <td><?= $zn->kategori_name ?></td>
                                             <td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE'  ?></td>
                                             <td>
 
-                                                <a href="<?= base_url('Mst_Kategori_Object/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger ' title="hapus data"><i class="fa fa-trash"></i></a>
+                                                <a href="<?= base_url('Mst_Kategori_Object/hapus/' . $zn->kategori_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger ' title="hapus data"><i class="fa fa-trash"></i></a>
 
 
-                                                <a href='' data-toggle="modal" data-target="#edit-data" class=" ml-2 text-primary" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-status="<?= $zn->status ?>" data-ket="<?= $zn->others ?>" data-category_name="<?= $zn->kategori_name ?>" data-plant="<?= $zn->plant_name ?>" data-zona="<?= $zn->zone_name ?>"><i class="fa fa-eye"></i></a>
+                                                <a href='' data-toggle="modal" data-target="#edit-data" class=" ml-2 text-primary" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->kategori_id ?>" data-status="<?= $zn->status ?>" data-ket="<?= $zn->others ?>" data-category_name="<?= $zn->kategori_name ?>"><i class="fa fa-eye"></i></a>
 
 
-                                                <a href="<?= base_url('Mst_Kategori_Object/edit?kategori_id=' . $zn->id) ?>&zona_id=<?= $zn->zona_id ?>&plant_id=<?= $zn->plant_id ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
+                                                <a href="<?= base_url('Mst_Kategori_Object/edit?kategori_id=' . $zn->kategori_id) ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>
@@ -114,14 +110,6 @@
                 <h5 class="modal-title" id="exampleModalLabel">Detail Data</h5>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label>PLANT</label>
-                    <input type="text" readonly class="form-control" id="plant1">
-                </div>
-                <div class="form-group">
-                    <label>ZONA</label>
-                    <input type="text" readonly class="form-control" id="zona1">
-                </div>
                 <div class="form-group">
                     <label>NAMA KATEGORI</label>
                     <input type="text" readonly class="form-control" id="kategori_name">
@@ -153,8 +141,6 @@
             // Isi nilai pada field
             modal.find("#id").attr("value", div.data("id"));
             modal.find("#kategori_name").attr("value", div.data("category_name"));
-            modal.find("#plant1").attr("value", div.data("plant"));
-            modal.find("#zona1").attr("value", div.data("zona"));
             modal.find("#others").attr("value", div.data("ket"));
             if (div.data("status") == 1) {
                 modal.find("#status").attr("value", "ACTIVE");
@@ -166,7 +152,7 @@
     })
 
     $(".check-item").click(function() {
-        var panjang = $('[name="id_event[]"]:checked').length;
+        var panjang = $('[name="id_kategori[]"]:checked').length;
         if (panjang > 0) {
             document.getElementById('btn_delete_all').style.display = "block";
         } else {
@@ -179,7 +165,7 @@
         if ($(this).is(":checked")) {
             $(".check-item").prop("checked", true);
             document.getElementById('btn_delete_all').style.display = "block";
-            var panjang = $('[name="id_event[]"]:checked').length;
+            var panjang = $('[name="id_kategori[]"]:checked').length;
         } else {
             $(".check-item").prop("checked", false);
             document.getElementById('btn_delete_all').style.display = "none";

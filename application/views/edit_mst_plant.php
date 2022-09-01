@@ -46,21 +46,24 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">COMPANY</label>
-                                <input type="hidden" name="plant_id" value="<?= $data->id ?>">
+                                <input type="hidden" name="plant_id" value="<?= $data->plant_id ?>">
                                 <select class="form-control" name="comp_id" id="comp_id">
-                                    <option selected value="<?= $data->admisecsgp_mstcmp_id ?>"><?= $data->comp_name ?></option>
+                                    <option selected value="<?= $data->admisecsgp_mstcmp_company_id ?>"><?= $data->comp_name ?></option>
                                     <option value="">Pilih Company</option>
                                     <?php foreach ($company->result() as $cmp) :  ?>
-                                        <option value="<?= $cmp->id ?>"><?= $cmp->comp_name ?></option>
+                                        <option value="<?= $cmp->company_id ?>"><?= $cmp->comp_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info" style="display: none;" class="text-danger font-italic small">load data wilayah . . .</span>
                             </div>
-                            <div id="list_wilayah">
-                                <label for="">WILAYAH</label>
-                                <select class="form-control" name="site_id" id="site_id">
-                                    <option selected value="<?= $data->admisecsgp_mstsite_id ?>"><?= $data->site_name ?></option>
-                                </select>
+                            <div class="form-group">
+
+                                <div id="list_wilayah">
+                                    <label for="">WILAYAH</label>
+                                    <select class="form-control" name="site_id" id="site_id">
+                                        <option selected value="<?= $data->admisecsgp_mstsite_site_id ?>"><?= $data->site_name ?></option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="">NAMA PLANT</label>
@@ -133,7 +136,7 @@
             var id = $("select[name=comp_id] option:selected").val();
             // alert(id)
             if (id == null || id == "") {
-                document.getElementById('list_wilayah').innerHTML = '<label for="">WILAYAH</label><select class ="form-control" name="site_id" id ="site_id"><option selected value="<?= $data->admisecsgp_mstsite_id ?>"><?= $data->site_name ?></option></select> ';
+                document.getElementById('list_wilayah').innerHTML = '<label for="">WILAYAH</label><select class ="form-control" name="site_id" id ="site_id"><option selected value="<?= $data->admisecsgp_mstsite_site_id ?>"><?= $data->site_name ?></option></select> ';
             } else {
                 $.ajax({
                     url: "<?= base_url('Mst_Plant/showWilayah') ?>",

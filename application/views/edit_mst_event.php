@@ -45,29 +45,6 @@
                     <form onsubmit="return cek()" action="<?= base_url('Mst_Event/update') ?>" method="post">
 
                         <div class="card-body">
-                            <!-- <div class="form-group">
-                                <label for="">PLANT</label>
-                                <select class="form-control" name="plant_id" id="plant_id">
-                                    <option selected value="<?= $data->plant_id ?>"><?= $data->plant_name ?></option>
-                                    <option value="">Pilih Plant</option>
-                                    <?php foreach ($plant->result() as $plt) : ?>
-                                        <option value="<?= $plt->id ?>"><?= $plt->plant_name ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                                <span id="info_zona" style="display: none;" class="text-danger font-italic small">load data zona . . .</span>
-                            </div>
-
-                            <div class="form-group ">
-                                <label for="">ZONA</label>
-                                <select class="form-control" name="zone_id" id="zone_id">
-                                    <option selected value="<?= $data->zona_id ?>"><?= $data->zone_name ?></option>
-                                    <option value="">Pilih Zona</option>
-                                    <?php foreach ($zone->result() as $znp) : ?>
-                                        <option value="<?= $znp->id ?>"><?= $znp->zone_name ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                                <span id="info_kategori" style="display: none;" class="text-danger font-italic small">load data kategori objek . . .</span>
-                            </div>
 
                             <div class="form-group mt-2 ">
                                 <label for="">KATEGORI OBJEK</label>
@@ -75,14 +52,14 @@
                                     <option selected value="<?= $data->kategori_id ?>"><?= $data->kategori_name ?></option>
                                     <option value="">Pilih Kategori Objek</option>
                                     <?php foreach ($kategori_objek->result() as $ktr) : ?>
-                                        <option value="<?= $ktr->id ?>"><?= $ktr->kategori_name ?></option>
+                                        <option value="<?= $ktr->kategori_id ?>"><?= $ktr->kategori_name ?></option>
                                     <?php endforeach ?>
                                 </select>
-                            </div> -->
+                            </div>
 
                             <div class="form-group">
                                 <label for="">NAMA EVENT</label>
-                                <input type="hidden" name="id" value="<?= $data->id ?>">
+                                <input type="hidden" name="id" value="<?= $data->event_id ?>">
                                 <input type="text" name="event_name" value="<?= $data->event_name ?>" autocomplete="off" id="event_name" class="form-control">
                             </div>
 

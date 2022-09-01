@@ -45,35 +45,21 @@
                     <form onsubmit="return cek()" action="<?= base_url('Admin/Mst_Event/input') ?>" method="post" id="inputEvent">
 
                         <div class="card-body">
-                            <!-- <div class="form-group">
-                                <label for="">PLANT</label>
-                                <select class="form-control" name="plant_id" id="plant_id">
-                                    <option selected value="">Pilih Plant</option>
-                                    <?php foreach ($plant->result() as $plt) : ?>
-                                        <option value="<?= $plt->id ?>"><?= $plt->plant_name ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                                <span id="info_zona" style="display: none;" class="text-danger font-italic small">load data zona . . .</span>
-                            </div>
 
-                            <div class="form-group ">
-                                <label for="">ZONA</label>
-                                <select class="form-control" name="zone_id" id="zone_id">
-                                    <option selected value="">Pilih Zona</option>
-                                </select>
-                                <span id="info_kategori" style="display: none;" class="text-danger font-italic small">load data kategori objek . . .</span>
-                            </div>
 
                             <div class="form-group mt-2 ">
                                 <label for="">KATEGORI OBJEK</label>
                                 <select class="form-control" name="kategori_id" id="kategori_id">
                                     <option selected value="">Pilih Kategori Objek</option>
+                                    <?php foreach ($kategori->result() as $kt) : ?>
+                                        <option value="<?= $kt->kategori_id ?>"><?= $kt->kategori_name ?></option>
+                                    <?php endforeach; ?>
                                 </select>
-                            </div> -->
+                            </div>
 
                             <div class="form-group">
                                 <label for="">NAMA EVENT</label>
-                                <input type="text" name="event_name" autocomplete="off" id="event_name" class="form-control">
+                                <input type="text" data-role='tags-input' name="event_name" autocomplete="off" id="event_name" value="" class="form-control">
                             </div>
 
                             <div class="form-group">
@@ -96,24 +82,12 @@
     </div>
 </section>
 <script>
+    $(document).ready(function() {
+        $('[data-role="tags-input"]').tagsInput();
+    });
+
     function cek() {
-        if (document.getElementById("plant_id").value == "") {
-            Swal.fire({
-                title: 'Perhatian!',
-                text: 'pilih plant',
-                icon: 'error',
-            }).then((result) => {
-                // $("#site_name").focus();
-            })
-            return false
-        } else if (document.getElementById("zone_id").value == "") {
-            Swal.fire({
-                title: 'Perhatian!',
-                text: 'pilih zona',
-                icon: 'error',
-            }).then((result) => {})
-            return false
-        } else if (document.getElementById("kategori_id").value == "") {
+        if (document.getElementById("kategori_id").value == "") {
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'pilih kategori objek',

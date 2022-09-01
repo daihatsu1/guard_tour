@@ -57,8 +57,7 @@
                             <div class="row justify-content-end">
                                 <button onclick="return confirm('Yakin Hapus Data ?')" id="btn_delete_all" style="display:none ;" class="btn btn-danger btn-sm mb-2 mr-2"> <i class="fas fa-trash"></i> HAPUS DATA TERPILIH</button>
                             </div>
-
-                            <table id="example" class="table-sm mt-1 table table-striped table-bordered">
+                            <table id="example" class="mt-1 table-sm table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th style="width: 10px;">
@@ -69,7 +68,6 @@
                                         <th>ZONA</th>
                                         <th>NAMA CHECKPOINT</th>
                                         <th>ID CHECKPOINT</th>
-                                        <th>DURASI</th>
                                         <th>STATUS</th>
                                         <th>OPSI</th>
                                     </tr>
@@ -78,20 +76,19 @@
                                     <?php $no = 1;
                                     foreach ($checkpoint->result() as $zn) : ?>
                                         <tr>
-                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_event[]" value="<?= $zn->id ?>"> </td>
+                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_check[]" value="<?= $zn->id ?>"> </td>
                                             <td><?= $no++ ?></td>
                                             <td><?= $zn->plant_name ?></td>
                                             <td><?= $zn->zone_name ?></td>
                                             <td><?= $zn->check_name ?></td>
                                             <td><?= $zn->check_no ?></td>
-                                            <td><?= $zn->durasi ?> menit</td>
                                             <td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
                                             <td>
                                                 <a href="<?= base_url('Admin/Mst_Checkpoint/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
-                                                <a data-toggle="modal" data-target="#edit-data" class="text-primary ml-2" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-check="<?= $zn->check_name ?>" data-check_no="<?= $zn->check_no ?>" data-zone="<?= $zn->zone_name ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>" data-durasi="<?= $zn->durasi ?>"><i class="fa fa-eye"></i></a>
+                                                <a data-toggle="modal" data-target="#edit-data" class=" ml-2 text-primary" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-check="<?= $zn->check_name ?>" data-check_no="<?= $zn->check_no ?>" data-zone="<?= $zn->zone_name ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>" data-durasi="<?= $zn->durasi_batas_atas ?>" data-durasi2="<?= $zn->durasi_batas_bawah ?>" data-plant="<?= $zn->plant_name ?>"><i class="fa fa-eye"></i></a>
 
-                                                <a href="<?= base_url('Admin/Mst_Checkpoint/edit?check_id=' . $zn->id) ?>&id_zona=<?= $zn->zona_id ?>&id_plant=<?= $zn->plant_id ?>" class='text-success ml-2' title="edit data"><i class="fa fa-edit"></i></a>
+                                                <a href="<?= base_url('Admin/Mst_Checkpoint/edit?check_id=' . $zn->id) ?>&id_zona=<?= $zn->zona_id ?>&id_plant=<?= $zn->plant_id ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>
@@ -121,8 +118,11 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-
                     <div class="card-body">
+                        <div class="form-group">
+                            <label for="">PLANT</label>
+                            <input type="text" readonly autocomplete="off" id="plant" class="form-control">
+                        </div>
                         <div class="form-group">
                             <label for="">ZONA</label>
                             <input type="text" readonly autocomplete="off" id="zona" class="form-control">
@@ -132,13 +132,20 @@
                             <label for="">ID CHECKPOINT</label>
                             <input type="text" readonly autocomplete="off" id="check_no" class="form-control">
                         </div>
+
                         <div class="form-group">
                             <label for="">NAMA CHECKPOINT</label>
                             <input type="text" readonly autocomplete="off" id="check" class="form-control">
                         </div>
+
                         <div class="form-group">
-                            <label for="">DURASI</label>
+                            <label for="">DURASI BATAS ATAS</label>
                             <input type="text" readonly autocomplete="off" id="durasi" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">DURASI BATAS BAWAH</label>
+                            <input type="text" readonly autocomplete="off" id="durasi2" class="form-control">
                         </div>
 
                         <div class="form-group">
@@ -174,7 +181,9 @@
                 modal.find("#zona").attr("value", div.data("zone"));
                 modal.find("#check").attr("value", div.data("check"));
                 modal.find("#check_no").attr("value", div.data("check_no"));
+                modal.find("#plant").attr("value", div.data("plant"));
                 modal.find("#durasi").attr("value", div.data("durasi") + ' menit');
+                modal.find("#durasi2").attr("value", div.data("durasi2") + ' menit');
                 if (div.data("status") == 1) {
                     modal.find("#status").attr("value", "ACTIVE");
                 } else {
@@ -185,7 +194,7 @@
         });
 
         $(".check-item").click(function() {
-            var panjang = $('[name="id_event[]"]:checked').length;
+            var panjang = $('[name="id_check[]"]:checked').length;
             if (panjang > 0) {
                 document.getElementById('btn_delete_all').style.display = "block";
             } else {
@@ -198,7 +207,7 @@
             if ($(this).is(":checked")) {
                 $(".check-item").prop("checked", true);
                 document.getElementById('btn_delete_all').style.display = "block";
-                var panjang = $('[name="id_event[]"]:checked').length;
+                var panjang = $('[name="id_check[]"]:checked').length;
             } else {
                 $(".check-item").prop("checked", false);
                 document.getElementById('btn_delete_all').style.display = "none";

@@ -71,7 +71,7 @@
                                         <td><?= $zn->nama_shift == 'LIBUR' ? '-' : $zn->jam_pulang ?></td>
                                         <td><?= $zn->status  == 1 ? 'ACTIVE'  : 'INACTIVE' ?></td>
                                         <td>
-                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-status="<?= $zn->status ?>" data-shift="<?= $zn->nama_shift ?>" data-jam_masuk="<?= $zn->jam_masuk ?>" data-jam_pulang="<?= $zn->jam_pulang ?>"><i class="fas fa-eye"></i></a>
+                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->shift_id ?>" data-status="<?= $zn->status ?>" data-shift="<?= $zn->nama_shift ?>" data-jam_masuk="<?= $zn->jam_masuk ?>" data-jam_pulang="<?= $zn->jam_pulang ?>"><i class="fas fa-eye"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

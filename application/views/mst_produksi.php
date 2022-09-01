@@ -51,7 +51,7 @@
                     <div class="card-body">
                         <a href="<?= base_url('Mst_Produksi/form_add') ?>" class="btn btn-sm btn-primary">
                             <i class="fa fa-plus"></i> Tambah Data</a>
-                        <table id="example2" class="mt-1 table table-striped table-bordered">
+                        <table id="example2" class="table-sm mt-1 table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>NO</th>
@@ -68,11 +68,11 @@
                                         <td><?= $zn->name ?></td>
                                         <td><?= $zn->status  == 1 ? 'ACTIVE'  : 'INACTIVE' ?></td>
                                         <td>
-                                            <a href="<?= base_url('Mst_Produksi/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger ' title="hapus data"><i class="fa fa-trash"></i></a>
+                                            <a href="<?= base_url('Mst_Produksi/hapus/' . $zn->produksi_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger ' title="hapus data"><i class="fa fa-trash"></i></a>
 
-                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary  ml-3 " title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-status="<?= $zn->status ?>" data-production="<?= $zn->name ?>"><i class="fa fa-eye"></i></a>
+                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary  ml-3 " title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->produksi_id ?>" data-status="<?= $zn->status ?>" data-production="<?= $zn->name ?>"><i class="fa fa-eye"></i></a>
 
-                                            <a href="<?= base_url('Mst_Produksi/edit?prod_id=' . $zn->id) ?>" class='text-success  ml-3 ' title="edit data"><i class="fa fa-edit"></i></a>
+                                            <a href="<?= base_url('Mst_Produksi/edit?prod_id=' . $zn->produksi_id) ?>" class='text-success  ml-3 ' title="edit data"><i class="fa fa-edit"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

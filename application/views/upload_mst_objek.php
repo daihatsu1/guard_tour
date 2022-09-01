@@ -95,7 +95,7 @@
                                     } else {
                                         $dplant = $plantCek->row();
                                         //cek kode zona 
-                                        $kodezona = $this->db->get_where('admisecsgp_mstzone', ['kode_zona' => $sh[1], 'zone_name' => $sh[2], 'admisecsgp_mstplant_id' => $dplant->id]);
+                                        $kodezona = $this->db->get_where('admisecsgp_mstzone', ['kode_zona' => $sh[1], 'zone_name' => $sh[2], 'admisecsgp_mstplant_plant_id' => $dplant->plant_id]);
                                         if ($kodezona->num_rows() <= 0) {
                                             echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                                             nama zona <b class="font-italice">' . $sh[2] . '</b> dengan kode zona <b>' . $sh[1] . ' </b> tidak terdaftar di database
@@ -106,14 +106,14 @@
                                             $count += 1;
                                         } else {
                                             $idzona = $kodezona->row();
-                                            $checkpoint  = $this->db->get_where('admisecsgp_mstckp', ['admisecsgp_mstzone_id' => $idzona->id, 'check_name' => $sh[3]]);
+                                            $checkpoint  = $this->db->get_where('admisecsgp_mstckp', ['admisecsgp_mstzone_zone_id' => $idzona->zone_id, 'check_name' => $sh[3]]);
 
                                             //
                                             //cek kategori objek 
-                                            $kategoriCek = $this->db->get_where('admisecsgp_mstkobj',  ['kategori_name' => $sh[4], 'admisecsgp_mstzone_id' => $idzona->id]);
+                                            $kategoriCek = $this->db->get_where('admisecsgp_mstkobj',  ['kategori_name' => $sh[4]]);
                                             if ($kategoriCek->num_rows() <= 0) {
                                                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        kategori objek  <b class="font-italice">' . $sh[4] . ' </b> tidak terdaftar di zona ' . $sh[2] . ' ' . $sh[0] . ' 
+                                        kategori objek  <b class="font-italice">' . $sh[4] . ' </b> tidak terdaftar
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -132,7 +132,7 @@
                                             } else {
                                                 //cek data jika sudah tersedia gagal input 
                                                 $checkData = $checkpoint->row();
-                                                $existObjek =  $this->db->get_where('admisecsgp_mstobj', ['admisecsgp_mstckp_id' => $checkData->id, 'nama_objek' => $sh[5]]);
+                                                $existObjek =  $this->db->get_where('admisecsgp_mstobj', ['admisecsgp_mstckp_checkpoint_id' => $checkData->checkpoint_id, 'nama_objek' => $sh[5]]);
                                                 if ($existObjek->num_rows() >= 1) {
                                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                                            objek <b class="font-italice">' . $sh[5] . '</b> di checkpoint <b>' . $sh[3] . ' ' . $sh[0] . ' </b> sudah ada di database

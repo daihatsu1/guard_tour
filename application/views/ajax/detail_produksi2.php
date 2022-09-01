@@ -1,38 +1,24 @@
 <form id="submitData" method="post">
     <input type="hidden" name="id_update" value="<?= $id ?>" id="id_update">
-    <input type="hidden" name="kolom_tanggal_update" value="<?= $kolom_tanggal_produksi ?>" id="kolom_tanggal_update">
-    <input type="hidden" name="kolom_status_zona" value="<?= $kolom_status_zona ?>" id="kolom_status_zona">
+
+
     <label for="">TANGGAL PRODUKSI</label>
-    <input type="text" class="form-control" value="<?= $tanggal_produksi ?>" name="tanggal_produksi" id="tanggal_produksi" disabled>
+    <input type="text" class="form-control" value="<?= $date ?>" name="tanggal_produksi" id="tanggal_produksi" disabled>
+
     <label for="">SHIFT</label>
-    <select class="form-control" name="shift_produksi" id="shift_produksi">
-        <?php foreach ($data_shift->result() as $sh)
-            if ($sh->id == $shift_id) { ?>
-            <option selected value="<?= $shift_id ?>"><?= $sh->nama_shift ?></option>
-        <?php   } else { ?>
-            <option value="<?= $sh->id ?>"><?= $sh->nama_shift ?></option>
-        <?php  }
-        ?>
-    </select>
+    <input readonly class="form-control" value="<?= $shift ?>" name="shift_produksi" id="shift_produksi">
+
 
     <label for="">ZONA</label>
-    <select class="form-control" name="zona_produksi" id="zona_produksi">
-        <?php foreach ($data_zona->result() as $zn)
-            if ($zn->id == $zone_id) { ?>
-            <option selected value="<?= $zone_id ?>"><?= $zn->zone_name ?></option>
-        <?php   } else { ?>
-            <option value="<?= $zn->id ?>"><?= $zn->zone_name ?></option>
-        <?php  }
-        ?>
-    </select>
+    <input readonly class="form-control" value="<?= $zona ?>" name="zona_produksi" id="zona_produksi">
 
     <label for="">STATUS PRODUKSI</label>
     <select class="form-control" name="status_produksi" id="status_produksi">
         <?php foreach ($data_produksi->result() as $prd)
-            if ($prd->id == $produksi_id) { ?>
-            <option selected value="<?= $prd->id ?>"><?= $prd->name ?></option>
+            if ($prd->produksi_id == $produksi_id) { ?>
+            <option selected value="<?= $prd->produksi_id ?>"><?= $prd->name ?></option>
         <?php   } else { ?>
-            <option value="<?= $prd->id ?>"><?= $prd->name ?></option>
+            <option value="<?= $prd->produksi_id ?>"><?= $prd->name ?></option>
         <?php  }
         ?>
     </select>

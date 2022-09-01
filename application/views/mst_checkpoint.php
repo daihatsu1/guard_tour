@@ -68,7 +68,6 @@
                                         <th>ZONA</th>
                                         <th>NAMA CHECKPOINT</th>
                                         <th>ID CHECKPOINT</th>
-                                        <th>DURASI</th>
                                         <th>STATUS</th>
                                         <th>OPSI</th>
                                     </tr>
@@ -77,20 +76,19 @@
                                     <?php $no = 1;
                                     foreach ($checkpoint->result() as $zn) : ?>
                                         <tr>
-                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_event[]" value="<?= $zn->id ?>"> </td>
+                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_check[]" value="<?= $zn->checkpoint_id ?>"> </td>
                                             <td><?= $no++ ?></td>
                                             <td><?= $zn->plant_name ?></td>
                                             <td><?= $zn->zone_name ?></td>
                                             <td><?= $zn->check_name ?></td>
                                             <td><?= $zn->check_no ?></td>
-                                            <td><?= $zn->durasi ?> menit</td>
                                             <td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
                                             <td>
-                                                <a href="<?= base_url('Mst_Checkpoint/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
+                                                <a href="<?= base_url('Mst_Checkpoint/hapus/' . $zn->checkpoint_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
-                                                <a data-toggle="modal" data-target="#edit-data" class=" ml-2 text-primary" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-check="<?= $zn->check_name ?>" data-check_no="<?= $zn->check_no ?>" data-zone="<?= $zn->zone_name ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>" data-durasi="<?= $zn->durasi ?>" data-plant="<?= $zn->plant_name ?>"><i class="fa fa-eye"></i></a>
+                                                <a data-toggle="modal" data-target="#edit-data" class=" ml-2 text-primary" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->checkpoint_id ?>" data-check="<?= $zn->check_name ?>" data-check_no="<?= $zn->check_no ?>" data-zone="<?= $zn->zone_name ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>" data-durasi="<?= $zn->durasi_batas_atas ?>" data-durasi2="<?= $zn->durasi_batas_bawah ?>" data-plant="<?= $zn->plant_name ?>"><i class="fa fa-eye"></i></a>
 
-                                                <a href="<?= base_url('Mst_Checkpoint/edit?check_id=' . $zn->id) ?>&id_zona=<?= $zn->zona_id ?>&id_plant=<?= $zn->plant_id ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
+                                                <a href="<?= base_url('Mst_Checkpoint/edit?check_id=' . $zn->checkpoint_id) ?>&id_zona=<?= $zn->zona_id ?>&id_plant=<?= $zn->plant_id ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>
@@ -141,8 +139,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="">DURASI</label>
+                            <label for="">DURASI BATAS ATAS</label>
                             <input type="text" readonly autocomplete="off" id="durasi" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">DURASI BATAS BAWAH</label>
+                            <input type="text" readonly autocomplete="off" id="durasi2" class="form-control">
                         </div>
 
                         <div class="form-group">
@@ -180,6 +183,7 @@
                 modal.find("#check_no").attr("value", div.data("check_no"));
                 modal.find("#plant").attr("value", div.data("plant"));
                 modal.find("#durasi").attr("value", div.data("durasi") + ' menit');
+                modal.find("#durasi2").attr("value", div.data("durasi2") + ' menit');
                 if (div.data("status") == 1) {
                     modal.find("#status").attr("value", "ACTIVE");
                 } else {
@@ -190,7 +194,7 @@
         });
 
         $(".check-item").click(function() {
-            var panjang = $('[name="id_event[]"]:checked').length;
+            var panjang = $('[name="id_check[]"]:checked').length;
             if (panjang > 0) {
                 document.getElementById('btn_delete_all').style.display = "block";
             } else {
@@ -203,7 +207,7 @@
             if ($(this).is(":checked")) {
                 $(".check-item").prop("checked", true);
                 document.getElementById('btn_delete_all').style.display = "block";
-                var panjang = $('[name="id_event[]"]:checked').length;
+                var panjang = $('[name="id_check[]"]:checked').length;
             } else {
                 $(".check-item").prop("checked", false);
                 document.getElementById('btn_delete_all').style.display = "none";

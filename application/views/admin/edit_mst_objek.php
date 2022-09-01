@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <form onsubmit="return cek()" action="<?= base_url('Admin/Mst_objek/update') ?>" method="post" id="updateObjek">
-                        <input type="hidden" name="id_object" value="<?= $data->id ?>">
+                        <input type="hidden" name="id_object" value="<?= $data->objek_id ?>">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">PLANT</label>
@@ -51,7 +51,7 @@
                                     <option selected value="<?= $data->plant_id ?>"><?= $data->plant_name ?></option>
                                     <option value="">Pilih Plant</option>
                                     <?php foreach ($plant->result() as $plt) : ?>
-                                        <option value="<?= $plt->id ?>"><?= $plt->plant_name ?></option>
+                                        <option value="<?= $plt->plant_id ?>"><?= $plt->plant_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info_zona" style="display: none;" class="text-danger font-italic small">load data zona . . .</span>
@@ -63,7 +63,7 @@
                                     <option selected value="<?= $data->zona_id ?>"><?= $data->zone_name ?></option>
                                     <option value="">Pilih Zona</option>
                                     <?php foreach ($zone->result() as $znp) : ?>
-                                        <option value="<?= $znp->id ?>"><?= $znp->zone_name ?></option>
+                                        <option value="<?= $znp->zone_id ?>"><?= $znp->zone_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info_kategori" style="display: none;" class="text-danger font-italic small">load data kategori objek . . .</span>
@@ -75,7 +75,7 @@
                                     <option selected value="<?= $data->check_id ?>"><?= $data->check_name ?></option>
                                     <option value="">Pilih Checkpoint</option>
                                     <?php foreach ($checkpoint->result() as $ckp) : ?>
-                                        <option value="<?= $ckp->id ?>"><?= $ckp->check_name ?></option>
+                                        <option value="<?= $ckp->checkpoint_id ?>"><?= $ckp->check_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -86,7 +86,7 @@
                                     <option selected value="<?= $data->kategori_id ?>"><?= $data->kategori_name ?></option>
                                     <option value="">Pilih Kategori Objek</option>
                                     <?php foreach ($kategori_objek->result() as $ktr) : ?>
-                                        <option value="<?= $ktr->id ?>"><?= $ktr->kategori_name ?></option>
+                                        <option value="<?= $ktr->kategori_id ?>"><?= $ktr->kategori_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -95,9 +95,6 @@
                                 <label for="">NAMA OBJEK</label>
                                 <input type="text" value="<?= $data->nama_objek ?>" name="nama_objek" autocomplete="off" id="nama_objek" class="form-control">
                             </div>
-
-
-
 
                             <div class="form-group">
                                 <label for="">STATUS</label>
@@ -130,10 +127,37 @@
 </section>
 <script>
     function cek() {
-        if (document.getElementById("check_id").value == "") {
+        if (document.getElementById("plant_id").value == "") {
+            Swal.fire({
+                title: 'Perhatian!',
+                text: 'pilih plant',
+                icon: 'error',
+            }).then((result) => {
+                // $("#site_name").focus();
+            })
+            return false
+        } else if (document.getElementById("zone_id").value == "") {
+            Swal.fire({
+                title: 'Perhatian!',
+                text: 'pilih zona',
+                icon: 'error',
+            }).then((result) => {
+                // $("#site_name").focus();
+            })
+            return false
+        } else if (document.getElementById("check_id").value == "") {
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'pilih checkpoint',
+                icon: 'error',
+            }).then((result) => {
+                // $("#site_name").focus();
+            })
+            return false
+        } else if (document.getElementById("kategori_id").value == "") {
+            Swal.fire({
+                title: 'Perhatian!',
+                text: 'pilih kategori objek',
                 icon: 'error',
             }).then((result) => {
                 // $("#site_name").focus();
@@ -153,27 +177,86 @@
     }
 
 
-    $("select[name=zone_id").on('change', function() {
-        var id = $("select[name=zone_id] option:selected").val();
-        if (id == null || id == "") {
-            document.getElementById('list_check').innerHTML = '<label for="">CHECKPOINT</label><select class ="form-control" name="zone_id" id="zone_id"><option selected value="<?= $data->admisecsgp_mstckp_id ?>"><?= $data->check_name ?></option></select> ';
+
+    $("select[name=plant_id").on('change', function() {
+        var id = $("select[name=plant_id] option:selected").val();
+        if (id == "" || id == null) {
+            // alert("data kosong")
         } else {
             $.ajax({
-                url: "<?= base_url('Admin/Mst_objek/getCheck') ?>",
+                url: "<?= base_url('Admin/Mst_objek/show_zona') ?>",
                 method: "POST",
-                data: "id=" + id,
+                data: "plant_id=" + id,
                 beforeSend: function() {
-                    document.getElementById('info').style.display = "block"
+                    document.getElementById('info_zona').style.display = "block"
                 },
                 complete: function() {
-                    document.getElementById('info').style.display = "none"
+                    document.getElementById('info_zona').style.display = "none"
 
                 },
                 success: function(e) {
-                    document.getElementById('list_check').innerHTML = e;
-                    console.log(e);
+                    var select1 = $('#zone_id');
+                    if (e == 'tidak ada zona') {
+                        alert(e);
+                    } else {
+                        // console.log(e);
+                        select1.empty();
+                        var added2 = document.createElement('option');
+                        added2.value = "";
+                        added2.innerHTML = "Pilih Zona";
+                        select1.append(added2);
+                        var result = JSON.parse(e);
+                        for (var i = 0; i < result.length; i++) {
+                            var added = document.createElement('option');
+                            added.value = result[i].id;
+                            added.innerHTML = result[i].zone_name;
+                            select1.append(added);
+                        }
+                    }
                 }
             })
+
         }
+    });
+
+
+
+    //load daftar kategori zona id 
+    $("select[name=zone_id").on('change', function() {
+        var id = $("select[name=zone_id] option:selected").val();
+        $.ajax({
+            url: "<?= base_url('Admin/Mst_objek/show_kategori') ?>",
+            method: "POST",
+            data: "zone_id=" + id,
+            type: 'json',
+            cache: false,
+            beforeSend: function() {
+                document.getElementById('info_kategori').style.display = "block"
+            },
+            complete: function() {
+                document.getElementById('info_kategori').style.display = "none"
+
+            },
+            success: function(e) {
+                var select = $('#check_id');
+                if (e == 'tidak ada zona') {
+                    alert(e);
+                } else {
+                    // console.log(e);
+                    select.empty();
+                    var added = document.createElement('option');
+                    added.value = "";
+                    added.innerHTML = "Pilih Checkpoint";
+                    select.append(added);
+                    var result = JSON.parse(e);
+                    for (var i = 0; i < result.length; i++) {
+                        var added = document.createElement('option');
+                        added.value = result[i].checkpoint_id;
+                        added.innerHTML = result[i].check_name;
+                        select.append(added);
+                    }
+                }
+            }
+        })
     });
 </script>

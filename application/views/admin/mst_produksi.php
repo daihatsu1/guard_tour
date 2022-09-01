@@ -66,7 +66,7 @@
                                         <td><?= $zn->name ?></td>
                                         <td><?= $zn->status  == 1 ? 'ACTIVE'  : 'INACTIVE' ?></td>
                                         <td>
-                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-status="<?= $zn->status ?>" data-production="<?= $zn->name ?>"><i class="fa fa-eye"></i></a>
+                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->produksi_id ?>" data-status="<?= $zn->status ?>" data-production="<?= $zn->name ?>"><i class="fa fa-eye"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

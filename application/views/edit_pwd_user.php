@@ -51,9 +51,8 @@
                         </div>
                     </div>
                     <form onsubmit="return cek()" action="<?= base_url('Mst_user/resetPasword') ?>" method="post" id="inputPlant">
-                        <input type="hidden" name="id" value="<?= $data->id ?>">
+                        <input type="hidden" name="id" value="<?= $data->npk ?>">
                         <div class="card-body">
-
                             <div class="form-group">
                                 <label for="">PASSWORD BARU</label>
                                 <input type="password" name="password" autocomplete="off" id="password" class="form-control">

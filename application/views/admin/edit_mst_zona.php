@@ -48,10 +48,10 @@
                             <div class="form-group">
                                 <label for="">WILAYAH</label>
                                 <select class="form-control" name="site_id" id="site_id">
-                                    <option selected value="<?= $data->admisecsgp_mstsite_id ?>"><?= $data->site_name ?></option>
+                                    <option selected value="<?= $data->admisecsgp_mstsite_site_id ?>"><?= $data->site_name ?></option>
                                     <option value="">Pilih Wilayah</option>
                                     <?php foreach ($wilayah->result() as $cmp) : ?>
-                                        <option value="<?= $cmp->id ?>"><?= $cmp->site_name ?></option>
+                                        <option value="<?= $cmp->site_id ?>"><?= $cmp->site_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info" style="display: none;" class="text-danger font-italic small">load data plant . . .</span>
@@ -61,7 +61,7 @@
                                 <div class="form-group">
                                     <label for="">PLANT</label>
                                     <select class="form-control" name="plant_id" id="plant_id">
-                                        <option value="<?= $data->admisecsgp_mstplant_id ?>"><?= $data->plant_name ?></option>
+                                        <option value="<?= $data->admisecsgp_mstplant_plant_id ?>"><?= $data->plant_name ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
         var id = $("select[name=site_id] option:selected").val();
         // console.log(id)
         if (id == null || id == "") {
-            document.getElementById('list_plant').innerHTML = '<div class="form-group"><label for="">PLANT</label><select class="form-control" name="plant_id" id="plant_id"><option value="<?= $data->admisecsgp_mstplant_id ?>"><?= $data->plant_name ?></option></select></div>';
+            document.getElementById('list_plant').innerHTML = '<div class="form-group"><label for="">PLANT</label><select class="form-control" name="plant_id" id="plant_id"><option value="<?= $data->admisecsgp_mstplant_plant_id ?>"><?= $data->plant_name ?></option></select></div>';
         } else {
             $.ajax({
                 url: "<?= base_url('Admin/Mst_Zona/showPlant') ?>",

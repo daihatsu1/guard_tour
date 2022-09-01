@@ -7,7 +7,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_objek') ?>">Master</a></li>
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_objek') ?>">Objek</a></li>
+                    <li class="breadcrumb-item"><a href="#">Objek</a></li>
                 </ol>
             </div>
         </div>
@@ -53,18 +53,18 @@
                         <a href="<?= base_url('Admin/Mst_objek/form_add') ?>" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Tambah Objek</a>
 
                         <a href="<?= base_url('Admin/Mst_objek/form_upload') ?>" class="btn btn-sm btn-success"><i class="fa fa-file-excel"></i> Upload Objek</a>
-
                         <form method="post" action="<?= base_url('Admin/Mst_objek/multipleDelete') ?>">
                             <div class="row justify-content-end">
                                 <button onclick="return confirm('Yakin Hapus Data ?')" id="btn_delete_all" style="display:none ;" class="btn btn-danger btn-sm mb-2 mr-2"> <i class="fas fa-trash"></i> HAPUS DATA TERPILIH</button>
                             </div>
-                            <table id="example" class="table-sm mt-1 table table-striped table-bordered">
+
+                            <table id="example" class="mt-1 table-sm table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th style="width: 10px;">
                                             <input id="check-all" type="checkbox">
                                         </th>
-                                        <th>NO</th>
+                                        <th style="width: 50px;">NO</th>
                                         <th>PLANT</th>
                                         <th>ZONA</th>
                                         <th>NAMA CHECKPOINT</th>
@@ -78,7 +78,7 @@
                                     <?php $no = 1;
                                     foreach ($objek->result() as $zn) : ?>
                                         <tr>
-                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_event[]" value="<?= $zn->id ?>"> </td>
+                                            <td><input id="check-item" class="check-item" type="checkbox" name="id_objek[]" value="<?= $zn->id ?>"> </td>
                                             <td><?= $no++ ?></td>
                                             <td><?= $zn->plant_name ?></td>
                                             <td><?= $zn->zone_name ?></td>
@@ -90,9 +90,9 @@
                                                 <!-- data-kategori="<?= $zn->kategori_name ?> -->
                                                 <a href="<?= base_url('Admin/Mst_objek/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
-                                                <a data-toggle="modal" data-target="#edit-data" class="text-primary ml-2" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-plant="<?= $zn->plant_name ?>" data-check="<?= $zn->check_name ?>" data-zone="<?= $zn->zone_name ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>" data-objek_name="<?= $zn->nama_objek ?>" data-kategori="<?= $zn->kategori_name ?>"><i class="fa fa-eye"></i></a>
+                                                <a data-toggle="modal" data-target="#edit-data" class=" ml-2 text-primary" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-plant="<?= $zn->plant_name ?>" data-check="<?= $zn->check_name ?>" data-zone="<?= $zn->zone_name ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>" data-name="<?= $zn->nama_objek ?>" data-kategori="<?= $zn->kategori_name ?>"><i class="fa fa-eye"></i></a>
 
-                                                <a href=" <?= base_url('Admin/Mst_objek/edit?check_id=' . $zn->id) ?>&zona_id=<?= $zn->zona_id ?>&id_checkpoint=<?= $zn->id_check ?>" class='text-success ml-2' title="edit data"><i class="fa fa-edit"></i></a>
+                                                <a href=" <?= base_url('Admin/Mst_objek/edit?check_id=' . $zn->id) ?>&zona_id=<?= $zn->zona_id ?>&id_checkpoint=<?= $zn->id_check ?>&plant_id=<?= $zn->plant_id ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>
@@ -183,7 +183,7 @@
                 modal.find("#zona").attr("value", div.data("zone"));
                 modal.find("#check").attr("value", div.data("check"));
                 modal.find("#kategori").attr("value", div.data("kategori"));
-                modal.find("#objek").attr("value", div.data("objek_name"));
+                modal.find("#objek").attr("value", div.data("name"));
                 modal.find("#plant_name").attr("value", div.data("plant"));
                 if (div.data("status") == 1) {
                     modal.find("#status").attr("value", "ACTIVE");
@@ -195,7 +195,7 @@
         });
 
         $(".check-item").click(function() {
-            var panjang = $('[name="id_event[]"]:checked').length;
+            var panjang = $('[name="id_objek[]"]:checked').length;
             if (panjang > 0) {
                 document.getElementById('btn_delete_all').style.display = "block";
             } else {
@@ -208,7 +208,7 @@
             if ($(this).is(":checked")) {
                 $(".check-item").prop("checked", true);
                 document.getElementById('btn_delete_all').style.display = "block";
-                var panjang = $('[name="id_event[]"]:checked').length;
+                var panjang = $('[name="id_objek[]"]:checked').length;
             } else {
                 $(".check-item").prop("checked", false);
                 document.getElementById('btn_delete_all').style.display = "none";

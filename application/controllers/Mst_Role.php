@@ -44,21 +44,17 @@ class Mst_Role extends CI_Controller
 
     public function input()
     {
-        $id_role        = $this->input->post("id_role");
+        $id_role        = 'ADMRL' . substr(uniqid(rand(), true), 4, 4);
         $level          = strtoupper($this->input->post("level"));
         $status         = $this->input->post("status");
 
-        $cek = $this->db->get_where("admisecsgp_mstroleusr", ['id_role' => $id_role])->num_rows();
         $cek2 = $this->db->get_where("admisecsgp_mstroleusr", ['level' => $level])->num_rows();
-        if ($cek >= 1) {
-            $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> id ' . $id_role . ' sudah digunakan ');
-            redirect('Mst_Role');
-        } else if ($cek2 >= 1) {
+        if ($cek2 >= 1) {
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> level ' . $level . ' sudah digunakan ');
             redirect('Mst_Role');
         } else {
             $data = [
-                'id_role'            => $id_role,
+                'role_id'            => $id_role,
                 'level'              => $level,
                 'status'             => $status,
                 'created_at'         => date('Y-m-d H:i:s'),
@@ -73,7 +69,7 @@ class Mst_Role extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['role_id' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstroleusr", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -88,7 +84,7 @@ class Mst_Role extends CI_Controller
         $id =  $this->input->get('role_id');
         $data = [
             'link'       => $this->uri->segment(1),
-            'data'       => $this->M_patrol->ambilData("admisecsgp_mstroleusr", ['id' => $id])->row(),
+            'data'       => $this->M_patrol->ambilData("admisecsgp_mstroleusr", ['role_id' => $id])->row(),
         ];
         // $this->template->load("template/template", "edit_mst_role", $data);
         $this->load->view("template/sidebar", $data);
@@ -106,10 +102,10 @@ class Mst_Role extends CI_Controller
             'level'              => $level
         ];
 
-        $where = ['id' => $id];
+        $where = ['role_id' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstroleusr", $data, $where);
         if ($update) {
-            $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');    
+            $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');
             redirect('Mst_Role');
         } else {
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal update data');

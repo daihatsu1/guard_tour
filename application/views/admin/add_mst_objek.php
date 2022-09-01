@@ -50,7 +50,7 @@
                                 <select class="form-control" name="plant_id" id="plant_id">
                                     <option selected value="">Pilih Plant</option>
                                     <?php foreach ($plant->result() as $plt) : ?>
-                                        <option value="<?= $plt->id ?>"><?= $plt->plant_name ?></option>
+                                        <option value="<?= $plt->plant_id ?>"><?= $plt->plant_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info_zona" style="display: none;" class="text-danger font-italic small">load data zona . . .</span>
@@ -75,16 +75,16 @@
                                 <label for="">KATEGORI OBJEK</label>
                                 <select class="form-control" name="kategori_id" id="kategori_id">
                                     <option selected value="">Pilih Kategori Objek</option>
+                                    <?php foreach ($kategori->result() as $ktr) : ?>
+                                        <option value="<?= $ktr->kategori_id ?>"><?= $ktr->kategori_name ?></option>
+                                    <?php endforeach ?>
                                 </select>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group mt-2">
                                 <label for="">NAMA OBJEK</label>
                                 <input type="text" name="nama_objek" autocomplete="off" id="nama_objek" class="form-control">
                             </div>
-
-
-
 
                             <div class="form-group">
                                 <label for="">STATUS</label>
@@ -173,6 +173,7 @@
                     var select1 = $('#zone_id');
                     if (e == 'tidak ada zona') {
                         alert(e);
+                        location.reload();
                     } else {
                         // console.log(e);
                         select1.empty();
@@ -183,7 +184,7 @@
                         var result = JSON.parse(e);
                         for (var i = 0; i < result.length; i++) {
                             var added = document.createElement('option');
-                            added.value = result[i].id;
+                            added.value = result[i].zone_id;
                             added.innerHTML = result[i].zone_name;
                             select1.append(added);
                         }
@@ -199,12 +200,11 @@
     //load daftar kategori zona id 
     $("select[name=zone_id").on('change', function() {
         var id = $("select[name=zone_id] option:selected").val();
+        console.log(id);
         $.ajax({
             url: "<?= base_url('Admin/Mst_objek/show_kategori') ?>",
             method: "POST",
             data: "zone_id=" + id,
-            type: 'json',
-            cache: false,
             beforeSend: function() {
                 document.getElementById('info_kategori').style.display = "block"
             },
@@ -213,41 +213,23 @@
 
             },
             success: function(e) {
-                var select1 = $('#kategori_id');
-                var select2 = $('#check_id');
-                if (e == 'tidak ada kategori objek di zona ini') {
+                var select = $('#check_id');
+                if (e == 'tidak ada zona') {
                     alert(e);
+                    location.reload();
                 } else {
-                    var data = JSON.parse(e);
-                    const data_kategori = data[0][0];
-                    const data_checkpoint = data[1][0];
-
-                    //tambahkan kategori objek
-                    select1.empty();
-                    var added2 = document.createElement('option');
-                    added2.value = "";
-                    added2.innerHTML = "Pilih Kategori Objek";
-                    select1.append(added2);
-                    for (var i = 0; i < data_kategori.length; i++) {
+                    // console.log(e);
+                    select.empty();
+                    var added = document.createElement('option');
+                    added.value = "";
+                    added.innerHTML = "Pilih Checkpoint";
+                    select.append(added);
+                    var result = JSON.parse(e);
+                    for (var i = 0; i < result.length; i++) {
                         var added = document.createElement('option');
-                        added.value = data_kategori[i].id;
-                        added.innerHTML = data_kategori[i].kategori_name;
-                        select1.append(added);
-                    }
-
-
-
-                    //tambahkan checkpoint
-                    select2.empty();
-                    var added3 = document.createElement('option');
-                    added3.value = "";
-                    added3.innerHTML = "Pilih Checkpoint";
-                    select2.append(added3);
-                    for (var i = 0; i < data_checkpoint.length; i++) {
-                        var added4 = document.createElement('option');
-                        added4.value = data_checkpoint[i].id;
-                        added4.innerHTML = data_checkpoint[i].check_name;
-                        select2.append(added4);
+                        added.value = result[i].checkpoint_id;
+                        added.innerHTML = result[i].check_name;
+                        select.append(added);
                     }
                 }
             }

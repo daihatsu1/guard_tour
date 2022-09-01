@@ -50,7 +50,7 @@ class Mst_user extends CI_Controller
     public function input()
     {
         $npk            = $this->input->post("npk");
-        $name           = $this->input->post("nama");
+        $name           = strtoupper($this->input->post("nama"));
         $id_role        = $this->input->post("level");
         $id_site        = $this->input->post("site_id");
         $id_plant       = $this->input->post("plant_id");
@@ -63,19 +63,19 @@ class Mst_user extends CI_Controller
             $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> npk ' . $npk . ' sudah terdaftar ');
             redirect('Mst_user');
         } else {
-            $cari_company   = $this->db->query("select id , admisecsgp_mstcmp_id from admisecsgp_mstsite where id='" . $id_site  . "'")->row();
-            $id_comp = $cari_company->admisecsgp_mstcmp_id;
+            $cari_company   = $this->db->query("select site_id , admisecsgp_mstcmp_company_id from admisecsgp_mstsite where site_id='" . $id_site  . "'")->row();
+            $id_comp = $cari_company->admisecsgp_mstcmp_company_id;
             $data = [
-                'npk'                        => $npk,
-                'name'                       => $name,
-                'admisecsgp_mstroleusr_id'   => $id_role,
-                'admisecsgp_mstsite_id'      => $id_site,
-                'admisecsgp_mstplant_id'     => $id_plant,
-                'admisecsgp_mstcmp_id'       => $id_comp,
-                'password'                   => $password,
-                'created_at'                 => date('Y-m-d H:i:s'),
-                'created_by'                 => $this->session->userdata('id_token'),
-                'status'                     => $status
+                'npk'                             => $npk,
+                'name'                            => $name,
+                'admisecsgp_mstroleusr_role_id'   => $id_role,
+                'admisecsgp_mstsite_site_id'      => $id_site,
+                'admisecsgp_mstplant_plant_id'    => $id_plant,
+                'admisecsgp_mstcmp_company_id'    => $id_comp,
+                'password'                        => $password,
+                'created_at'                      => date('Y-m-d H:i:s'),
+                'created_by'                      => $this->session->userdata('id_token'),
+                'status'                          => $status
             ];
             $this->M_patrol->inputData($data, "admisecsgp_mstusr");
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil input data');
@@ -88,7 +88,7 @@ class Mst_user extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['npk' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstusr", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -120,27 +120,27 @@ class Mst_user extends CI_Controller
     {
         $id             = $this->input->post("id");
         $npk            = $this->input->post("npk");
-        $name           = $this->input->post("nama");
+        $name           = strtoupper($this->input->post("nama"));
         $id_role        = $this->input->post("level");
         $id_site        = $this->input->post("site_id");
         $id_plant       = $this->input->post("plant_id");
         $status         = $this->input->post("status");
 
-        $cari_company   = $this->db->query("select id , admisecsgp_mstcmp_id from admisecsgp_mstsite where id='" .  $id_site . "'")->row();
-        $id_comp = $cari_company->admisecsgp_mstcmp_id;
+        $cari_company   = $this->db->query("select site_id , admisecsgp_mstcmp_company_id from admisecsgp_mstsite where site_id='" .  $id_site . "'")->row();
+        $id_comp = $cari_company->admisecsgp_mstcmp_company_id;
         $data = [
-            'npk'                        => $npk,
-            'name'                       => $name,
-            'admisecsgp_mstroleusr_id'   => $id_role,
-            'admisecsgp_mstsite_id'      => $id_site,
-            'admisecsgp_mstplant_id'     => $id_plant,
-            'admisecsgp_mstcmp_id'       => $id_comp,
-            'updated_at'                 => date('Y-m-d H:i:s'),
-            'updated_by'                 => $this->session->userdata('id_token'),
-            'status'                     => $status
+            // 'npk'                        => $npk,
+            'name'                              => $name,
+            'admisecsgp_mstroleusr_role_id'     => $id_role,
+            'admisecsgp_mstsite_site_id'        => $id_site,
+            'admisecsgp_mstplant_plant_id'      => $id_plant,
+            'admisecsgp_mstcmp_company_id'      => $id_comp,
+            'updated_at'                        => date('Y-m-d H:i:s'),
+            'updated_by'                        => $this->session->userdata('id_token'),
+            'status'                            => $status
         ];
 
-        $where = ['id' => $id];
+        $where = ['npk' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstusr", $data, $where);
         if ($update) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');
@@ -173,13 +173,13 @@ class Mst_user extends CI_Controller
             'password'    => $password,
         ];
 
-        $where = ['id' => $id];
+        $where = ['npk' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstusr", $data, $where);
         if ($update) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update password');
             redirect('Mst_user');
         } else {
-            $this->session->set_flashdata('info', '<i class="icon fas fa-exclamation-triangle"></i> Gagal update password');
+            $this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal update password');
             redirect('Mst_user');
         }
     }

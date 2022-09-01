@@ -50,7 +50,7 @@
                                 <select class="form-control" name="site_id" id="site_id">
                                     <option selected value="">Pilih Wilayah</option>
                                     <?php foreach ($wilayah->result() as $cmp) : ?>
-                                        <option value="<?= $cmp->id ?>"><?= $cmp->site_name ?></option>
+                                        <option value="<?= $cmp->site_id ?>"><?= $cmp->site_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info" style="display: none;" class="text-danger font-italic small">load data plant . . .</span>
@@ -68,10 +68,6 @@
                                 <input type="text" name="kode_zona" autocomplete="off" id="kode_zona" class="form-control">
                             </div>
 
-                            <div class="form-group">
-                                <label for="">DURASI</label>
-                                <input type="number" name="durasi" autocomplete="off" id="durasi" class="form-control">
-                            </div>
 
                             <div class="form-group">
                                 <label for="">STATUS</label>
@@ -130,15 +126,6 @@
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'kode zona harus di isi',
-                icon: 'error',
-            }).then((result) => {
-                // $("#site_name").focus();
-            })
-            return false
-        } else if (document.getElementById("durasi").value == "") {
-            Swal.fire({
-                title: 'Perhatian!',
-                text: 'durasi zona harus di isi',
                 icon: 'error',
             }).then((result) => {
                 // $("#site_name").focus();

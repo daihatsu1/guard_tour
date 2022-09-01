@@ -43,6 +43,9 @@ date_default_timezone_set('Asia/Jakarta');
     <!-- filtter -->
     <script src="https://cdn.datatables.net/fixedheader/3.2.3/js/dataTables.fixedHeader.min.js"></script>
 
+    <!-- tags input -->
+    <link rel="stylesheet" type="text/css" href="<?= base_url('assets') ?>/dist/css/jquery-tagsinput.min.css" />
+    <script src="<?= base_url('assets') ?>/dist/js/jquery-tagsinput.min.js" defer></script>
 </head>
 
 <body class="hold-transition sidebar-mini sidebar-collapse">
@@ -226,26 +229,6 @@ date_default_timezone_set('Asia/Jakarta');
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="<?= base_url('Mst_Event_Detail') ?>" class="nav-link
-                                    <?php if ($link == 'Mst_Event_Detail') {
-                                        echo 'active';
-                                    } ?>">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Master Event Detail</p>
-                                    </a>
-                                </li>
-
-                                <!-- <li class="nav-item">
-                                    <a href="<?= base_url('Mst_Periode') ?>" class="nav-link 
-                                    <?php if ($link == 'Mst_Periode') {
-                                        echo 'active';
-                                    } ?>">
-                                        <i class=" far fa-circle nav-icon"></i>
-                                        <p>Master Periode Patroli</p>
-                                    </a>
-                                </li> -->
-
-                                <li class="nav-item">
                                     <a href="<?= base_url('Mst_Shift') ?>" class="nav-link
                                     <?php if ($link == 'Mst_Shift') {
                                         echo 'active';
@@ -282,27 +265,19 @@ date_default_timezone_set('Asia/Jakarta');
                                         <p>Master Role User</p>
                                     </a>
                                 </li>
-                                <!-- <li class="nav-item">
-                                    <a href="<?= base_url('FormMenu') ?>" class="nav-link
-                                    <?php if ($link == 'FormMenu') {
-                                        echo ' active';
-                                    } ?>">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Master Hak Akses</p>
-                                    </a>
-                                </li> -->
+
 
                             </ul>
                         </li>
                         <li class="nav-item
                         <?php if (
-                            $link == 'Upload_Jadwal' || $link == 'Mst_Jadwal' || $link == 'Mst_Jadwal_Produksi'
+                            $link == 'Upload_Jadwal_Patroli' || $link == 'Upload_Jadwal_Produksi' || $link == 'Mst_Jadwal_Patroli' || $link == 'Mst_Jadwal_Produksi'
                         ) {
                             echo 'menu-open';
                         } ?>">
                             <a href="#" class="nav-link
                             <?php if (
-                                $link == 'Upload_Jadwal' || $link == 'Mst_Jadwal' || $link == 'Mst_Jadwal_Produksi'
+                                $link == 'Upload_Jadwal_Patroli' || $link == 'Mst_Jadwal' || $link == 'Mst_Jadwal_Produksi'
                             ) {
                                 echo 'active';
                             } ?>">
@@ -314,8 +289,8 @@ date_default_timezone_set('Asia/Jakarta');
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?= base_url('Mst_Jadwal') ?>" class="nav-link
-                                    <?php if ($link == 'Mst_Jadwal') {
+                                    <a href="<?= base_url('Mst_Jadwal_Patroli') ?>" class="nav-link
+                                    <?php if ($link == 'Mst_Jadwal_Patroli') {
                                         echo 'active';
                                     } ?>">
                                         <i class="far fa-circle nav-icon"></i>
@@ -332,12 +307,21 @@ date_default_timezone_set('Asia/Jakarta');
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?= base_url('Upload_Jadwal') ?>" class="nav-link
-                                    <?php if ($link == 'Upload_Jadwal') {
+                                    <a href="<?= base_url('Upload_Jadwal_Patroli') ?>" class="nav-link
+                                    <?php if ($link == 'Upload_Jadwal_Patroli') {
                                         echo 'active';
                                     } ?>">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Upload Jadwal</p>
+                                        <p>Upload Jadwal Patroli</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?= base_url('Upload_Jadwal_Produksi') ?>" class="nav-link
+                                    <?php if ($link == 'Upload_Jadwal_Produksi') {
+                                        echo 'active';
+                                    } ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Upload Jadwal Produksi</p>
                                     </a>
                                 </li>
                             </ul>

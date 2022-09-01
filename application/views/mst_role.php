@@ -43,9 +43,9 @@
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                            <!-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
                                 <i class="fas fa-times"></i>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                     <div class="card-body">
@@ -53,7 +53,7 @@
                             <i class="fa fa-plus"></i> Tambah Role User
                         </a>
 
-                        <table id="example2" class="mt-1 table table-striped table-bordered">
+                        <table id="example2" class="table-sm mt-1 table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>NO</th>
@@ -72,12 +72,12 @@
                                         <td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
                                         <td>
 
-                                            <a href="<?= base_url('Mst_Role/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger '><i class="fas fa-trash"></i></a>
+                                            <a href="<?= base_url('Mst_Role/hapus/' . $zn->role_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger '><i class="fas fa-trash"></i></a>
 
 
-                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary  ml-3 " data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-status="<?= $zn->status ?>" data-idrole="<?= $zn->id_role ?>" data-level="<?= $zn->level ?>"><i class="fa fa-eye"></i></a>
+                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary  ml-3 " data-backdrop="static" data-keyboard="false" data-id="<?= $zn->role_id ?>" data-status="<?= $zn->status ?>" data-idrole="<?= $zn->role_id ?>" data-level="<?= $zn->level ?>"><i class="fa fa-eye"></i></a>
 
-                                            <a href="<?= base_url('Mst_Role/edit?role_id=' . $zn->id) ?>" class='text-success  ml-3 '><i class="fa fa-edit"></i></a>
+                                            <a href="<?= base_url('Mst_Role/edit?role_id=' . $zn->role_id) ?>" class='text-success  ml-3 '><i class="fa fa-edit"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

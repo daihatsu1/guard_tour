@@ -34,9 +34,11 @@
                         <h3 class="card-title">Tambah Data</h3>
 
                         <div class="card-tools">
-                            <!-- <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
+
+                            <!-- 
                             <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
                                 <i class="fas fa-times"></i>
                             </button> -->
@@ -45,20 +47,7 @@
                     <form onsubmit="return cek()" action="<?= base_url('Mst_Kategori_Object/input') ?>" method="post" id="inputEvent">
 
                         <div class="card-body">
-                            <div class="form-group">
-                                <label for="">PLANT</label>
-                                <select class="form-control" name="plant_id" id="plant_id">
-                                    <option selected value="">Pilih Plant</option>
-                                    <?php foreach ($plant->result() as $plt) : ?>
-                                        <option value="<?= $plt->id ?>"><?= $plt->plant_name ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                                <span id="info" style="display: none;" class="text-danger font-italic small">load data zone . . .</span>
-                            </div>
 
-                            <div id="list_zone">
-
-                            </div>
                             <div class="form-group">
                                 <label for="">NAMA KATEGORI OBJEK</label>
                                 <input type="text" name="kategori_name" autocomplete="off" id="kategori_name" class="form-control">

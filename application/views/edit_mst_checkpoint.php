@@ -43,15 +43,15 @@
                         </div>
                     </div>
                     <form onsubmit="return cek()" action="<?= base_url('Mst_Checkpoint/update') ?>" method="post" id="updateCheckpoint">
-                        <input type="hidden" name="id" value="<?= $data->id ?>">
+                        <input type="hidden" name="id" value="<?= $data->checkpoint_id ?>">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">PLANT</label>
                                 <select class="form-control" name="plant_id" id="plant_id">
-                                    <option selected value="<?= $data->admisecsgp_mstplant_id ?>"><?= $data->plant_name ?></option>
+                                    <option selected value="<?= $data->admisecsgp_mstplant_plant_id ?>"><?= $data->plant_name ?></option>
                                     <option value="">Pilih Plant</option>
                                     <?php foreach ($plant->result() as $plt) : ?>
-                                        <option value="<?= $plt->id ?>"><?= $plt->plant_name ?></option>
+                                        <option value="<?= $plt->plant_id ?>"><?= $plt->plant_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info" style="display: none;" class="text-danger font-italic small">load data zona . . .</span>
@@ -62,10 +62,10 @@
                                 <select class="form-control" name="zone_id" id="zone_id">
                                     <?php foreach ($zone->result() as $znp) :
 
-                                        if ($znp->id == $zona_id) { ?>
-                                            <option selected value="<?= $data->admisecsgp_mstzone_id ?>"><?= $znp->zone_name ?></option>
+                                        if ($znp->zona_id == $zona_id) { ?>
+                                            <option selected value="<?= $data->admisecsgp_mstzone_zone_id ?>"><?= $znp->zone_name ?></option>
                                         <?php } else { ?>
-                                            <option value="<?= $znp->id ?>"><?= $znp->zone_name ?></option>
+                                            <option value="<?= $znp->zone_id ?>"><?= $znp->zone_name ?></option>
                                         <?php } ?>
                                     <?php endforeach ?>
                                 </select>
@@ -81,8 +81,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="">DURASI</label>
-                                <input type="number" value="<?= $data->durasi ?>" name="durasi" autocomplete="off" id="durasi" class="form-control">
+                                <label for="">DURASI BATAS ATAS</label>
+                                <input type="number" value="<?= $data->durasi_batas_atas ?>" name="durasi" autocomplete="off" id="durasi" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">DURASI BATAS BAWAH</label>
+                                <input type="number" value="<?= $data->durasi_batas_bawah ?>" name="durasi2" autocomplete="off" id="durasi2" class="form-control">
                             </div>
 
 
@@ -153,7 +158,7 @@
         var id = $("select[name=plant_id] option:selected").val();
         // console.log(id)
         if (id == null || id == "") {
-            document.getElementById('list_zone').innerHTML = '<label for="">ZONA</label><select class ="form-control" name="zone_id" id="zone_id"><option selected value="<?= $data->admisecsgp_mstzone_id ?>"><?= $data->zone_name ?></option></select> ';
+            document.getElementById('list_zone').innerHTML = '<label for="">ZONA</label><select class ="form-control" name="zone_id" id="zone_id"><option selected value="<?= $data->admisecsgp_mstzone_zone_id ?>"><?= $data->zone_name ?></option></select> ';
         } else {
             $.ajax({
                 url: "<?= base_url('Mst_Checkpoint/showZone') ?>",
@@ -168,7 +173,7 @@
                 },
                 success: function(e) {
                     document.getElementById('list_zone').innerHTML = e;
-                    console.log(e);
+                    // console.log(e);
                 }
             })
         }
