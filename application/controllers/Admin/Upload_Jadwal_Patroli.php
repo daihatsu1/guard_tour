@@ -16,6 +16,7 @@ class Upload_Jadwal_Patroli extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $id = $this->session->userdata('id_token');
         $this->load->helper('ConvertBulan');
+        $this->load->helper('string');
         if ($id == null || $id == "") {
             $this->session->set_flashdata('info_login', 'anda harus login dulu');
             redirect('Login');
@@ -122,7 +123,7 @@ class Upload_Jadwal_Patroli extends CI_Controller
                 $d = new DateTime();
                 $uniq = $d->format("dmyHisv");
                 $id                 = uniqid($uniq);
-                $gen = 'ADMJP' . substr($id, 0, 6) . substr($id, 22, 10);
+                $gen = 'ADMJP' . substr($id, 0, 6) . substr($id, 22, 10) . random_string('alnum', 3);;
                 $Shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift[$t]['tanggal_' . $o] . "' ")->row();
                 $User = $this->db->query("select npk from admisecsgp_mstusr where npk ='" . $npk .  "' and name='" . $nama . "' and admisecsgp_mstplant_plant_id = '" . $plant->plant_id . "' ")->row();
                 $var = [

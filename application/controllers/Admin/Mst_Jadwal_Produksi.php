@@ -14,6 +14,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         $id = $this->session->userdata('id_token');
         date_default_timezone_set('Asia/Jakarta');
         $this->load->helper('convertbulan');
+        $this->load->helper('string');
         if ($id == null || $id == "") {
             $this->session->set_flashdata('info_login', 'anda harus login dulu');
             redirect('Login');
@@ -230,7 +231,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
                 $d = new DateTime();
                 $uniq = $d->format("dmyHisv");
                 $id                 = uniqid($uniq);
-                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10);
+                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10) . random_string('alnum', 3);;
                 $data =  [
                     'id_zona_patroli'                        => $gen,
                     'date_patroli'                           => $date . "-" . $prt,

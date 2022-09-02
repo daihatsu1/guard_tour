@@ -9,8 +9,6 @@ class M_restJadwal extends CI_Model
 		$this->load->database();
 		$this->table = 'admisecsgp_mstjadwalpatroli';
 		$this->load->helper('date_time');
-
-
 	}
 
 	function getJadwal($dateTime, $user_id, $plant_id)
