@@ -31,7 +31,7 @@ class Login extends CI_Controller
         // $cekUser = $this->db->get_where("admisecsgp_mstusr", ['name' =>  $name, 'password' => $password]);
 
         $cekUser = $this->db->query("SELECT   usr.npk , usr.name , ru.level  , usr.admisecsgp_mstsite_site_id , usr.admisecsgp_mstplant_plant_id 
-        FROM `admisecsgp_mstusr` usr  , `admisecsgp_mstroleusr`  ru
+        FROM admisecsgp_mstusr usr  , admisecsgp_mstroleusr  ru
         WHERE ru.role_id = usr.admisecsgp_mstroleusr_role_id and usr.password = '" . $password . "' and usr.name = '" . $name . "' ");
         // var_dump($cekUser->row());
 
