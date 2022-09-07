@@ -24,7 +24,7 @@
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in to start your session . <?= md5('superadmin') ?></p>
+                <p class="login-box-msg">Sign in to start your session .</p>
                 <form onsubmit="return cek()" action="<?= base_url('Login/cekLogin') ?>" method="post">
                     <div class="input-group mb-3">
                         <input type="text" id="username" name="username" class="form-control" placeholder="Username">
