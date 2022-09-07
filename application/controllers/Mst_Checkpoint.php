@@ -94,7 +94,7 @@ class Mst_Checkpoint extends CI_Controller
 
     public function form_upload()
     {
-        $filename = "upload_checkpoint_" . $this->session->flashdata('id_token');
+        $filename = "upload_checkpoint_" . $this->session->userdata('id_token');
         $data['plant_kode_input'] = "";
         if (isset($_POST['view'])) {
             $upload = $this->M_patrol->uploadCheckpoint($filename);

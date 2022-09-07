@@ -34,6 +34,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         $data['bulan'] = "";
         $data['tahun'] = "";
         $data['plant_id'] = "";
+        $id_wil_user = $this->session->userdata('site_id');
         $data['daftar_bulan'] = [
             'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI', 'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'
         ];
@@ -48,7 +49,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
             $data['jadwal']       = $this->M_patrol->headerjadwalProduksi($plant_id, $tahun . '-' . convert_bulan($bulan));
         }
         $data['link']          = $this->uri->segment(2);
-        $data['plant']         = $this->M_patrol->ambilData("admisecsgp_mstplant");
+        $data['plant']         = $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1, 'admisecsgp_mstsite_site_id' => $id_wil_user]);
         $this->load->view("template/admin/sidebar", $data);
         $this->load->view("admin/mst_jadwal_produksi", $data);
         $this->load->view("template/admin/footer");
@@ -70,6 +71,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         $data['session_plant'] = "";
         $data['session_date'] = "";
         $date = "";
+        $id_wil_user = $this->session->userdata('site_id');
         if (isset($_POST['lihat'])) {
             //param dari user 
             $plant_id               = $this->input->post("plant_id");
@@ -82,7 +84,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
             $data['session_plant']          = $plant_id;
         }
         $data['link']                = $this->uri->segment(2);
-        $data['plant']               = $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1]);
+        $data['plant']               = $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1, 'admisecsgp_mstsite_site_id' => $id_wil_user]);
         $data['daftar_bulan'] = [
             'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI', 'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'
         ];
@@ -148,6 +150,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
     public function form_revisi_upload_jadwal(Type $var = null)
     {
 
+        $id_wil_user = $this->session->userdata('site_id');
         $filename = "rev_upload_jadwal_" . $this->session->userdata("id_token");
         $data['plant_3'] = "";
         if (isset($_POST['view'])) {
@@ -185,7 +188,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
             }
         }
         $data['link'] =  $this->uri->segment(2);
-        $data['plant_master']  = $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1]);
+        $data['plant_master']  = $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1, 'admisecsgp_mstsite_site_id' => $id_wil_user]);
         $this->load->view("template/admin/sidebar", $data);
         $this->load->view("admin/form_revisi_upload_jadwal", $data);
         $this->load->view("template/admin/footer");

@@ -143,7 +143,7 @@ class Mst_Event extends CI_Controller
 
     public function form_upload_event(Type $var = null)
     {
-        $filename = "upload_event_" . $this->session->flashdata('id_token');
+        $filename = "upload_event_" . $this->session->userdata('id_token');
         $data['plant_kode_input'] = "";
         if (isset($_POST['view'])) {
             $upload = $this->M_patrol->uploadCheckpoint($filename);

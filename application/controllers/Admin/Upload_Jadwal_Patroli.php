@@ -31,6 +31,7 @@ class Upload_Jadwal_Patroli extends CI_Controller
     {
 
         $filename = "upload_jadwal_patroli_" . $this->session->userdata("id_token");
+        $id_wil_user = $this->session->userdata('site_id');
         $data['plant_3'] = "";
         // $filename = "upload_jadwal-format";
         if (isset($_POST['view'])) {
@@ -70,7 +71,7 @@ class Upload_Jadwal_Patroli extends CI_Controller
             }
         }
         $data['link'] =  $this->uri->segment(2);
-        $data['plant_master']  = $this->M_admin->ambilData("admisecsgp_mstplant", ['status' => 1]);
+        $data['plant_master']  = $this->M_admin->ambilData("admisecsgp_mstplant", ['status' => 1, 'admisecsgp_mstsite_site_id' => $id_wil_user]);
 
         $this->load->view("template/admin/sidebar", $data);
         $this->load->view("admin/upload_jadwal_patroli", $data);
@@ -123,7 +124,7 @@ class Upload_Jadwal_Patroli extends CI_Controller
                 $d = new DateTime();
                 $uniq = $d->format("dmyHisv");
                 $id                 = uniqid($uniq);
-                $gen = 'ADMJP' . substr($id, 0, 6) . substr($id, 22, 10) . random_string('alnum', 3);;
+                $gen = 'ADMJP' . substr($id, 0, 6) . substr($id, 22, 10) . random_string('alnum', 3);
                 $Shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift[$t]['tanggal_' . $o] . "' ")->row();
                 $User = $this->db->query("select npk from admisecsgp_mstusr where npk ='" . $npk .  "' and name='" . $nama . "' and admisecsgp_mstplant_plant_id = '" . $plant->plant_id . "' ")->row();
                 $var = [

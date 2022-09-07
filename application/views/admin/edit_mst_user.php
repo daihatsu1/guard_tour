@@ -120,14 +120,7 @@
 </section>
 <script>
     function cek() {
-        if (document.getElementById("comp_id").value == "") {
-            Swal.fire({
-                title: 'Perhatian!',
-                text: 'pilih company',
-                icon: 'error',
-            })
-            return false
-        } else if (document.getElementById("site_id").value == "") {
+        if (document.getElementById("site_id").value == "") {
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'pilih wilayah',
@@ -135,7 +128,7 @@
             }).then((result) => {})
 
             return false
-        } else if (document.getElementById("plant_name").value == "") {
+        } else if (document.getElementById("plant_id").value == "") {
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'nama plant harus di isi',
