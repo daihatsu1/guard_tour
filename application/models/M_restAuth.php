@@ -29,7 +29,6 @@ class M_restAuth extends CI_Model
 				$this->db->where($key, $value);
 			}
 		}
-
 		if (array_key_exists("npk", $params)) {
 			$this->db->where('npk', $params['npk']);
 			$query = $this->db->get();

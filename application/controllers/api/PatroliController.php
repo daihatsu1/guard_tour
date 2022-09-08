@@ -27,7 +27,7 @@ class PatroliController extends RestController
 		$this->dateNow = new DateTimeImmutable('now', new DateTimeZone('Asia/Jakarta'));
 		$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
 
-		$this->user = $this->M_restAuth->getRows(['id' => $this->_apiuser->user_id]);
+		$this->user = $this->M_restAuth->getRows(['npk' => $this->_apiuser->user_id]);
 		$this->zero_clock = new DateTime('00:00:00', new DateTimeZone('Asia/Jakarta'));
 		$this->six_clock = new DateTime('06:00:00', new DateTimeZone('Asia/Jakarta'));
 		$this->accessTime = $this->dateNow;
@@ -42,8 +42,8 @@ class PatroliController extends RestController
 	public function jadwalUser_get()
 	{
 
-		$jadwalHariIni = $this->M_restPatrol->getJadwal($this->dateNow, $this->user['id'], $this->user['admisecsgp_mstusr']);
-		$jadwalSelanjutnya = $this->M_restPatrol->getJadwal($this->dateTomorrow, $this->user['id'], $this->user['admisecsgp_mstusr']);
+		$jadwalHariIni = $this->M_restPatrol->getJadwal($this->dateNow, $this->user['npk'], $this->user['admisecsgp_mstusr']);
+		$jadwalSelanjutnya = $this->M_restPatrol->getJadwal($this->dateTomorrow, $this->user['npk'], $this->user['admisecsgp_mstusr']);
 
 		$response = [
 			'status' => 'ok',
@@ -62,94 +62,101 @@ class PatroliController extends RestController
 	 */
 	public function dataPatroli_get()
 	{
-		$jadwalHariIni = $this->M_restPatrol->getJadwal($this->dateNow, $this->user['id'], $this->user['admisecsgp_mstplant_id']);
-		$data = $this->M_restPatrol->getDataPatroli($this->dateNow, $jadwalHariIni->shift, $this->user['admisecsgp_mstplant_id']);
+		$jadwalHariIni = $this->M_restPatrol->getJadwal($this->dateNow, $this->user['npk'], $this->user['admisecsgp_mstplant_plant_id']);
+		$data = $this->M_restPatrol->getDataPatroli($this->dateNow, $jadwalHariIni->shift, $this->user['admisecsgp_mstplant_plant_id']);
 
 		$this->response($data, 200);
 	}
 
 	public function dataTemuan_post()
 	{
+//		$this->response($_FILES, 200);
 
 		$data = array(
-			'date' => $this->post('date'),
-			'ms_user_id' => $this->user['id'],
-			'ms_shift_id' => $this->post('ms_shift_id'),
-			'is_matched_jpat' => $this->post('is_matched_jpat'),
-			'is_matched_jpr' => $this->post('is_matched_jpr'),
-			'is_diluar_jadwal' => $this->post('is_diluar_jadwal'),
+//			'date' => $this->post('date'),
+			'admisecsgp_mstusr_npk' => $this->user['npk'],
+			'admisecsgp_mstshift_shift_id' => $this->post('admisecsgp_mstshift_shift_id'),
+			'admisecsgp_mstzone_zone_id' => $this->post('admisecsgp_mstzone_zone_id'),
+			'date_patroli' => $this->post('date_patroli'),
+			'checkin_checkpoint' => $this->post('checkin_checkpoint'),
+			'checkout_checkpoint' => $this->post('checkout_checkpoint'),
 			'status' => $this->post('status'),
-			'uploaded_at' => $this->dateNow->format('Y-m-d H:i:s'),
-
-//			'created_at' => $this->post('created_at'),
-//			'created_by' => $this->post('created_by'),
-//			'updated_at' => $this->post('updated_at'),
-//			'updated_by' => $this->post('updated_by'),
+			'sync_token' => $this->post('sync_token'),
+			'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
 		);
 
-		$id = $this->M_restPatrol->saveData('admisecsgp_tr_headers', $data);
+		$id = $this->M_restPatrol->saveData('admisecsgp_trans_headers', $data);
 
 		$details = $this->post('detail_temuan');
-		foreach ($details as $k => $detail) {
-			$files = $_FILES['detail_temuan'];
-			$image_field = array('image_1', 'image_2', 'image_3');
-			$upload_result = array();
-			foreach ($image_field as $key => $field) {
-				if (array_key_exists($field, $files['name'][$k])) {
-					$date = new DateTimeImmutable();
-					$filename = $date->getTimestamp() . '_' . $files['name'][$k][$field];
+		if ($details) {
+			foreach ($details as $k => $detail) {
+				if ($_FILES != null) {
+					$files = array_key_exists('detail_temuan', $_FILES) ? $_FILES['detail_temuan'] : null;
+					$upload_result = array('image_1' => null, 'image_2' => null, 'image_3' => null,);
+					if ($files != null) {
+						$image_field = array('image_1', 'image_2', 'image_3');
+						foreach ($image_field as $key => $field) {
+							if (array_key_exists($k, $files['name'])) {
+								if (array_key_exists($field, $files['name'][$k])) {
+									$date = new DateTimeImmutable();
+									$filename = $date->getTimestamp() . '_' . $files['name'][$k][$field];
+									$_FILES[$field]['name'] = $files['name'][$k][$field];
+									$_FILES[$field]['type'] = $files['type'][$k][$field];
+									$_FILES[$field]['tmp_name'] = $files['tmp_name'][$k][$field];
+									$_FILES[$field]['error'] = $files['error'][$k][$field];
+									$_FILES[$field]['size'] = $files['size'][$k][$field];
 
-					$_FILES[$field]['name'] = $files['name'][$k][$field];
-					$_FILES[$field]['type'] = $files['type'][$k][$field];
-					$_FILES[$field]['tmp_name'] = $files['tmp_name'][$k][$field];
-					$_FILES[$field]['error'] = $files['error'][$k][$field];
-					$_FILES[$field]['size'] = $files['size'][$k][$field];
-
-					$config['upload_path'] = realpath(APPPATH . '../assets/temuan');
+									$config['upload_path'] = realpath(APPPATH . '../assets/temuan');
 //					$config['allowed_types'] = 'gif|jpg|jpeg|png';
-					$config['file_name'] = $filename;
+									$config['file_name'] = $filename;
 
-					$this->load->library('upload', $config);
-					$this->upload->initialize($config);
-					$this->upload->set_allowed_types('*');
+									$this->load->library('upload', $config);
+									$this->upload->initialize($config);
+									$this->upload->set_allowed_types('*');
 
-					if (!$this->upload->do_upload($field)) {
-						$upload_result[$field] = '';
-					} else {
-						$data = $this->upload->data();
-						$upload_result[$field] = $data['file_name'];
+									if (!$this->upload->do_upload($field)) {
+										$upload_result[$field] = null;
+									} else {
+										$data = $this->upload->data();
+										$upload_result[$field] = base_url() . 'assets/temuan/' . $data['file_name'];
+									}
+								} else {
+									$upload_result[$field] = null;
+								}
+							} else {
+								$upload_result[$field] = null;
+							}
+
+						}
 					}
-				} else {
-					$upload_result[$field] = '';
 				}
+
+				$dataDetail = array(
+					//detail
+					'admisecsgp_trans_headers_trans_headers_id' => $id,
+					'admisecsgp_mstobj_objek_id' => $detail['admisecsgp_mstobj_objek_id'],
+					'conditions' => $detail['conditions'],
+					'admisecsgp_mstevent_event_id' => $detail['admisecsgp_mstevent_event_id'],
+					'description' => $detail['description'],
+					'image_1' => $upload_result['image_1'],
+					'image_2' => $upload_result['image_2'],
+					'image_3' => $upload_result['image_3'],
+					'is_laporan_kejadian' => $detail['is_laporan_kejadian'],
+					'laporkan_pic' => $detail['laporkan_pic'],
+					'is_tindakan_cepat' => $detail['is_tindakan_cepat'],
+					'status_temuan' => $detail['status'],
+					'deskripsi_tindakan' => $detail['deskripsi_tindakan'],
+					'note_tindakan_cepat' => $detail['note_tindakan_cepat'],
+					'status' => $detail['status'],
+					'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
+					'sync_token' => $detail['sync_token'],
+
+				);
+				$this->M_restPatrol->saveData('admisecsgp_trans_details', $dataDetail);
+
 			}
-
-			$dataDetail = array(
-				//detail
-				'tr_dpg_headers_id' => $id,
-				'ms_ckp_id' => $detail['ms_ckp_id'],
-				'rfid_is_matched' => $detail['rfid_is_matched'],
-				'ms_objects_id' => $detail['ms_objects_id'],
-				'conditions' => $detail['conditions'],
-				'event' => $detail['event'],
-				'description' => $detail['description'],
-				'image_1' => $upload_result['image_1'],
-				'image_2' => $upload_result['image_2'],
-				'image_3' => $upload_result['image_3'],
-				'is_laporan_kejadian' => $detail['is_laporan_kejadian'],
-				'laporkan_pic' => $detail['laporkan_pic'],
-				'is_tindakan_cepat' => $detail['is_tindakan_cepat'],
-				'status' => $detail['status'],
-				'uploaded_at' => $this->dateNow->format('Y-m-d H:i:s'),
-
-//				'created_at' => $detail['created_at'],
-//				'created_by' => $detail['created_by'],
-//				'updated_at' => $detail['updated_at'],
-//				'updated_by' => $detail['updated_by'],
-			);
-			$this->M_restPatrol->saveData('admisecsg_tr_details', $dataDetail);
-
 		}
+
 		$result = $this->M_restPatrol->getDataTemuan($id);
 		$this->response($result, 200);
 	}

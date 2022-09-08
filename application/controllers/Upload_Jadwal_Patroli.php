@@ -119,10 +119,8 @@ class Upload_Jadwal_Patroli extends CI_Controller
             $o = 1;
             $l = 1;
             for ($t = 0; $t < count($shift); $t++) {
-                $d = new DateTime();
-                $uniq = $d->format("dmyHisv");
-                $id                 = uniqid($uniq);
-                $gen = 'ADMJP' . substr($id, 0, 6) . substr($id, 22, 10);
+                $d = time();
+                $gen = uniqid("ADMJP".rand());
                 $Shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift[$t]['tanggal_' . $o] . "' ")->row();
                 $User = $this->db->query("select npk from admisecsgp_mstusr where npk ='" . $npk .  "' and name='" . $nama . "' and admisecsgp_mstplant_plant_id = '" . $plant->plant_id . "' ")->row();
                 $var = [

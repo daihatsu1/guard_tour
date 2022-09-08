@@ -22,11 +22,11 @@ class AuthController extends RestController
 		// Get the post data
 		$npk = $this->post('npk');
 		$password = $this->post('password');
-
 		// Validate the post data
 		if (!empty($npk) && !empty($password)) {
 
 			// Check if any user exists with the given credentials
+			$con['npk'] =  $npk;
 			$con['returnType'] = 'single';
 			$con['conditions'] = array(
 				'npk' => $npk,
@@ -34,7 +34,6 @@ class AuthController extends RestController
 				'status' => 1
 			);
 			$user = $this->M_restAuth->getRows($con);
-
 			if ($user) {
 				// Set the response and exit
 				//				var_dump($user['npk']);
