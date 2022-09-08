@@ -25,7 +25,8 @@ class Mst_Kategori_Object extends CI_Controller
         $id_wil_user = $this->session->userdata("site_id");
         $data = [
             'link'          => $this->uri->segment(2),
-            'kategori_obj'  => $this->M_admin->kategoriObjek($id_wil_user)
+            // 'kategori_obj'  => $this->M_admin->kategoriObjek($id_wil_user)
+            'kategori_obj'  => $this->M_admin->ambilData("admisecsgp_mstkobj")
         ];
         // $this->template->load("template/template", "mst_kategori_object", $data);
         $this->load->view("template/admin/sidebar", $data);
@@ -38,7 +39,7 @@ class Mst_Kategori_Object extends CI_Controller
         $id_wil_user = $this->session->userdata("site_id");
         $data = [
             'link'       => $this->uri->segment(2),
-            'plant'      => $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1, 'admisecsgp_mstsite_id' => $id_wil_user])
+            'plant'      => $this->M_patrol->ambilData("admisecsgp_mstplant", ['status' => 1, 'admisecsgp_mstsite_site_id' => $id_wil_user])
         ];
         // $this->template->load("template/template", "add_mst_kategori_objek", $data);
         $this->load->view("template/admin/sidebar", $data);
@@ -51,19 +52,19 @@ class Mst_Kategori_Object extends CI_Controller
     {
         $status               = $this->input->post("status");
         $others               = $this->input->post("others");
-        $zona_id              = $this->input->post("zone_id");
         $kategori_name        = $this->input->post("kategori_name");
 
+        $id                   = 'ADMKO' . substr(uniqid(rand(), true), 4, 4);
         $data = [
-            'status'                    => $status,
-            'others'                    => $others,
-            'admisecsgp_mstzone_id'     => $zona_id,
-            'kategori_name'             => strtoupper($kategori_name),
-            'created_at'                => date('Y-m-d H:i:s'),
-            'created_by'                => $this->session->userdata('id_token'),
+            'kategori_id'                 => $id,
+            'status'                      => $status,
+            'others'                      => $others,
+            'kategori_name'               => strtoupper($kategori_name),
+            'created_at'                  => date('Y-m-d H:i:s'),
+            'created_by'                  => $this->session->userdata('id_token'),
         ];
 
-        $cek = $this->db->get_where("admisecsgp_mstkobj", ['kategori_name' => $kategori_name, 'admisecsgp_mstzone_id'  => $zona_id])->num_rows();
+        $cek = $this->db->get_where("admisecsgp_mstkobj", ['kategori_name' => $kategori_name])->num_rows();
         if ($cek >= 1) {
             $this->session->set_flashdata('fail', 'nama ' . $kategori_name . ' sudah ada');
             redirect('Admin/Mst_Kategori_Object');
@@ -82,7 +83,7 @@ class Mst_Kategori_Object extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['kategori_id' => $id];
         $del = $this->M_admin->delete("admisecsgp_mstkobj", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -96,8 +97,8 @@ class Mst_Kategori_Object extends CI_Controller
     //multiple delete
     public function multipleDelete()
     {
-        $id_event = $this->input->post("id_event", true);
-        $delete = $this->M_admin->multiple_delete("admisecsgp_mstkobj", $id_event);
+        $id_kategori = $this->input->post("id_kategori", true);
+        $delete = $this->M_admin->multiple_delete("admisecsgp_mstkobj", $id_kategori);
 
         if ($delete) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -117,8 +118,8 @@ class Mst_Kategori_Object extends CI_Controller
         $data = [
             'link'       => $this->uri->segment(2),
             'data'       => $this->M_admin->detailkategoriObjek($id)->row(),
-            'zone'       => $this->M_admin->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_id' => $plant_id]),
-            'plant'      => $this->M_admin->ambilData("admisecsgp_mstplant", ['status' => 1, 'admisecsgp_mstsite_id' => $id_wil_user]),
+            'zone'       => $this->M_admin->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $plant_id]),
+            'plant'      => $this->M_admin->ambilData("admisecsgp_mstplant", ['status' => 1, 'admisecsgp_mstsite_site_id' => $id_wil_user]),
             'zona_id'    => $zona_id,
             'plant_id'   => $plant_id
         ];
@@ -133,18 +134,16 @@ class Mst_Kategori_Object extends CI_Controller
         $id                   = $this->input->post("id");
         $status               = $this->input->post("status");
         $others               = $this->input->post("others");
-        $zona_id              = $this->input->post("zone_id");
         $kategori_name        = $this->input->post("kategori_name");
         $data = [
             'kategori_name'             => strtoupper($kategori_name),
             'updated_at'                => date('Y-m-d H:i:s'),
-            'admisecsgp_mstzone_id'     => $zona_id,
             'updated_by'                => $this->session->userdata('id_token'),
             'status'                    => $status,
             'others'                    => $others,
         ];
 
-        $where  = ['id' => $id];
+        $where  = ['kategori_id' => $id];
         $update = $this->M_admin->update("admisecsgp_mstkobj", $data, $where);
         if ($update) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');

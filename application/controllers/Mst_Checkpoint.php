@@ -52,7 +52,7 @@ class Mst_Checkpoint extends CI_Controller
     {
         $id = $this->input->post('id');
         $data = [
-            'zona'  =>  $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_id' => $id, 'status' => 1])
+            'zona'  =>  $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $id, 'status' => 1])
         ];
         $this->load->view('ajax/list_zone', $data);
     }
@@ -65,7 +65,8 @@ class Mst_Checkpoint extends CI_Controller
         $zone_id        = $this->input->post("zone_id");
         $others         = $this->input->post("others");
         $status         = $this->input->post("status");
-        $durasi         = $this->input->post("durasi");
+        $durasi         = $this->input->post("durasi_batas_bawah");
+        $durasi2        = $this->input->post("durasi_batas_atas");
 
         $cek = $this->db->get_where("admisecsgp_mstckp", ['check_no' => $check_no])->num_rows();
         if ($cek >= 1) {
@@ -73,14 +74,16 @@ class Mst_Checkpoint extends CI_Controller
             redirect('Mst_Checkpoint');
         } else {
             $data = [
-                'admisecsgp_mstzone_id'      => $zone_id,
-                'check_name'                 => strtoupper($check_name),
-                'check_no'                   => $check_no,
-                'durasi'                     => $durasi,
-                'others'                     => $others,
-                'status'                     => $status,
-                'created_at'                 => date('Y-m-d H:i:s'),
-                'created_by'                 => $this->session->userdata('id_token'),
+                'checkpoint_id'                   => 'ADMC' . substr(uniqid(rand(), true), 4, 4),
+                'admisecsgp_mstzone_zone_id'      => $zone_id,
+                'check_name'                      => strtoupper($check_name),
+                'check_no'                        => $check_no,
+                'durasi_batas_atas'               => $durasi,
+                'durasi_batas_bawah'              => $durasi2,
+                'others'                          => $others,
+                'status'                          => $status,
+                'created_at'                      => date('Y-m-d H:i:s'),
+                'created_by'                      => $this->session->userdata('id_token'),
             ];
             $this->M_patrol->inputData($data, "admisecsgp_mstckp");
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil  menambah data');
@@ -128,13 +131,15 @@ class Mst_Checkpoint extends CI_Controller
         unset($d[0]);
         $datas = array();
         foreach ($d as $t) {
-            $cek_id = $this->db->query("select id , zone_name , kode_zona from admisecsgp_mstzone where kode_zona='" . $t[1] . "'   ")->row();
+            $cek_id = $this->db->query("select zone_id , zone_name , kode_zona from admisecsgp_mstzone where kode_zona='" . $t[1] . "' ")->row();
             $params = [
+                'checkpoint_id'              => 'ADMC' . substr(uniqid(rand(), true), 4, 4),
                 'check_no'                   => strval($t[3]),
                 'check_name'                 => strtoupper($t[4]),
                 'status'                     => 1,
-                'durasi'                     => '0',
-                'admisecsgp_mstzone_id'      => $cek_id->id,
+                'durasi_batas_bawah'         => strval($t[6]),
+                'durasi_batas_atas'          => strval($t[5]),
+                'admisecsgp_mstzone_zone_id' => $cek_id->zone_id,
                 'created_at'                 => date('Y-m-d H:i:s'),
                 'created_by'                 => $this->session->userdata('id_token'),
             ];
@@ -155,7 +160,7 @@ class Mst_Checkpoint extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['checkpoint_id' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstckp", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -169,8 +174,8 @@ class Mst_Checkpoint extends CI_Controller
     //multiple delete
     public function multipleDelete()
     {
-        $id_event = $this->input->post("id_event", true);
-        $delete = $this->M_patrol->multiple_delete("admisecsgp_mstckp", $id_event);
+        $id_check = $this->input->post("id_check", true);
+        $delete = $this->M_patrol->multiple_delete("admisecsgp_mstckp", $id_check, "checkpoint_id");
 
         if ($delete) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -188,7 +193,7 @@ class Mst_Checkpoint extends CI_Controller
             'link'       => $this->uri->segment(1),
             'data'       => $this->M_patrol->detailCheckpoint($id)->row(),
             'zona_id'    => $this->input->get('id_zona'),
-            "zone"       => $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_id' => $this->input->get('id_plant')]),
+            "zone"       => $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $this->input->get('id_plant')]),
             'plant_id'   => $this->input->get('id_plant'),
             "plant"      => $this->M_patrol->ambilData("admisecsgp_mstplant"),
         ];
@@ -207,18 +212,20 @@ class Mst_Checkpoint extends CI_Controller
         $others         = $this->input->post("others");
         $status         = $this->input->post("status");
         $durasi         = $this->input->post("durasi");
+        $durasi2         = $this->input->post("durasi2");
         $data = [
-            'admisecsgp_mstzone_id'      => $zone_id,
+            'admisecsgp_mstzone_zone_id' => $zone_id,
             'check_name'                 => $check_name,
             'check_no'                   => $check_no,
-            'durasi'                     => $durasi,
+            'durasi_batas_atas'          => $durasi,
+            'durasi_batas_bawah'         => $durasi2,
             'others'                     => $others,
             'status'                     => $status,
             'updated_at'                 => date('Y-m-d H:i:s'),
             'updated_by'                 => $this->session->userdata('id_token'),
         ];
 
-        $where = ['id' => $id];
+        $where = ['checkpoint_id' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstckp", $data, $where);
 
         if ($update) {

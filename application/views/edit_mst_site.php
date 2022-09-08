@@ -46,14 +46,14 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">COMPANY</label>
-                                <input type="hidden" name="id" value="<?= $data->id ?>">
+                                <input type="hidden" name="id" value="<?= $data->site_id ?>">
                                 <select class="form-control" name="comp_id" id="comp_id">
 
                                     <?php foreach ($company->result() as $cmp) :
-                                        if ($data->admisecsgp_mstcmp_id == $cmp->id) { ?>
-                                            <option selected value="<?= $data->admisecsgp_mstcmp_id ?>"><?= $data->comp_name ?></option>
+                                        if ($data->admisecsgp_mstcmp_company_id == $cmp->company_id) { ?>
+                                            <option selected value="<?= $data->admisecsgp_mstcmp_company_id ?>"><?= $data->comp_name ?></option>
                                         <?php } else { ?>
-                                            <option value="<?= $cmp->id ?>"><?= $cmp->comp_name ?></option>
+                                            <option value="<?= $cmp->company_id ?>"><?= $cmp->comp_name ?></option>
                                     <?php  }
                                     endforeach ?>
                                 </select>

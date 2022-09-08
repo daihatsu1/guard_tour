@@ -13,6 +13,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $hook['pre_system'] = function () {
 	$dotenv = new Symfony\Component\Dotenv\Dotenv();
-	$path = FCPATH.'/.env';
+	$path = FCPATH.'.env';
 	$dotenv->overload($path);
 };

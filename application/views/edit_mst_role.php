@@ -45,13 +45,7 @@
                     <form onsubmit="return cek()" action="<?= base_url('Mst_Role/update') ?>" method="post" id="inputEvent">
 
                         <div class="card-body">
-                            <input type="hidden" value="<?= $data->id ?>" name="id">
-                            <div class="form-group">
-                                <label for="">ID ROLE</label>
-                                <select name="id_role" id="id_role" class="form-control">
-                                    <option selected value="<?= $data->id_role ?>"><?= $data->id_role ?></option>
-                                </select>
-                            </div>
+                            <input type="hidden" value="<?= $data->role_id ?>" name="id">
                             <div class="form-group">
                                 <label for="">LEVEL</label>
                                 <input type="text" name="level" value="<?= $data->level ?>" autocomplete="off" id="level" class="form-control">

@@ -49,9 +49,10 @@ class Mst_Shift extends CI_Controller
         $shift             = $this->input->post("shift");
         $jam_masuk         = $this->input->post("jam_masuk");
         $jam_pulang        = $this->input->post("jam_pulang");
-
+        $id                   = 'ADMSH' . substr(uniqid(rand(), true), 4, 4);
 
         $data = [
+            'shift_id'         => $id,
             'status'           => $status,
             'nama_shift'       => $shift,
             'jam_masuk'        => $jam_masuk,
@@ -79,7 +80,7 @@ class Mst_Shift extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['shift_id' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstshift", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -95,7 +96,7 @@ class Mst_Shift extends CI_Controller
         $id =  $this->input->get('shift_id');
         $data = [
             'link'       => $this->uri->segment(1),
-            'data'       => $this->M_patrol->ambilData("admisecsgp_mstshift", ['id' => $id])->row()
+            'data'       => $this->M_patrol->ambilData("admisecsgp_mstshift", ['shift_id' => $id])->row()
         ];
         // $this->template->load("template/template", "edit_mst_shift", $data);
         $this->load->view("template/sidebar", $data);
@@ -106,7 +107,7 @@ class Mst_Shift extends CI_Controller
 
     public function update()
     {
-        $id                 = $this->input->post("id");
+        $id                = $this->input->post("id");
         $status            = $this->input->post("status");
         $shift             = $this->input->post("shift");
         $jam_masuk         = $this->input->post("jam_masuk");
@@ -120,7 +121,7 @@ class Mst_Shift extends CI_Controller
             'updated_by'         => $this->session->userdata('id_token'),
         ];
 
-        $where = ['id' => $id];
+        $where = ['shift_id' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstshift", $data, $where);
         if ($update) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');

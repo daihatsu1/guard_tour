@@ -53,14 +53,14 @@
                                     <?php } ?>
                                 <?php endforeach ?>
                             </select>
-                            <div class="mt-2 form group">
-                                <label for="">UPLOAD FILE</label>
+                            <div class="form group">
+                                <label for="">Upload File</label>
                                 <input onchange="return exe()" id="file" accept=".xlsx" type="file" name="file" class="form-control form-control-sm">
                                 <span class="text-danger font-italic small">* hanya file dengan ekstensi xlsx yang boleh di upload *</span>
                             </div>
 
                             <div class="form-inline mt-2">
-                                <a href="<?= base_url('Admin/Mst_Checkpoint') ?>" class="mr-2 btn btn-success btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
+                                <a href="<?= base_url('Mst_Checkpoint') ?>" class="mr-2 btn btn-success btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
                                 <input type="submit" value="Upload Checkpoint" name="view" class="btn btn-info btn-sm"></input>
                             </div>
                         </form>
@@ -73,7 +73,7 @@
 
                                 //cek data kode zona 
                                 foreach ($sheet as $sh) {
-                                    //
+                                    // 
                                     if ($sh[0] != $plant_kode_input) {
                                         echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         Plant yang dipilih tidak sama dengan instalasi plant yang ada di file excel
@@ -83,7 +83,6 @@
                                     </div>';
                                         $count += 1;
                                     }
-
                                     //cek kode plant 
                                     $plantCek = $this->db->get_where('admisecsgp_mstplant',  ['plant_name' => $sh[0]]);
                                     if ($plantCek->num_rows() <= 0) {
@@ -94,32 +93,43 @@
                                         </button>
                                     </div>';
                                         $count += 1;
+                                    }
+
+                                    //cek kode zona 
+                                    $kodezona = $this->db->get_where('admisecsgp_mstzone', ['kode_zona' => $sh[1], 'zone_name' => $sh[2]]);
+                                    if ($kodezona->num_rows() <= 0) {
+                                        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        Nama zona <b class="font-italice">' . $sh[2] . '</b> dengan kode zona <b>' . $sh[1] . '</b> tidak terdaftar di database
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>';
+                                        $count += 1;
                                     } else {
-                                        $pltname = $plantCek->row();
-                                        //cek kode zona 
-                                        $kodezona = $this->db->get_where('admisecsgp_mstzone', ['kode_zona' => $sh[1], 'zone_name' => $sh[2], 'admisecsgp_mstplant_id' =>  $pltname->id]);
-                                        if ($kodezona->num_rows() <= 0) {
-                                            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            Nama zona <b class="font-italice">' . $sh[2] . '</b> dengan kode zona <b>' . $sh[1] . '</b> tidak terdaftar di plant ' . $sh[0] . '
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>';
-                                            $count += 1;
-                                        }
-
-
                                         //cek id checkpoint 
-                                        $checkpoint_id =  $this->db->get_where('admisecsgp_mstckp', ['check_no' => $sh[3]]);
-                                        if ($checkpoint_id->num_rows() >= 1) {
+                                        $checkpoint_name =  $this->db->get_where('admisecsgp_mstckp', ['check_name' => $sh[4]]);
+                                        if ($checkpoint_name->num_rows() >= 1) {
                                             echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            id checkpoint <b class="font-italice"> ' . $sh[2] . ' </b> sudah terdaftar di database
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>';
+                                        checkpoint <b class="font-italice"> ' . $sh[4] . ' </b> sudah terdaftar di zona ' . $sh[2] . '
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>';
                                             $count += 1;
                                         }
+                                    }
+
+
+                                    //cek id checkpoint 
+                                    $checkpoint_id =  $this->db->get_where('admisecsgp_mstckp', ['check_no' => $sh[3]]);
+                                    if ($checkpoint_id->num_rows() >= 1) {
+                                        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        id checkpoint <b class="font-italice"> ' . $sh[3] . ' </b> sudah terdaftar di database
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>';
+                                        $count += 1;
                                     }
                                 }
 
@@ -145,14 +155,7 @@
 <script>
     function cekExe() {
         var fi = document.getElementById('file');
-        if (document.getElementById('plant_id').value == "") {
-            Swal.fire({
-                title: 'Perhatian!',
-                text: 'Pilih plant ',
-                icon: 'error',
-            })
-            return false;
-        } else if (fi.value == '' || fi.value == null) {
+        if (fi.value == '' || fi.value == null) {
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'Pilih file yang akan di upload',

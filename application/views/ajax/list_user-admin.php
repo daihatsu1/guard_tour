@@ -1,7 +1,6 @@
 <form id="submitData" action="#" method="post">
-
-    <input type="hidden" value="<?= $kolom_update ?>" name="kolom_update" id="kolom_update">
-    <input type="hidden" value="<?= $id ?>" name="id_update" id="id_update">
+    <input type="hidden" name="plant_id" value="<?= $plant_id ?>">
+    <input type="hidden" name="user_npk" value="<?= $npk ?>">
     <div class="form-group">
         <label>TANGGAL PATROLI</label>
         <input type="text" readonly class="form-control" value="<?= $tanggal_patroli ?>" id="tanggal_jaga" name="tanggal_patroli">
@@ -9,25 +8,17 @@
 
     <div class="form-group">
         <label>PETUGAS</label>
-        <select class="form-control" name="id_user" id="id_user">
-            <?php foreach ($data_petugas->result() as $sh) :
-                if ($sh->id == $id_user) { ?>
-                    <option selected value="<?= $sh->id ?>"><?= $sh->npk . '-' . $sh->name  ?></option>
-                <?php } else { ?>
-                    <option value="<?= $sh->id ?>"><?= $sh->npk . '-' . $sh->name  ?></option>
-                <?php } ?>
-            <?php endforeach ?>
-        </select>
+        <input type="text" class="form-control" readonly value="<?= $nama ?>">
     </div>
 
     <div class="form-group">
         <label>SHIFT</label>
-        <select class="form-control" name="shift" id="shift">
+        <select class="form-control" name="shift_id" id="shift">
             <?php foreach ($data_shift->result() as $sh) :
                 if ($sh->nama_shift == $shift) { ?>
-                    <option selected><?= $sh->nama_shift ?></option>
+                    <option value="<?= $sh->shift_id ?>" selected><?= $sh->nama_shift ?></option>
                 <?php } else { ?>
-                    <option><?= $sh->nama_shift ?></option>
+                    <option value="<?= $sh->shift_id ?>"><?= $sh->nama_shift ?></option>
                 <?php } ?>
             <?php endforeach ?>
         </select>
@@ -49,7 +40,7 @@
         $("#submitData").on('submit', function(e) {
             e.preventDefault();
             $.ajax({
-                url: "<?= base_url('Admin/Mst_Jadwal/update_petugas_patroli') ?>",
+                url: "<?= base_url('Admin/Mst_Jadwal_Patroli/update_petugas_patroli') ?>",
                 method: 'POST',
                 data: new FormData(this),
                 contentType: false,
@@ -62,7 +53,6 @@
                     document.getElementById("inf").style.display = "none";
                 },
                 success: function(e) {
-                    // alert(e);
                     if (e == 1) {
                         Swal.fire({
                             title: 'Berhasil!',

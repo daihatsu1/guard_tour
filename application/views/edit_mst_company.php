@@ -47,7 +47,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">NAMA PERUSAHAAN</label>
-                                <input type="hidden" name="id" value="<?= $data->id ?>">
+                                <input type="hidden" name="id" value="<?= $data->company_id ?>">
                                 <input type="text" value="<?= $data->comp_name ?>" name="comp_name" autocomplete="off" id="comp_name" class="form-control">
                             </div>
                             <div class="form-group">

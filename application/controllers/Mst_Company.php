@@ -55,6 +55,7 @@ class Mst_Company extends CI_Controller
         $status         = $this->input->post("status");
 
         $data = [
+            'company_id'      => 'ADMCMP' . substr(uniqid(rand(), true), 4, 4),
             'comp_name'       => $comp_name,
             'comp_phone'      => $comp_phone,
             'address1'        => $address,
@@ -77,7 +78,7 @@ class Mst_Company extends CI_Controller
         $id =  $this->input->get('comp_id');
         $data = [
             'link'       => $this->uri->segment(1),
-            'data'       => $this->M_patrol->ambilData("admisecsgp_mstcmp", ['id' => $id])->row()
+            'data'       => $this->M_patrol->ambilData("admisecsgp_mstcmp", ['company_id' => $id])->row()
         ];
         // $this->template->load("template/template", "edit_mst_company", $data);
         $this->load->view("template/sidebar", $data);
@@ -87,7 +88,7 @@ class Mst_Company extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['company_id' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstcmp", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -115,7 +116,7 @@ class Mst_Company extends CI_Controller
             'status'          => $status
         ];
 
-        $where = ['id' => $id];
+        $where = ['company_id' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstcmp", $data, $where);
         if ($update) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');

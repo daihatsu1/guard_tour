@@ -7,31 +7,35 @@ class M_restPatrol extends CI_Model
 	{
 		parent::__construct();
 		$this->load->database();
-		$this->table = 'admisecsgp_mstjadwalpatroli';
+		$this->table = 'admisecsgp_trans_jadwal_patroli';
 		$this->load->helper('date_time');
 	}
 
 	function getJadwal($dateTime, $user_id, $plant_id)
 	{
-		$tanggal = $dateTime->format('j');
-		$bulan = get_bulan($dateTime->format('m'));
-		$tahun = $dateTime->format('Y');
+		$date = $dateTime->format('Y-m-d');
 
-		$sql = "select tanggal_" . $tanggal . " as shift, p.plant_name, p.id as plant_id
-					from admisecsgp_mstjadwalpatroli,         
-					admisecsgp_mstplant p 
+		$sql = "select s.nama_shift as shift,
+       				s.shift_id, 
+       				s.jam_masuk, 
+       				s.jam_pulang, 
+       				p.plant_name, 
+       				p.plant_id as plant_id
+				from admisecsgp_trans_jadwal_patroli,         
+					admisecsgp_mstplant p ,
+					admisecsgp_mstshift s
 				where          
-				admisecsgp_mstplant_id = p.id
-				AND bulan = '" . $bulan . "' 
-					AND tahun = '" . $tahun . "'
-					AND admisecsgp_mstplant_id = '" . $plant_id . "'
-  					AND admisecsgp_mstusr_id = '" . $user_id . "'";
+				admisecsgp_mstplant_plant_id = p.plant_id
+				and admisecsgp_mstshift_shift_id  = s.shift_id
+				AND date_patroli = '" . $date . "'
+				AND admisecsgp_mstplant_plant_id = '" . $plant_id . "'
+				AND admisecsgp_mstusr_npk = '" . $user_id . "'";
+
 		$result = $this->db->query($sql)->row();
 		if ($result) {
 			$result->date = $dateTime->format('d-m-Y');
 		}
 		return $result;
-
 	}
 
 	function getDataPatroli($dateTime, $shift_id, $plant_id)
@@ -59,67 +63,64 @@ class M_restPatrol extends CI_Model
 
 	function getZones($dateTime, $shift_id, $plant_id)
 	{
-		$tanggal = $dateTime->format('j');
-		$bulan = get_bulan($dateTime->format('m'));
-		$tahun = $dateTime->format('Y');
+//		$tanggal = $dateTime->format('j');
+//		$bulan = get_bulan($dateTime->format('m'));
+//		$tahun = $dateTime->format('Y');
 
-		$kolom_tgl_zona = "jp.tanggal_" . $tanggal;
-		$kolom_stat_zona = "jp.ss_" . $tanggal;
+//		$kolom_tgl_zona = "jp.tanggal_" . $tanggal;
+//		$kolom_stat_zona = "jp.ss_" . $tanggal;
+		$date = $dateTime->format('Y-m-d');
 
-		$sql = "SELECT 	jp.id as production_detail_id, 
-        				zn.id as id,
-       					pl.id as plant_id,
-						pl.plant_name, zn.zone_name ,
-						jp.admisecsgp_mstzone_id as zona_id, 
-						jp.bulan,
-						$kolom_tgl_zona,
-						sh.nama_shift, 
-						jp.status
-				FROM admisecsgp_mstproductiondtls jp ,
-					 admisecsgp_mstplant pl, 
-					 admisecsgp_mstzone zn, 
-					 admisecsgp_mstshift sh 
-				WHERE jp.status = 1  
-				  and zn.id = jp.admisecsgp_mstzone_id  
-				  and jp.admisecsgp_mstplant_id = pl.id 
-				  and sh.id = jp.admisecsgp_mstshift_id  
-				  and jp.admisecsgp_mstplant_id = '" . $plant_id . "'  
-				  and $kolom_stat_zona  = 1 
-				  and jp.bulan = '" . $bulan . "' 
-				  and jp.tahun = '" . $tahun . "' 
-				  and sh.nama_shift = '" . $shift_id . "'";
+
+		$sql = "SELECT zn.zone_id as id,
+       					pl.plant_id as plant_id,
+						pl.plant_name, 
+						zn.zone_name
+				FROM admisecsgp_mstzone zn, 
+					 admisecsgp_mstplant pl
+				WHERE zn.status = 1  
+				  and zn.admisecsgp_mstplant_plant_id = '" . $plant_id . "' ";
 		return $this->db->query($sql)->result();
 	}
 
 	public function getCheckPoint($zone_id)
 	{
 		return $this->db->query("
-				SELECT id,
+				SELECT checkpoint_id as id,
 					   check_name,
 					   check_no as no_nfc,
-					   admisecsgp_mstzone_id as zone_id,
+					   admisecsgp_mstzone_zone_id as zone_id,
 					   IF(status=1,'AKTIF', 'INACTIVE') as status_checkpoint 
 				from admisecsgp_mstckp 
 				where 	status=1 
-				and		admisecsgp_mstzone_id ='" . $zone_id . "' ")->result();
+				and		admisecsgp_mstzone_zone_id ='" . $zone_id . "' ")->result();
 	}
 
 	public function getObjek($check)
 	{
 		return $this->db->query("
-				select id,
-				       admisecsgp_mstckp_id as checkpoint_id,
+				select objek_id as id,
+				       admisecsgp_mstckp_checkpoint_id as checkpoint_id,
 					   nama_objek,
 					   status  
 				from admisecsgp_mstobj 
 				where status='1'
-				  and admisecsgp_mstckp_id  ='" . $check . "'")->result();
+				  and admisecsgp_mstckp_checkpoint_id  ='" . $check . "'")->result();
 	}
 
 	public function getEvent($objek)
 	{
-		$query = $this->db->query("SELECT ed.id, o.id as object_id, ed.admisecsgp_mstevent_id as event_id, e.event_name  from admisecsgp_msteventdtls ed,  admisecsgp_mstevent e, admisecsgp_mstobj o where ed.admisecsgp_mstobj_id = '" . $objek . "' and ed.admisecsgp_mstobj_id = o.id and ed.admisecsgp_mstevent_id = e.id   and ed.status=1 ");
-		return $query;
+		return $this->db->query("
+				SELECT ev.event_id as id, 
+				       ob.objek_id as object_id, 
+				       ev.event_name  
+				from admisecsgp_mstevent ev,  
+				     admisecsgp_mstkobj ko, 
+				     admisecsgp_mstobj ob 
+				where ob.objek_id = '" . $objek . "' 
+				and ko.kategori_id = ob.admisecsgp_mstkobj_kategori_id
+				and ko.status=1;
+				");
 	}
 
 	public function saveData($table, $data)
@@ -130,9 +131,9 @@ class M_restPatrol extends CI_Model
 
 	public function getDataTemuan($id)
 	{
-		$sql = "select * from admisecsgp_tr_headers where id ='" . $id . "' limit 1";
+		$sql = "select * from admisecsgp_trans_headers where trans_header_id ='" . $id . "' limit 1";
 		$data = $this->db->query($sql)->row();
-		$sqlDetail = "select * from admisecsg_tr_details where tr_dpg_headers_id ='" . $id . "'";
+		$sqlDetail = "select * from admisecsgp_trans_details where admisecsgp_trans_headers_trans_headers_id ='" . $id . "'";
 		$dataDetail = $this->db->query($sqlDetail)->result();;
 		$data->detail_temuan = $dataDetail;
 		return $data;

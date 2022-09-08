@@ -6,8 +6,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="<?= base_url('Mst_Jadwal') ?>">Jadwal</a></li>
-                    <li class="breadcrumb-item"><a href="<?= base_url('Mst_Jadwal') ?>">Jadwal Produksi</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Mst_Jadwal_Produksi') ?>">Jadwal</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Mst_Jadwal_Produksi') ?>">Jadwal Produksi</a></li>
                 </ol>
             </div>
         </div>
@@ -61,10 +61,10 @@
                                         <label for="">PLANT</label>
                                         <select name="plant" class="form-control" id="plant">
                                             <?php foreach ($plant->result() as $pl) :
-                                                if ($pl->id == $plant_id) { ?>
-                                                    <option selected value="<?= $pl->id ?>"><?= $pl->plant_name ?></option>
+                                                if ($pl->plant_id == $plant_id) { ?>
+                                                    <option selected value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
                                                 <?php } else { ?>
-                                                    <option value="<?= $pl->id ?>"><?= $pl->plant_name ?></option>
+                                                    <option value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
                                             <?php  }
                                             endforeach ?>
                                         </select>
@@ -144,102 +144,30 @@
                                     <tbody>
                                         <?php foreach ($jadwal->result() as $jwl) : ?>
                                             <tr>
-                                                <td style="width: 30px;"><?= $jwl->plant_name ?></td>
-                                                <td><?= $jwl->zone_name ?></td>
-                                                <td><?= $jwl->nama_shift ?></td>
-                                                <td style="color:<?= $jwl->TGL_1 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_1 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_2 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_2 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_3 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_3 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_4 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_4 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_5 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_5 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_6 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_6 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_7 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_7 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_8 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_8 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_9 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_9 == '0' ? 'OFF' : $jwl->TGL_9 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_10 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_10 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_11 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_11 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_12 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_12 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_13 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_13 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_14 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_14 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_15 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_15 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_16 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_16 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_17 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_17 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_18 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_18 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_19 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_19 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_20 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_20 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_21 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_21 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_22 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_22 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_23 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_23 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_24 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_24 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_25 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_25 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_26 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_26 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_27 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_27 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_28 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_28 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_29 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_29 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_30 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_30 ?>
-                                                </td>
-                                                <td style="color:<?= $jwl->TGL_31 == 'OFF' ? 'red' : 'blue' ?>">
-                                                    <?= $jwl->TGL_31 ?>
-                                                </td>
+                                                <td><?= $jwl->plant ?></td>
+                                                <td><?= $jwl->zona ?></td>
+                                                <td><?= $jwl->shift ?></td>
+                                                <?php for ($i = 1; $i <= 31; $i++) :
+                                                    if ($i <= 9) {
+                                                        $i = "0" . $i;
+                                                    } else {
+                                                        $i;
+                                                    }
+                                                ?>
+                                                    <td>
+                                                        <?php
+                                                        $date = $tahun . "-" . $month . "-" . $i;
+                                                        $zone_ = $this->M_patrol->detailJadwalProduksi($plant_id, $jwl->shift_id, $date, $jwl->zona_id);
+
+                                                        if ($zone_->num_rows() > 0) {
+                                                            $zonadata = $zone_->row();
+                                                            echo  $zonadata->zona_status == "OFF" ?  "<span class='text-danger'>" .  $zonadata->zona_status . "</span>" :  "<span>" .  $zonadata->zona_status . "</span>";
+                                                        } else {
+                                                            echo '-';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                <?php endfor; ?>
                                             </tr>
                                         <?php endforeach ?>
                                     </tbody>

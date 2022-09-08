@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <form onsubmit="return cek()" action="<?= base_url('Mst_objek/update') ?>" method="post" id="updateObjek">
-                        <input type="hidden" name="id_object" value="<?= $data->id ?>">
+                        <input type="hidden" name="id_object" value="<?= $data->objek_id ?>">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">PLANT</label>
@@ -51,7 +51,7 @@
                                     <option selected value="<?= $data->plant_id ?>"><?= $data->plant_name ?></option>
                                     <option value="">Pilih Plant</option>
                                     <?php foreach ($plant->result() as $plt) : ?>
-                                        <option value="<?= $plt->id ?>"><?= $plt->plant_name ?></option>
+                                        <option value="<?= $plt->plant_id ?>"><?= $plt->plant_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info_zona" style="display: none;" class="text-danger font-italic small">load data zona . . .</span>
@@ -63,7 +63,7 @@
                                     <option selected value="<?= $data->zona_id ?>"><?= $data->zone_name ?></option>
                                     <option value="">Pilih Zona</option>
                                     <?php foreach ($zone->result() as $znp) : ?>
-                                        <option value="<?= $znp->id ?>"><?= $znp->zone_name ?></option>
+                                        <option value="<?= $znp->zone_id ?>"><?= $znp->zone_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info_kategori" style="display: none;" class="text-danger font-italic small">load data kategori objek . . .</span>
@@ -75,7 +75,7 @@
                                     <option selected value="<?= $data->check_id ?>"><?= $data->check_name ?></option>
                                     <option value="">Pilih Checkpoint</option>
                                     <?php foreach ($checkpoint->result() as $ckp) : ?>
-                                        <option value="<?= $ckp->id ?>"><?= $ckp->check_name ?></option>
+                                        <option value="<?= $ckp->checkpoint_id ?>"><?= $ckp->check_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -86,7 +86,7 @@
                                     <option selected value="<?= $data->kategori_id ?>"><?= $data->kategori_name ?></option>
                                     <option value="">Pilih Kategori Objek</option>
                                     <?php foreach ($kategori_objek->result() as $ktr) : ?>
-                                        <option value="<?= $ktr->id ?>"><?= $ktr->kategori_name ?></option>
+                                        <option value="<?= $ktr->kategori_id ?>"><?= $ktr->kategori_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
@@ -238,41 +238,22 @@
 
             },
             success: function(e) {
-                var select1 = $('#kategori_id');
-                var select2 = $('#check_id');
-                if (e == 'tidak ada kategori objek di zona ini') {
+                var select = $('#check_id');
+                if (e == 'tidak ada zona') {
                     alert(e);
                 } else {
-                    var data = JSON.parse(e);
-                    const data_kategori = data[0][0];
-                    const data_checkpoint = data[1][0];
-
-                    //tambahkan kategori objek
-                    select1.empty();
-                    var added2 = document.createElement('option');
-                    added2.value = "";
-                    added2.innerHTML = "Pilih Kategori Objek";
-                    select1.append(added2);
-                    for (var i = 0; i < data_kategori.length; i++) {
+                    // console.log(e);
+                    select.empty();
+                    var added = document.createElement('option');
+                    added.value = "";
+                    added.innerHTML = "Pilih Checkpoint";
+                    select.append(added);
+                    var result = JSON.parse(e);
+                    for (var i = 0; i < result.length; i++) {
                         var added = document.createElement('option');
-                        added.value = data_kategori[i].id;
-                        added.innerHTML = data_kategori[i].kategori_name;
-                        select1.append(added);
-                    }
-
-
-
-                    //tambahkan checkpoint
-                    select2.empty();
-                    var added3 = document.createElement('option');
-                    added3.value = "";
-                    added3.innerHTML = "Pilih Checkpoint";
-                    select2.append(added3);
-                    for (var i = 0; i < data_checkpoint.length; i++) {
-                        var added4 = document.createElement('option');
-                        added4.value = data_checkpoint[i].id;
-                        added4.innerHTML = data_checkpoint[i].check_name;
-                        select2.append(added4);
+                        added.value = result[i].checkpoint_id;
+                        added.innerHTML = result[i].check_name;
+                        select.append(added);
                     }
                 }
             }

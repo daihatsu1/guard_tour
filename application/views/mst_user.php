@@ -35,9 +35,9 @@
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                 <i class="fas fa-minus"></i>
                             </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                            <!-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
                                 <i class="fas fa-times"></i>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                     <div class="card-body">
@@ -66,7 +66,7 @@
                                         <td><?= strtoupper($zn->name) ?></td>
                                         <td>
                                             <?php
-                                            $plant = $this->db->query("select plant_name from admisecsgp_mstplant where admisecsgp_mstsite_id = '" . $zn->site_id . "'");
+                                            $plant = $this->db->query("select plant_name from admisecsgp_mstplant where admisecsgp_mstsite_site_id = '" . $zn->site_id . "'");
                                             if ($zn->level == 'SUPERADMIN') {
                                                 echo 'ALL PLANT';
                                             } else if ($zn->level == 'ADMIN') {
@@ -84,13 +84,13 @@
                                         <td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
                                         <td>
 
-                                            <a href="<?= base_url('Mst_user/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
+                                            <a href="<?= base_url('Mst_user/hapus/' . $zn->npk) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
                                             <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2 " title="lihat data" data-backdrop="static" data-keyboard="false" data-level="<?= $zn->level ?>" data-npk="<?= $zn->npk ?>" data-status="<?= $zn->status ?>" data-plant="<?= strtoupper($zn->plant_name)  ?>" data-site="<?= strtoupper($zn->site_name) ?>" data-nama="<?= strtoupper($zn->name) ?>"><i class="fa fa-eye"></i></a>
 
-                                            <a href="<?= base_url('Mst_user/edit?user_id=' . $zn->id) ?>" class='text-success  ml-2 ' title="edit data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>"><i class="fa fa-edit"></i></a>
+                                            <a href="<?= base_url('Mst_user/edit?user_id=' . $zn->npk) ?>" class='text-success  ml-2 ' title="edit data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->npk ?>"><i class="fa fa-edit"></i></a>
 
-                                            <a href="<?= base_url('Mst_user/edit_pwd?user_id=' . $zn->id) ?>" class="text-warning  ml-2 " title="rubah password"><i class="fas fa-lock"></i></a>
+                                            <a href="<?= base_url('Mst_user/edit_pwd?user_id=' . $zn->npk) ?>" class="text-warning  ml-2 " title="rubah password"><i class="fas fa-lock"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>
@@ -113,9 +113,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Detail</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                </button> -->
             </div>
             <div class="modal-body">
                 <div class="card-body">

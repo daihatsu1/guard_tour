@@ -36,7 +36,7 @@
                         </button>
                     </div>
                 <?php } ?>
-                <a href="<?= base_url('assets/format_upload/revisi_upload_jadwal_produksi.xlsx')  ?>" class="ml-2 btn btn-primary btn-sm"> <i class="fas fa-download"></i> Download Format Upload</a>
+                <a href="<?= base_url('assets/format_upload/upload_jadwal_produksi.xlsx')  ?>" class="ml-2 btn btn-primary btn-sm"> <i class="fas fa-download"></i> Download Format Upload</a>
                 <div class="card mt-2">
                     <div class="card-body">
                         <form method="post" action="<?= base_url('Admin/Mst_Jadwal_Produksi/form_revisi_upload_jadwal') ?>" onsubmit="return cekExe()" enctype="multipart/form-data">
@@ -100,37 +100,48 @@
                         <hr>
                         <form action="<?= base_url('Admin/Mst_Jadwal_Produksi/upload_ulang') ?>" method="post" enctype="multipart/form-data" class="mt-2">
                             <?php
-
                             $count = 0;
                             if (isset($_POST['view'])) {
+                                $bln_ = ['JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI', 'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'];
+                                $cek_bulan_patrol = in_array($bulan_patroli, $bln_);
 
-                                if ($plant_3 != $plant) {
+                                if (!$cek_bulan_patrol) {
                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                         Plant yang di pilih tidak sama dengan plant yang di upload , periksa kembali file excel anda
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>';
+                        Format penulisan bulan di sheet jadwal produksi tidak sesuai
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>';
                                     $count += 1;
                                 }
 
-                                if ($bulan_input != $bulan_produksi) {
+                                if ("$plant_3" != "$plant") {
                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                         Bulan yang di pilih tidak sama dengan bulan yang di upload , periksa kembali file excel anda
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>';
+                        Plant yang di pilih tidak sama dengan plant yang di upload , periksa kembali file excel anda
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>';
                                     $count += 1;
                                 }
 
-                                if ($tahun_input != $tahun_produksi) {
+                                if ($bulan_input != $bulan_patroli) {
                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                         Tahun yang di pilih tidak sama dengan tahun yang di upload , periksa  kembali file excel anda
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>';
+                        Bulan yang di pilih tidak sama dengan bulan yang di upload , periksa kembali file excel anda
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>';
+                                    $count += 1;
+                                }
+
+                                if ($tahun_input != $tahun_patroli) {
+                                    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Tahun yang di pilih tidak sama dengan tahun yang di upload , periksa  kembali file excel anda
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>';
                                     $count += 1;
                                 }
 
@@ -139,101 +150,80 @@
                                 //jika tidak maka muncul alert 
                                 if ($cekplant->num_rows() <= 0) {
                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                         <b class="font-italice">' . $plant_name . '-' .  $plant . '</b> tidak terdaftar di database
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>';
+                        <b class="font-italice">' . $plant_name . '-' .  $plant . '</b> tidak terdaftar di database
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>';
                                     $count += 1;
                                 } else {
-
+                                    //cek data jadwal di bulan ini 
                                     $plt = $cekplant->row();
 
+                                    // cek data jadwal produksi
+                                    foreach ($jadwal as $jdl) {
+                                        $prt   = 1;
+                                        $var   = 3;
+                                        $zona  = $jdl[0];
+                                        $shift = $jdl[1];
+                                        $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' ");
+                                        $var_shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift . "' ");
 
-                                    //cek jadwal produksi exist 
-                                    $cekjadwal_produksi  = $this->db->get_where("admisecsgp_mstproductiondtls", ['status' => 1, 'admisecsgp_mstplant_id' => $plt->id, 'bulan' => $bulan_produksi, 'tahun' => $tahun_produksi]);
-                                    if ($cekjadwal_produksi->num_rows() <= 0) {
-                                        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                          Jadwal produksi bulan ' . $bulan_produksi  . ' tahun ' . $tahun_produksi . ' untuk ' . $plt->plant_name . ' tidak ditemukan , update jadwal tidak bisa dilakukan
+                                        if ($var_zona->num_rows() <= 0) {
+                                            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <b class="font-italice">' . $zona . ' di ' .  $plant . '</b> tidak terdaftar di database
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>';
-                                        $count += 1;
-                                    }
+                                            $count += 1;
+                                        }
 
-                                    foreach ($produksi as $pro) {
-                                        //cek status zona 
-                                        $cekzona_exists = $this->db->get_where("admisecsgp_mstzone", ['zone_name' => $pro[0], 'admisecsgp_mstplant_id' => $plt->id]);
-                                        //jika tidak maka muncul alert 
-                                        if ($cekzona_exists->num_rows() <= 0) {
+                                        if ($var_shift->num_rows() <= 0) {
                                             echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                               zona <b class="font-italice">' . $pro[0] . '</b> tidak terdaftar di database
+                                            <b class="font-italice">shift ' . $shift . ' </b> tidak terdaftar di database
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>';
+                                            $count += 1;
+                                        }
+                                        for ($p = 2; $p <= count($jadwal[7]) - 2; $p += 2) {
+                                            $produksi = $this->db->query("select produksi_id from admisecsgp_mstproduction where name='" . $jdl[$p] . "' ");
+
+                                            if ($produksi->num_rows() <= 0) {
+                                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <b class="font-italice">status produksi ' . $jdl[$p] . ' </b> tidak sesuai , hanya ada produksi dan non-produksi di kolom tanggal
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>';
+                                                $count += 1;
+                                            }
+
+
+                                            if (strval($jdl[$var]) == "on" || strval($jdl[$var]) == "off") {
+                                            } else {
+                                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                    <b class="font-italice">status zona ' . $jdl[$var] . ' </b> tidak sesuai , hanya ada on dan off di status zona
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>';
-                                            $count += 1;
-                                        }
-
-                                        //cek shift 
-                                        $cek_shift = $this->db->get_where("admisecsgp_mstshift", ['nama_shift' => $pro[1], 'status' => 1]);
-                                        //jika tidak maka muncul alert 
-                                        if ($cek_shift->num_rows() <= 0) {
-                                            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                               shift <b class="font-italice">' . $pro[1] . '</b> tidak terdaftar di database
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>';
-                                            $count += 1;
-                                        }
-
-                                        //cek penulisan status produksi dan non-produksi
-                                        for ($m = 1; $m <= 62; $m++) {
-                                            if ($m % 2 == 0) {
-                                                $cek_production = $this->db->get_where("admisecsgp_mstproduction", ['name' => $pro[$m]]);
-                                                //jika tidak maka muncul alert 
-                                                if ($cek_production->num_rows() <= 0) {
-                                                    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                       penginputan status produksi <b class="font-italice">' . $pro[$m] . ' </b>di kolom tanggal tidak sesuai format
-                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>';
-                                                    $count += 1;
-                                                }
+                                                $count += 1;
                                             }
-                                        }
 
-
-                                        //cek penulisan on off
-                                        for ($n = 3; $n <= 63; $n++) {
-                                            if ($n % 2 == 1) {
-                                                if ($pro[$n] == 'off' || $pro[$n] == 'on') {
-                                                    echo '';
-                                                } else {
-                                                    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                       penginputan status zona  <b class="font-italice"> ' . $pro[$n] . ' </b>di kolom status zona tidak sesuai format 
-                                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>';
-                                                    $count += 1;
-                                                }
-                                            }
+                                            $var += 2;
+                                            $prt++;
                                         }
                                     }
                                 }
 
                                 //hitung total kesalahan input
                                 if ($count <= 0) {
-                                    // var_dump($produksi);
                                     redirect('Admin/Mst_Jadwal_Produksi/revisi_upload_jadwal');
-                                    // echo '<button class="btn btn-danger btn-sm"><i class="fas fa-upload"></i> UPLOAD JADWAL PATROLI</button>';
                                 }
                             } ?>
-
                         </form>
                     </div>
 

@@ -75,11 +75,11 @@
                                         <td><?= $zn->plant_name ?></td>
                                         <td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
                                         <td>
-                                            <a href="<?= base_url('Mst_Plant/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
+                                            <a href="<?= base_url('Mst_Plant/hapus/' . $zn->plant_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
-                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-plant_name="<?= $zn->plant_name ?>" data-site_no="<?= $zn->admisecsgp_mstsite_id ?>" data-status="<?= $zn->status ?>" data-ket="<?= $zn->others ?>" data-comp_name="<?= $zn->comp_name ?>" data-site_name="<?= $zn->site_name ?>" data-plantkode="<?= $zn->kode_plant ?>"><i class="fa fa-eye"></i></a>
+                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->plant_id ?>" data-plant_name="<?= $zn->plant_name ?>" data-site_no="<?= $zn->admisecsgp_mstsite_site_id ?>" data-status="<?= $zn->status ?>" data-ket="<?= $zn->others ?>" data-comp_name="<?= $zn->comp_name ?>" data-site_name="<?= $zn->site_name ?>" data-plantkode="<?= $zn->kode_plant ?>"><i class="fa fa-eye"></i></a>
 
-                                            <a href="<?= base_url('Mst_Plant/edit?plant_id=' . $zn->id) ?>" class='ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
+                                            <a href="<?= base_url('Mst_Plant/edit?plant_id=' . $zn->plant_id) ?>" class='ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

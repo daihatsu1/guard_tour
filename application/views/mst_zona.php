@@ -60,7 +60,6 @@
                                     <th>PLANT</th>
                                     <th>KODE ZONA</th>
                                     <th>NAMA ZONA</th>
-                                    <th>DURASI</th>
                                     <th>STATUS</th>
                                     <th>OPSI</th>
                                 </tr>
@@ -74,16 +73,15 @@
                                         <td><?= $zn->plant_name ?></td>
                                         <td><?= $zn->kode_zona ?></td>
                                         <td><?= $zn->zone_name ?></td>
-                                        <td><?= $zn->durasi . ' menit' ?></td>
                                         <td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
                                         <td>
 
-                                            <a href="<?= base_url('Mst_Zona/hapus/' . $zn->id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
+                                            <a href="<?= base_url('Mst_Zona/hapus/' . $zn->zone_id) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
-                                            <a data-toggle="modal" data-target="#edit-data" class="text-primary  ml-2" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->id ?>" data-zone_name="<?= $zn->zone_name ?>" data-plant="<?= $zn->plant_name ?>" data-kodezona="<?= $zn->kode_zona ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>" data-durasi="<?= $zn->durasi ?>"><i class="fa fa-eye"></i></a>
+                                            <a data-toggle="modal" data-target="#edit-data" class="text-primary  ml-2" title="lihat data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->zone_id ?>" data-zone_name="<?= $zn->zone_name ?>" data-plant="<?= $zn->plant_name ?>" data-kodezona="<?= $zn->kode_zona ?>" data-others="<?= $zn->others ?>" data-status="<?= $zn->status ?>"><i class="fa fa-eye"></i></a>
 
 
-                                            <a href="<?= base_url('Mst_Zona/edit?zone_id=' . $zn->id) ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
+                                            <a href="<?= base_url('Mst_Zona/edit?zone_id=' . $zn->zone_id) ?>" class=' ml-2 text-success' title="edit data"><i class="fa fa-edit"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>
@@ -126,11 +124,6 @@
                         <div class="form-group">
                             <label for="">KODE ZONA</label>
                             <input type="text" readonly autocomplete="off" id="kode_zona" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="">DURASI</label>
-                            <input type="text" readonly autocomplete="off" id="durasi" class="form-control">
                         </div>
 
                         <div class="form-group">
@@ -184,7 +177,6 @@
                 modal.find("#plant").attr("value", div.data("plant"));
                 modal.find("#zone_name").attr("value", div.data("zone_name"));
                 modal.find("#kode_zona").attr("value", div.data("kodezona"));
-                modal.find("#durasi").attr("value", div.data("durasi") + ' menit');
                 if (div.data("status") == 1) {
                     modal.find("#status").attr("value", "ACTIVE");
                 } else {

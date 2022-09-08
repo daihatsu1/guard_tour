@@ -22,11 +22,11 @@ class AuthController extends RestController
 		// Get the post data
 		$npk = $this->post('npk');
 		$password = $this->post('password');
-
 		// Validate the post data
 		if (!empty($npk) && !empty($password)) {
 
 			// Check if any user exists with the given credentials
+			$con['npk'] =  $npk;
 			$con['returnType'] = 'single';
 			$con['conditions'] = array(
 				'npk' => $npk,
@@ -34,11 +34,10 @@ class AuthController extends RestController
 				'status' => 1
 			);
 			$user = $this->M_restAuth->getRows($con);
-
 			if ($user) {
 				// Set the response and exit
-				//				var_dump($user['id']);
-				$key = $this->_regenerate_key($user['id']);
+				//				var_dump($user['npk']);
+				$key = $this->_regenerate_key($user['npk']);
 				if ($key) {
 					$this->response([
 						'status'  => TRUE,
@@ -115,7 +114,7 @@ class AuthController extends RestController
 	{
 		// Returns all the users data if the id not specified,
 		// Otherwise, a single user will be returned.
-		$con = $id ? array('id' => $id) : '';
+		$con = $id ? array('npk' => $id) : '';
 		$users = $this->M_restAuth->getRows($con);
 
 		// Check if the user data exists
@@ -135,7 +134,7 @@ class AuthController extends RestController
 
 	public function user_put()
 	{
-		$id = $this->put('id');
+		$id = $this->put('npk');
 
 		// Get the post data
 		$first_name = strip_tags($this->put('first_name'));

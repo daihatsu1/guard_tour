@@ -6,8 +6,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_user') ?>">Master</a></li>
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_user') ?>">User</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_User') ?>">Master</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Mst_User') ?>">User</a></li>
                     <li class="breadcrumb-item"><a href="">Edit User</a></li>
                 </ol>
             </div>
@@ -51,15 +51,15 @@
                         </div>
                     </div>
                     <form onsubmit="return cek()" action="<?= base_url('Admin/Mst_user/update') ?>" method="post" id="inputPlant">
-                        <input type="hidden" name="id" value="<?= $data->id ?>">
+                        <input type="hidden" name="id" value="<?= $data->npk ?>">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="">WILAYAH</label>
                                 <select class="form-control" name="site_id" id="site_id">
-                                    <option selected value="<?= $data->admisecsgp_mstsite_id ?>"><?= $data->site_name ?></option>
+                                    <option selected value="<?= $data->admisecsgp_mstsite_site_id ?>"><?= $data->site_name ?></option>
                                     <option value="">Pilih Wilayah</option>
                                     <?php foreach ($wilayah->result() as $cmp) : ?>
-                                        <option value="<?= $cmp->id ?>"><?= $cmp->site_name ?></option>
+                                        <option value="<?= $cmp->site_id ?>"><?= $cmp->site_name ?></option>
                                     <?php endforeach ?>
                                 </select>
                                 <span id="info" style="display: none;" class="text-danger font-italic small">load data plant . . .</span>
@@ -69,13 +69,13 @@
                                 <div class="form-group">
                                     <label for="">PLANT</label>
                                     <select name="plant_id" id="plant_id" class="form-control">
-                                        <option value="<?= $data->admisecsgp_mstplant_id ?>"><?= $data->plant_name ?></option>
+                                        <option value="<?= $data->admisecsgp_mstplant_plant_id ?>"><?= $data->plant_name ?></option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="">NPK</label>
-                                <input type="text" name="npk" value="<?= $data->npk ?>" autocomplete="off" id="npk" class="form-control">
+                                <input disabled type="text" name="npk" value="<?= $data->npk ?>" autocomplete="off" id="npk" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">USERNAME</label>
@@ -85,10 +85,10 @@
                             <div class="form-group">
                                 <label for="">LEVEL</label>
                                 <select name="level" class="form-control" id="">
-                                    <option selected value="<?= $data->admisecsgp_mstroleusr_id ?>"><?= $data->level ?></option>
+                                    <option selected value="<?= $data->admisecsgp_mstroleusr_role_id ?>"><?= $data->level ?></option>
                                     <option value="">Pilih Role</option>
                                     <?php foreach ($role->result() as $rl) : ?>
-                                        <option value="<?= $rl->id ?>"><?= $rl->level ?></option>
+                                        <option value="<?= $rl->role_id ?>"><?= $rl->level ?></option>
                                     <?php endforeach ?>
                                 </select>
                             </div>

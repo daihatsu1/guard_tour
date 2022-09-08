@@ -47,7 +47,9 @@ class Mst_Produksi extends CI_Controller
     {
         $status           = $this->input->post("status");
         $nama             = $this->input->post("name");
+        $id                 = 'ADMP' . substr(uniqid(rand(), true), 4, 4);
         $data = [
+            'produksi_id'      => $id,
             'status'           => $status,
             'name'             => strtoupper($nama),
             'created_at'       => date('Y-m-d H:i:s'),
@@ -73,7 +75,7 @@ class Mst_Produksi extends CI_Controller
 
     public function hapus($id)
     {
-        $where = ['id' => $id];
+        $where = ['produksi_id' => $id];
         $del = $this->M_patrol->delete("admisecsgp_mstproduction", $where);
         if ($del) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil hapus data');
@@ -89,7 +91,7 @@ class Mst_Produksi extends CI_Controller
         $id =  $this->input->get('prod_id');
         $data = [
             'link'       => $this->uri->segment(1),
-            'data'       => $this->M_patrol->ambilData("admisecsgp_mstproduction", ['id' => $id])->row()
+            'data'       => $this->M_patrol->ambilData("admisecsgp_mstproduction", ['produksi_id' => $id])->row()
         ];
         // $this->template->load("template/template", "edit_mst_Produksi", $data);
         $this->load->view("template/sidebar", $data);
@@ -110,7 +112,7 @@ class Mst_Produksi extends CI_Controller
             'updated_by'         => $this->session->userdata('id_token'),
         ];
 
-        $where = ['id' => $id];
+        $where = ['produksi_id' => $id];
         $update = $this->M_patrol->update("admisecsgp_mstproduction", $data, $where);
         if ($update) {
             $this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data');

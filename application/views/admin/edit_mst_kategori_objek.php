@@ -44,35 +44,11 @@
                     </div>
                     <form onsubmit="return cek()" action="<?= base_url('Admin/Mst_Kategori_Object/update') ?>" method="post">
 
+                        <input type="hidden" name="id" value="<?= $data->kategori_id ?>">
                         <div class="card-body">
-                            <div class="form-group">
-                                <label for="">PLANT</label>
-                                <select class="form-control" name="plant_id" id="plant_id">
-                                    <option selected value="<?= $data->plant_id ?>"><?= $data->plant_name ?></option>
-                                    <option value="">Pilih Plant</option>
-                                    <?php foreach ($plant->result() as $plt) : ?>
-                                        <option value="<?= $plt->id ?>"><?= $plt->plant_name ?></option>
-                                    <?php endforeach ?>
-                                </select>
-                                <span id="info" style="display: none;" class="text-danger font-italic small">load data zone . . .</span>
-                            </div>
 
-                            <div id="list_zone">
-                                <label for="">ZONA</label>
-                                <select class="form-control" name="zone_id" id="zone_id">
-                                    <?php foreach ($zone->result() as $znp) :
-                                        if ($znp->id == $zona_id) { ?>
-                                            <option selected value="<?= $data->zona_id ?>"><?= $znp->zone_name ?></option>
-                                        <?php } else { ?>
-                                            <option value="<?= $znp->id ?>"><?= $znp->zone_name ?></option>
-                                        <?php } ?>
-                                    <?php endforeach ?>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
+                            <div class="form-group mt-2">
                                 <label for="">NAMA KATEGORI</label>
-                                <input type="hidden" name="id" value="<?= $data->id ?>">
                                 <input type="text" name="kategori_name" value="<?= $data->kategori_name ?>" autocomplete="off" id="kategori_name" class="form-control">
                             </div>
 
@@ -138,7 +114,6 @@
         }
         return;
     }
-
 
     $("select[name=plant_id").on('change', function() {
         var id = $("select[name=plant_id] option:selected").val();
