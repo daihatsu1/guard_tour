@@ -27,7 +27,7 @@ class Login extends CI_Controller
     {
         $name = $this->input->post("username");
         $password = md5($this->input->post("password"));
-
+        // pindah ke sql server
         // $cekUser = $this->db->get_where("admisecsgp_mstusr", ['name' =>  $name, 'password' => $password]);
 
         $cekUser = $this->db->query("SELECT   usr.npk , usr.name , ru.level  , usr.admisecsgp_mstsite_site_id , usr.admisecsgp_mstplant_plant_id 
