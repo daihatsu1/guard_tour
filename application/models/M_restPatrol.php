@@ -17,8 +17,8 @@ class M_restPatrol extends CI_Model
 
 		$sql = "select s.nama_shift as shift,
        				s.shift_id, 
-       				s.jam_masuk, 
-       				s.jam_pulang, 
+					convert(varchar,s.jam_masuk,120) as jam_masuk,
+					convert(varchar,s.jam_masuk,120) as jam_masuk,
        				p.plant_name, 
        				p.plant_id as plant_id
 				from admisecsgp_trans_jadwal_patroli,         
@@ -63,12 +63,12 @@ class M_restPatrol extends CI_Model
 
 	function getZones($dateTime, $shift_id, $plant_id)
 	{
-//		$tanggal = $dateTime->format('j');
-//		$bulan = get_bulan($dateTime->format('m'));
-//		$tahun = $dateTime->format('Y');
+		//		$tanggal = $dateTime->format('j');
+		//		$bulan = get_bulan($dateTime->format('m'));
+		//		$tahun = $dateTime->format('Y');
 
-//		$kolom_tgl_zona = "jp.tanggal_" . $tanggal;
-//		$kolom_stat_zona = "jp.ss_" . $tanggal;
+		//		$kolom_tgl_zona = "jp.tanggal_" . $tanggal;
+		//		$kolom_stat_zona = "jp.ss_" . $tanggal;
 		$date = $dateTime->format('Y-m-d');
 
 
@@ -90,7 +90,13 @@ class M_restPatrol extends CI_Model
 					   check_name,
 					   check_no as no_nfc,
 					   admisecsgp_mstzone_zone_id as zone_id,
-					   IF(status=1,'AKTIF', 'INACTIVE') as status_checkpoint 
+					   CAST(
+						CASE
+						  WHEN status=1 THEN 'AKTIF'
+						ELSE 'INACTIVE'
+						END
+						as varchar
+					) as status_checkpoint 
 				from admisecsgp_mstckp 
 				where 	status=1 
 				and		admisecsgp_mstzone_zone_id ='" . $zone_id . "' ")->result();
@@ -131,12 +137,11 @@ class M_restPatrol extends CI_Model
 
 	public function getDataTemuan($id)
 	{
-		$sql = "select * from admisecsgp_trans_headers where trans_header_id ='" . $id . "' limit 1";
+		$sql = "select TOP 1 * from admisecsgp_trans_headers where trans_header_id ='" . $id . "' ";
 		$data = $this->db->query($sql)->row();
 		$sqlDetail = "select * from admisecsgp_trans_details where admisecsgp_trans_headers_trans_headers_id ='" . $id . "'";
 		$dataDetail = $this->db->query($sqlDetail)->result();;
 		$data->detail_temuan = $dataDetail;
 		return $data;
 	}
-
 }

@@ -70,19 +70,21 @@ class PatroliController extends RestController
 
 	public function dataTemuan_post()
 	{
-//		$this->response($_FILES, 200);
+		//		$this->response($_FILES, 200);
 
 		$data = array(
-//			'date' => $this->post('date'),
+			//			'date' => $this->post('date'),
 			'admisecsgp_mstusr_npk' => $this->user['npk'],
 			'admisecsgp_mstshift_shift_id' => $this->post('admisecsgp_mstshift_shift_id'),
 			'admisecsgp_mstzone_zone_id' => $this->post('admisecsgp_mstzone_zone_id'),
+			'admisecsgp_mstckp_checkpoint_id' => $this->post('admisecsgp_mstckp_checkpoint_id'),
 			'date_patroli' => $this->post('date_patroli'),
 			'checkin_checkpoint' => $this->post('checkin_checkpoint'),
 			'checkout_checkpoint' => $this->post('checkout_checkpoint'),
 			'status' => $this->post('status'),
 			'sync_token' => $this->post('sync_token'),
 			'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
+			'created_by'	=> $this->user['npk'],
 		);
 
 		$id = $this->M_restPatrol->saveData('admisecsgp_trans_headers', $data);
@@ -107,7 +109,7 @@ class PatroliController extends RestController
 									$_FILES[$field]['size'] = $files['size'][$k][$field];
 
 									$config['upload_path'] = realpath(APPPATH . '../assets/temuan');
-//					$config['allowed_types'] = 'gif|jpg|jpeg|png';
+									//					$config['allowed_types'] = 'gif|jpg|jpeg|png';
 									$config['file_name'] = $filename;
 
 									$this->load->library('upload', $config);
@@ -126,7 +128,6 @@ class PatroliController extends RestController
 							} else {
 								$upload_result[$field] = null;
 							}
-
 						}
 					}
 				}
@@ -153,12 +154,10 @@ class PatroliController extends RestController
 
 				);
 				$this->M_restPatrol->saveData('admisecsgp_trans_details', $dataDetail);
-
 			}
 		}
 
 		$result = $this->M_restPatrol->getDataTemuan($id);
 		$this->response($result, 200);
 	}
-
 }

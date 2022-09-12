@@ -235,7 +235,8 @@ class AuthController extends RestController
 	private function _insert_key($key, $data)
 	{
 		$data[config_item('rest_key_column')] = $key;
-		$data['date_created'] = function_exists('now') ? now() : time();
+		// $data['date_created'] = function_exists('now') ? now() : time();
+		$data['date_created'] = function_exists('now') ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s');
 
 		return $this->rest->db
 			->set($data)

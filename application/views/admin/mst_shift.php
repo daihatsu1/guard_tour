@@ -50,7 +50,7 @@
                     </div>
                     <div class="card-body">
 
-                        <table id="example2" class="mt-1 table table-striped table-bordered">
+                        <table id="example2" class="table-sm  mt-1 table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>NO</th>

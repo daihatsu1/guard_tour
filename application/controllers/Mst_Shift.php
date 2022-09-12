@@ -21,9 +21,11 @@ class Mst_Shift extends CI_Controller
 
     public function index()
     {
+
         $data = [
             'link'          => $this->uri->segment(1),
-            'shift'         => $this->M_patrol->ambilData("admisecsgp_mstshift")
+            'shift'         => $this->M_patrol->showShift()
+            // 'shift'         => $this->M_patrol->ambilData("admisecsgp_mstshift")
         ];
         // $this->template->load("template/template", "mst_shift", $data);
         $this->load->view("template/sidebar", $data);
@@ -96,7 +98,8 @@ class Mst_Shift extends CI_Controller
         $id =  $this->input->get('shift_id');
         $data = [
             'link'       => $this->uri->segment(1),
-            'data'       => $this->M_patrol->ambilData("admisecsgp_mstshift", ['shift_id' => $id])->row()
+            'data'       => $this->M_patrol->showShiftDetail($id)->row()
+
         ];
         // $this->template->load("template/template", "edit_mst_shift", $data);
         $this->load->view("template/sidebar", $data);

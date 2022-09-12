@@ -8,7 +8,6 @@ class Mst_Company extends CI_Controller
     public function __construct(Type $var = null)
     {
         parent::__construct();
-
         date_default_timezone_set('Asia/Jakarta');
         $id = $this->session->userdata('id_token');
         if ($id == null || $id == "") {

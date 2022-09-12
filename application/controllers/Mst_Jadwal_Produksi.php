@@ -14,6 +14,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         $id = $this->session->userdata('id_token');
         date_default_timezone_set('Asia/Jakarta');
         $this->load->helper('convertbulan');
+        $this->load->helper('string');
         if ($id == null || $id == "") {
             $this->session->set_flashdata('info_login', 'anda harus login dulu');
             redirect('Login');
@@ -230,7 +231,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
                 $d = new DateTime();
                 $uniq = $d->format("dmyHisv");
                 $id                 = uniqid($uniq);
-                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10);
+                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10) . random_string('alnum', 3);
                 $data =  [
                     'id_zona_patroli'                        => $gen,
                     'date_patroli'                           => $date . "-" . $prt,
@@ -241,7 +242,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
                     'status_zona'                            => $jdl[$var] == 'on' ? 1 : 0,
                     'status'                                 => 1,
                     'created_at'                             => date('Y-m-d H:i:s'),
-                    'created_by'                             => 1
+                    'created_by'                             => $this->session->userdata("id_token")
                 ];
 
                 array_push($dataprd, $data);
@@ -251,7 +252,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         }
 
 
-        $this->db->query("DELETE FROM admisecsgp_trans_zona_patroli WHERE admisecsgp_mstplant_plant_id='" . $plant->plant_id . "' AND date_format(date_patroli,'%Y-%m') = '" . $date . "' ");
+        $this->db->query("DELETE FROM admisecsgp_trans_zona_patroli WHERE admisecsgp_mstplant_plant_id='" . $plant->plant_id . "' AND format(date_patroli,'yyyy-MM','en-US') = '" . $date . "' ");
         // $this->db->delete("admisecsgp_trans_zona_patroli");
         if ($this->db->affected_rows() > 0) {
             $this->db->insert_batch('admisecsgp_trans_zona_patroli', $dataprd);
