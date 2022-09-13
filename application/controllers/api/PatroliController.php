@@ -70,11 +70,9 @@ class PatroliController extends RestController
 
 	public function dataTemuan_post()
 	{
-//		$this->response($_FILES, 200);
-
 		$data = array(
-//			'date' => $this->post('date'),
 			'admisecsgp_mstusr_npk' => $this->user['npk'],
+			'admisecsgp_mstckp_checkpoint_id' => $this->post('admisecsgp_mstckp_checkpoint_id'),
 			'admisecsgp_mstshift_shift_id' => $this->post('admisecsgp_mstshift_shift_id'),
 			'admisecsgp_mstzone_zone_id' => $this->post('admisecsgp_mstzone_zone_id'),
 			'date_patroli' => $this->post('date_patroli'),
