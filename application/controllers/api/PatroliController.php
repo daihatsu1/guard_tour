@@ -81,6 +81,7 @@ class PatroliController extends RestController
 			'status' => $this->post('status'),
 			'sync_token' => $this->post('sync_token'),
 			'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
+			'created_by' => $this->user['npk'],
 		);
 
 		$id = $this->M_restPatrol->saveData('admisecsgp_trans_headers', $data);
@@ -105,7 +106,6 @@ class PatroliController extends RestController
 									$_FILES[$field]['size'] = $files['size'][$k][$field];
 
 									$config['upload_path'] = realpath(APPPATH . '../assets/temuan');
-//					$config['allowed_types'] = 'gif|jpg|jpeg|png';
 									$config['file_name'] = $filename;
 
 									$this->load->library('upload', $config);
@@ -148,6 +148,8 @@ class PatroliController extends RestController
 					'status' => $detail['status'],
 					'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
 					'sync_token' => $detail['sync_token'],
+					'created_by' => $this->user['npk'],
+
 
 				);
 				$this->M_restPatrol->saveData('admisecsgp_trans_details', $dataDetail);
