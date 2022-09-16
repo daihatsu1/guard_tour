@@ -70,6 +70,7 @@ class PatroliController extends RestController
 
 	public function dataTemuan_post()
 	{
+		$syncToken = $this->post('sync_token');
 		$data = array(
 			'admisecsgp_mstusr_npk' => $this->user['npk'],
 			'admisecsgp_mstckp_checkpoint_id' => $this->post('admisecsgp_mstckp_checkpoint_id'),
@@ -79,12 +80,16 @@ class PatroliController extends RestController
 			'checkin_checkpoint' => $this->post('checkin_checkpoint'),
 			'checkout_checkpoint' => $this->post('checkout_checkpoint'),
 			'status' => $this->post('status'),
-			'sync_token' => $this->post('sync_token'),
+			'sync_token' => $syncToken,
 			'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
 			'created_by' => $this->user['npk'],
 		);
 
-		$id = $this->M_restPatrol->saveData('admisecsgp_trans_headers', $data);
+		if ($this->input->post('trans_header_id')) {
+			$data['trans_header_id'] = $this->input->post('trans_header_id');
+		}
+
+		$id = $this->M_restPatrol->upsertHeader('admisecsgp_trans_headers', $data);
 
 		$details = $this->post('detail_temuan');
 		if ($details) {

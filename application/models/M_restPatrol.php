@@ -119,6 +119,10 @@ class M_restPatrol extends CI_Model
 		$this->db->insert($table, $data);
 		return $this->db->insert_id();
 	}
+	public function upsertHeader($table, $data){
+		$this->db->replace($table, $data);
+		return $this->db->insert_id();
+	}
 
 	public function getDataTemuan($id)
 	{
