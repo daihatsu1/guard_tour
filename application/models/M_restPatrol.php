@@ -63,21 +63,13 @@ class M_restPatrol extends CI_Model
 
 	function getZones($dateTime, $shift_id, $plant_id)
 	{
-//		$tanggal = $dateTime->format('j');
-//		$bulan = get_bulan($dateTime->format('m'));
-//		$tahun = $dateTime->format('Y');
-
-//		$kolom_tgl_zona = "jp.tanggal_" . $tanggal;
-//		$kolom_stat_zona = "jp.ss_" . $tanggal;
 		$date = $dateTime->format('Y-m-d');
-
-
 		$sql = "SELECT zn.zone_id as id,
        					pl.plant_id as plant_id,
 						pl.plant_name, 
 						zn.zone_name
-				FROM admisecsgp_mstzone zn, 
-					 admisecsgp_mstplant pl
+				FROM admisecsgp_mstzone zn 
+				join  admisecsgp_mstplant pl on zn.admisecsgp_mstplant_plant_id = pl.plant_id
 				WHERE zn.status = 1  
 				  and zn.admisecsgp_mstplant_plant_id = '" . $plant_id . "' ";
 		return $this->db->query($sql)->result();
@@ -111,16 +103,15 @@ class M_restPatrol extends CI_Model
 	public function getEvent($objek)
 	{
 		return $this->db->query("
-				SELECT ev.event_id as id, 
-				       ob.objek_id as object_id, 
-				       ev.event_name  
-				from admisecsgp_mstevent ev,  
-				     admisecsgp_mstkobj ko, 
-				     admisecsgp_mstobj ob 
-				where ob.objek_id = '" . $objek . "' 
-				and ko.kategori_id = ob.admisecsgp_mstkobj_kategori_id
-				and ko.status=1;
-				");
+				SELECT ev.event_id as id,
+					   ob.objek_id as object_id,
+					   ev.event_name
+				from admisecsgp_mstevent ev
+						 join admisecsgp_mstkobj ko on ev.admisecsgp_mstkobj_kategori_id = ko.kategori_id
+						 join admisecsgp_mstobj ob on ko.kategori_id = ob.admisecsgp_mstkobj_kategori_id
+				where ob.objek_id = '".$objek."'
+				  and ko.kategori_id = ob.admisecsgp_mstkobj_kategori_id
+				  and ko.status = 1");
 	}
 
 	public function saveData($table, $data)
