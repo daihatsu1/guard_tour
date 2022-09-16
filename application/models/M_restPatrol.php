@@ -82,7 +82,7 @@ class M_restPatrol extends CI_Model
 					   check_name,
 					   check_no as no_nfc,
 					   admisecsgp_mstzone_zone_id as zone_id,
-					   IF(status=1,'AKTIF', 'INACTIVE') as status_checkpoint 
+					   IIF(status=1,'AKTIF', 'INACTIVE') as status_checkpoint 
 				from admisecsgp_mstckp 
 				where 	status=1 
 				and		admisecsgp_mstzone_zone_id ='" . $zone_id . "' ")->result();
