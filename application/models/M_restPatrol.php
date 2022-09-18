@@ -126,7 +126,7 @@ class M_restPatrol extends CI_Model
 
 	public function getDataTemuan($id)
 	{
-		$sql = "select * from admisecsgp_trans_headers where trans_header_id ='" . $id . "' limit 1";
+		$sql = "SELECT TOP 1  * from admisecsgp_trans_headers where trans_header_id ='" . $id . "'";
 		$data = $this->db->query($sql)->row();
 		$sqlDetail = "select * from admisecsgp_trans_details where admisecsgp_trans_headers_trans_headers_id ='" . $id . "'";
 		$dataDetail = $this->db->query($sqlDetail)->result();;
