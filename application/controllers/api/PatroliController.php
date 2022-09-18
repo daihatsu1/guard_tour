@@ -86,10 +86,11 @@ class PatroliController extends RestController
 		);
 
 		if ($this->input->post('trans_header_id')) {
-			$data['trans_header_id'] = $this->input->post('trans_header_id');
+			$id = $this->input->post('trans_header_id');
+			$this->M_restPatrol->updateData('admisecsgp_trans_headers', $data, 'trans_header_id', $id);
+		} else {
+			$id = $this->M_restPatrol->saveData('admisecsgp_trans_headers', $data);
 		}
-
-		$id = $this->M_restPatrol->upsertHeader('admisecsgp_trans_headers', $data);
 
 		$details = $this->post('detail_temuan');
 		if ($details) {
@@ -129,7 +130,6 @@ class PatroliController extends RestController
 							} else {
 								$upload_result[$field] = null;
 							}
-
 						}
 					}
 				}
