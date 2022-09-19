@@ -85,8 +85,14 @@ class PatroliController extends RestController
 			'created_by' => $this->user['npk'],
 		);
 
-		if ($this->input->post('trans_header_id')) {
-			$id = $this->input->post('trans_header_id');
+		$header = $this->db->get_where('admisecsgp_trans_headers', array(
+			'sync_token' => $syncToken
+		),1,0);
+		$count = $header->num_rows();
+
+		if ($count > 0) {
+			$dataHeader = $header->row();
+			$id = $dataHeader->trans_header_id;
 			$this->M_restPatrol->updateData('admisecsgp_trans_headers', $data, 'trans_header_id', $id);
 		} else {
 			$id = $this->M_restPatrol->saveData('admisecsgp_trans_headers', $data);
@@ -95,6 +101,8 @@ class PatroliController extends RestController
 		$details = $this->post('detail_temuan');
 		if ($details) {
 			foreach ($details as $k => $detail) {
+
+
 				if ($_FILES != null) {
 					$files = array_key_exists('detail_temuan', $_FILES) ? $_FILES['detail_temuan'] : null;
 					$upload_result = array('image_1' => null, 'image_2' => null, 'image_3' => null,);
@@ -154,10 +162,19 @@ class PatroliController extends RestController
 					'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
 					'sync_token' => $detail['sync_token'],
 					'created_by' => $this->user['npk'],
-
-
 				);
-				$this->M_restPatrol->saveData('admisecsgp_trans_details', $dataDetail);
+				$headerDetail = $this->db->get_where('admisecsgp_trans_details', array(
+					'sync_token' => $detail['sync_token']
+				), 1,0);
+				$countDetail = $headerDetail->num_rows();
+				if ($countDetail > 0) {
+					$existingDataDetail = $headerDetail->row();
+					$idDetail = $existingDataDetail->trans_detail_id;
+					$this->M_restPatrol->updateData('admisecsgp_trans_details', $dataDetail, 'trans_detail_id', $idDetail);
+				} else {
+					$this->M_restPatrol->saveData('admisecsgp_trans_details', $dataDetail);
+
+				}
 
 			}
 		}
