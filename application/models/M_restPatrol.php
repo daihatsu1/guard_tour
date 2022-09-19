@@ -64,14 +64,21 @@ class M_restPatrol extends CI_Model
 	function getZones($dateTime, $shift_id, $plant_id)
 	{
 		$date = $dateTime->format('Y-m-d');
-		$sql = "SELECT zn.zone_id as id,
-       					pl.plant_id as plant_id,
-						pl.plant_name, 
-						zn.zone_name
-				FROM admisecsgp_mstzone zn 
-				join  admisecsgp_mstplant pl on zn.admisecsgp_mstplant_plant_id = pl.plant_id
-				WHERE zn.status = 1  
-				  and zn.admisecsgp_mstplant_plant_id = '" . $plant_id . "' ";
+		$sql = "select z.zone_id   as id,
+					   am.plant_id as plant_id,
+					   am.plant_name,
+					   z.zone_name
+				from admisecsgp_trans_zona_patroli zp
+						 left join admisecsgp_mstplant am on am.plant_id = zp.admisecsgp_mstplant_plant_id
+						 left join admisecsgp_mstzone z on zp.admisecsgp_mstzone_zone_id = z.zone_id and
+														   zp.admisecsgp_mstplant_plant_id = z.admisecsgp_mstplant_plant_id
+						 left join admisecsgp_mstshift ams on zp.admisecsgp_mstshift_shift_id = ams.shift_id
+				where z.status = 1
+				  and zp.status_zona = 1
+				  and am.plant_id = '" . $plant_id . "'
+				  and ams.nama_shift = '" . $shift_id . "'
+				and date_patroli ='".$date."'";
+
 		return $this->db->query($sql)->result();
 	}
 
@@ -109,7 +116,7 @@ class M_restPatrol extends CI_Model
 				from admisecsgp_mstevent ev
 						 join admisecsgp_mstkobj ko on ev.admisecsgp_mstkobj_kategori_id = ko.kategori_id
 						 join admisecsgp_mstobj ob on ko.kategori_id = ob.admisecsgp_mstkobj_kategori_id
-				where ob.objek_id = '".$objek."'
+				where ob.objek_id = '" . $objek . "'
 				  and ko.kategori_id = ob.admisecsgp_mstkobj_kategori_id
 				  and ko.status = 1");
 	}
@@ -119,7 +126,9 @@ class M_restPatrol extends CI_Model
 		$this->db->insert($table, $data);
 		return $this->db->insert_id();
 	}
-	public function updateData($table, $data, $whereColumn, $where){
+
+	public function updateData($table, $data, $whereColumn, $where)
+	{
 		$this->db->where($whereColumn, $where);
 		return $this->db->update($table, $data);
 	}
