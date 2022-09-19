@@ -26,8 +26,9 @@ class PatroliController extends RestController
 		$this->load->model(['M_restPatrol', 'M_restAuth', 'M_api']);
 		$this->dateNow = new DateTimeImmutable('now', new DateTimeZone('Asia/Jakarta'));
 		$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
-
-		$this->user = $this->M_restAuth->getRows(['npk' => $this->_apiuser->user_id]);
+		if ($this->_apiuser){
+			$this->user = $this->M_restAuth->getRows(['npk' => $this->_apiuser->user_id]);
+		}
 		$this->zero_clock = new DateTime('00:00:00', new DateTimeZone('Asia/Jakarta'));
 		$this->six_clock = new DateTime('06:00:00', new DateTimeZone('Asia/Jakarta'));
 		$this->accessTime = $this->dateNow;
@@ -68,6 +69,13 @@ class PatroliController extends RestController
 		$this->response($data, 200);
 	}
 
+	public function getdataTemuan_get()
+	{
+		$dataTemuan = $this->M_restPatrol->getAllDataTemuan();
+		$this->response($dataTemuan, 200);
+
+	}
+
 	public function dataTemuan_post()
 	{
 		$syncToken = $this->post('sync_token');
@@ -87,7 +95,7 @@ class PatroliController extends RestController
 
 		$header = $this->db->get_where('admisecsgp_trans_headers', array(
 			'sync_token' => $syncToken
-		),1,0);
+		), 1, 0);
 		$count = $header->num_rows();
 
 		if ($count > 0) {
@@ -165,7 +173,7 @@ class PatroliController extends RestController
 				);
 				$headerDetail = $this->db->get_where('admisecsgp_trans_details', array(
 					'sync_token' => $detail['sync_token']
-				), 1,0);
+				), 1, 0);
 				$countDetail = $headerDetail->num_rows();
 				if ($countDetail > 0) {
 					$existingDataDetail = $headerDetail->row();
