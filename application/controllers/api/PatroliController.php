@@ -110,7 +110,6 @@ class PatroliController extends RestController
 		if ($details) {
 			foreach ($details as $k => $detail) {
 
-
 				if ($_FILES != null) {
 					$files = array_key_exists('detail_temuan', $_FILES) ? $_FILES['detail_temuan'] : null;
 					$upload_result = array('image_1' => null, 'image_2' => null, 'image_3' => null,);
@@ -148,6 +147,10 @@ class PatroliController extends RestController
 							}
 						}
 					}
+				}else{
+					$upload_result['image_1'] = $detail['image_1'];
+					$upload_result['image_2'] = $detail['image_2'];
+					$upload_result['image_3'] = $detail['image_3'];
 				}
 
 				$dataDetail = array(
