@@ -109,7 +109,25 @@ class PatroliController extends RestController
 		$details = $this->post('detail_temuan');
 		if ($details) {
 			foreach ($details as $k => $detail) {
+				$dataDetail = array(
+					//detail
+					'admisecsgp_trans_headers_trans_headers_id' => $id,
+					'admisecsgp_mstobj_objek_id' => $detail['admisecsgp_mstobj_objek_id'],
+					'conditions' => $detail['conditions'],
+					'admisecsgp_mstevent_event_id' => $detail['admisecsgp_mstevent_event_id'],
+					'description' => $detail['description'],
 
+					'is_laporan_kejadian' => $detail['is_laporan_kejadian'],
+					'laporkan_pic' => $detail['laporkan_pic'],
+					'is_tindakan_cepat' => $detail['is_tindakan_cepat'],
+					'status_temuan' => $detail['status'],
+					'deskripsi_tindakan' => $detail['deskripsi_tindakan'],
+					'note_tindakan_cepat' => $detail['note_tindakan_cepat'],
+					'status' => $detail['status'],
+					'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
+					'sync_token' => $detail['sync_token'],
+					'created_by' => $this->user['npk'],
+				);
 				if ($_FILES != null) {
 					$files = array_key_exists('detail_temuan', $_FILES) ? $_FILES['detail_temuan'] : null;
 					$upload_result = array('image_1' => null, 'image_2' => null, 'image_3' => null,);
@@ -147,33 +165,12 @@ class PatroliController extends RestController
 							}
 						}
 					}
-				}else{
-					$upload_result['image_1'] = $detail['image_1'];
-					$upload_result['image_2'] = $detail['image_2'];
-					$upload_result['image_3'] = $detail['image_3'];
+					$dataDetail['image_1'] =$upload_result['image_1'];
+					$dataDetail['image_2'] = $upload_result['image_2'];
+					$dataDetail['image_3'] = $upload_result['image_3'];
 				}
 
-				$dataDetail = array(
-					//detail
-					'admisecsgp_trans_headers_trans_headers_id' => $id,
-					'admisecsgp_mstobj_objek_id' => $detail['admisecsgp_mstobj_objek_id'],
-					'conditions' => $detail['conditions'],
-					'admisecsgp_mstevent_event_id' => $detail['admisecsgp_mstevent_event_id'],
-					'description' => $detail['description'],
-					'image_1' => $upload_result['image_1'],
-					'image_2' => $upload_result['image_2'],
-					'image_3' => $upload_result['image_3'],
-					'is_laporan_kejadian' => $detail['is_laporan_kejadian'],
-					'laporkan_pic' => $detail['laporkan_pic'],
-					'is_tindakan_cepat' => $detail['is_tindakan_cepat'],
-					'status_temuan' => $detail['status'],
-					'deskripsi_tindakan' => $detail['deskripsi_tindakan'],
-					'note_tindakan_cepat' => $detail['note_tindakan_cepat'],
-					'status' => $detail['status'],
-					'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
-					'sync_token' => $detail['sync_token'],
-					'created_by' => $this->user['npk'],
-				);
+
 				$headerDetail = $this->db->get_where('admisecsgp_trans_details', array(
 					'sync_token' => $detail['sync_token']
 				), 1, 0);
