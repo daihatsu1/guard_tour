@@ -77,7 +77,7 @@ class M_restPatrol extends CI_Model
 				  and zp.status_zona = 1
 				  and am.plant_id = '" . $plant_id . "'
 				  and ams.nama_shift = '" . $shift_id . "'
-				and date_patroli ='".$date."'";
+				and date_patroli ='" . $date . "'";
 
 		return $this->db->query($sql)->result();
 	}
@@ -141,6 +141,27 @@ class M_restPatrol extends CI_Model
 		$dataDetail = $this->db->query($sqlDetail)->result();
 		$data->detail_temuan = $dataDetail;
 		return $data;
+	}
+
+	public function getAllDataTemuan()
+	{
+		$sqlDetail = "select sh.shift_id,
+						   sh.nama_shift,
+						   admisecsgp_mstobj_objek_id as object_id,
+						   am.nama_objek,
+						   ath.admisecsgp_mstckp_checkpoint_id as chekpoint_id,
+						   description,
+						   image_1 as image,
+						   ath.date_patroli
+						from admisecsgp_trans_details
+							 left join admisecsgp_trans_headers ath
+									   on ath.trans_header_id = admisecsgp_trans_details.admisecsgp_trans_headers_trans_headers_id
+							 left join admisecsgp_mstshift sh on sh.shift_id = ath.admisecsgp_mstshift_shift_id
+							 left join admisecsgp_mstobj am on admisecsgp_trans_details.admisecsgp_mstobj_objek_id = am.objek_id
+					where status_temuan = 0";
+		$dataDetail = $this->db->query($sqlDetail)->result();;
+		return $dataDetail;
+
 	}
 
 }
