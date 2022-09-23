@@ -8,28 +8,29 @@ class M_restPatrol extends CI_Model
 		parent::__construct();
 		$this->load->database();
 		$this->table = 'admisecsgp_trans_jadwal_patroli';
-		$this->load->helper('date_time');
+		$ci = get_instance();
+		$ci->load->helper(['date_time', 'db_settings']);
 	}
 
 	function getJadwal($dateTime, $user_id, $plant_id)
 	{
 		$date = $dateTime->format('Y-m-d');
-
-		$sql = "select s.nama_shift as shift,
-       				s.shift_id, 
-       				s.jam_masuk, 
-       				s.jam_pulang, 
-       				p.plant_name, 
-       				p.plant_id as plant_id
-				from admisecsgp_trans_jadwal_patroli,         
-					admisecsgp_mstplant p ,
-					admisecsgp_mstshift s
-				where          
-				admisecsgp_mstplant_plant_id = p.plant_id
-				and admisecsgp_mstshift_shift_id  = s.shift_id
-				AND date_patroli = '" . $date . "'
-				AND admisecsgp_mstplant_plant_id = '" . $plant_id . "'
-				AND admisecsgp_mstusr_npk = '" . $user_id . "'";
+		$settings = get_setting('end_patrol_time_threshold');
+		$sql = "select s.nama_shift                                                                 as shift,
+					   s.shift_id,
+					   CONVERT(varchar,s.jam_masuk, 24) as jam_masuk,
+						IIF(s.nama_shift = 'LIBUR', CONVERT(varchar, s.jam_pulang, 24),
+						   CONVERT(varchar, DATEADD(MINUTE, -29, s.jam_pulang), 24)) as jam_pulang,
+					   p.plant_name,
+					   p.plant_id                                                                   as plant_id
+				from admisecsgp_trans_jadwal_patroli,
+					 admisecsgp_mstplant p,
+					 admisecsgp_mstshift s
+				where admisecsgp_mstplant_plant_id = p.plant_id
+				  	and admisecsgp_mstshift_shift_id = s.shift_id
+					AND date_patroli = '" . $date . "'
+					AND admisecsgp_mstplant_plant_id = '" . $plant_id . "'
+					AND admisecsgp_mstusr_npk = '" . $user_id . "'";
 
 		$result = $this->db->query($sql)->row();
 		if ($result) {
@@ -117,7 +118,6 @@ class M_restPatrol extends CI_Model
 						 join admisecsgp_mstkobj ko on ev.admisecsgp_mstkobj_kategori_id = ko.kategori_id
 						 join admisecsgp_mstobj ob on ko.kategori_id = ob.admisecsgp_mstkobj_kategori_id
 				where ob.objek_id = '" . $objek . "'
-				  and ko.kategori_id = ob.admisecsgp_mstkobj_kategori_id
 				  and ko.status = 1");
 	}
 
