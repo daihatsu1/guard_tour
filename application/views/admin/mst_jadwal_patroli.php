@@ -128,12 +128,16 @@
                                 </table>
                                 <!-- <a target="_blank" href="<?= base_url('Mst_Jadwal/download_jadwal?bulan=' . $bulan . '&tahun=' . $tahun . '&plant_id=' . $plant_id . '') ?>" class="btn btn-success btn-sm "><i class="fas fa-download"></i> Download Jadwal</a> -->
                                 <table id="jadwal_patroli" class="table table-bordered small table-sm">
+                                    <?php
+                                    $kal = CAL_GREGORIAN;
+                                    $day = cal_days_in_month($kal, date('m'), date('Y'));
+                                    ?>
                                     <thead>
                                         <tr>
                                             <th width="90px">PLANT</th>
                                             <th>NPK</th>
                                             <th width="120px">NAMA</th>
-                                            <?php for ($i = 1; $i <= 31; $i++) {  ?>
+                                            <?php for ($i = 1; $i <= $day; $i++) {  ?>
                                                 <th><?= $i ?></th>
                                             <?php } ?>
                                         </tr>
@@ -144,7 +148,7 @@
                                                 <td><?= $us->plant  ?></td>
                                                 <td><?= $us->npk  ?></td>
                                                 <td><?= $us->nama  ?></td>
-                                                <?php for ($i = 1; $i <= 31; $i++) :
+                                                <?php for ($i = 1; $i <= $day; $i++) :
                                                     if ($i <= 9) {
                                                         $i = "0" . $i;
                                                     } else {

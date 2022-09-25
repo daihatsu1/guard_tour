@@ -120,14 +120,7 @@
 </section>
 <script>
     function cek() {
-        if (document.getElementById("comp_id").value == "") {
-            Swal.fire({
-                title: 'Perhatian!',
-                text: 'pilih company',
-                icon: 'error',
-            })
-            return false
-        } else if (document.getElementById("site_id").value == "") {
+        if (document.getElementById("site_id").value == "") {
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'pilih wilayah',
@@ -135,7 +128,7 @@
             }).then((result) => {})
 
             return false
-        } else if (document.getElementById("plant_name").value == "") {
+        } else if (document.getElementById("plant_id").value == "") {
             Swal.fire({
                 title: 'Perhatian!',
                 text: 'nama plant harus di isi',
@@ -152,7 +145,7 @@
         var id = $("select[name=site_id] option:selected").val();
         // console.log(id)
         if (id == null || id == "") {
-            document.getElementById('list_plant').innerHTML = '<div class="form-group"><label for="">PLANT</label><select class="form-control" name="plant_id" id="plant_id"><option value="<?= $data->admisecsgp_mstplant_id ?>"><?= $data->plant_name ?></option></select></div>';
+            document.getElementById('list_plant').innerHTML = '<div class="form-group"><label for="">PLANT</label><select class="form-control" name="plant_id" id="plant_id"><option value="<?= $data->admisecsgp_mstplant_plant_id ?>"><?= $data->plant_name ?></option></select></div>';
         } else {
             $.ajax({
                 url: "<?= base_url('Admin/Mst_Zona/showPlant') ?>",

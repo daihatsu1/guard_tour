@@ -172,8 +172,7 @@ class Patroli extends RestController
             // bulan 
             $bulan           = $this->bulan($np[1]);
             $bln_            = strtolower($bulan);
-        }
-		else {
+        } else {
             // echo "ambil tanggal sekarang";
             $get_tanggal             = date('Y-m-d');
             $split_get_tanggal       = explode('-', $get_tanggal);

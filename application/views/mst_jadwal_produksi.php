@@ -131,12 +131,16 @@
                                     </tr>
                                 </table>
                                 <table id="jadwal_produksi" class="table table-sm small table-striped  table-bordered" style="width:100%">
+                                    <?php
+                                    $kal = CAL_GREGORIAN;
+                                    $day = cal_days_in_month($kal, date('m'), date('Y'));
+                                    ?>
                                     <thead>
                                         <tr>
                                             <th width="120px">PLANT</th>
                                             <th>ZONA</th>
                                             <th>SHIFT</th>
-                                            <?php for ($i = 1; $i <= 31; $i++) {  ?>
+                                            <?php for ($i = 1; $i <= $day; $i++) {  ?>
                                                 <th><?= $i ?></th>
                                             <?php } ?>
                                         </tr>
@@ -147,7 +151,7 @@
                                                 <td><?= $jwl->plant ?></td>
                                                 <td><?= $jwl->zona ?></td>
                                                 <td><?= $jwl->shift ?></td>
-                                                <?php for ($i = 1; $i <= 31; $i++) :
+                                                <?php for ($i = 1; $i <= $day; $i++) :
                                                     if ($i <= 9) {
                                                         $i = "0" . $i;
                                                     } else {

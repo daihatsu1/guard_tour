@@ -14,6 +14,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $id = $this->session->userdata('id_token');
         $this->load->helper('ConvertBulan');
+        $this->load->helper('string');
         if ($id == null || $id == "") {
             $this->session->set_flashdata('info_login', 'anda harus login dulu');
             redirect('Login');
@@ -111,7 +112,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
                 $d = new DateTime();
                 $uniq = $d->format("dmyHisv");
                 $id                 = uniqid($uniq);
-                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10);
+                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10) . random_string('alnum', 3);
                 $data =  [
                     'id_zona_patroli'                    => $gen,
                     'date_patroli'                       => $date . "-" . $prt,
@@ -122,7 +123,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
                     'status_zona'                        => $jdl[$var] == 'on' ? 1 : 0,
                     'status'                             => 1,
                     'created_at'                         => date('Y-m-d H:i:s'),
-                    'created_by'                         => 1
+                    'created_by'                         => $this->session->userdata("id_token")
                 ];
 
                 array_push($dataprd, $data);

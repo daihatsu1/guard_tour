@@ -51,7 +51,7 @@
                     <div class="card-body">
                         <a href="<?= base_url('Mst_Shift/form_add') ?>" class="btn btn-sm btn-primary">
                             <i class="fa fa-plus"></i> Tambah Shift</a>
-                        <table id="example2" class="table-sm mt-1 table table-striped table-bordered">
+                        <table id="example2" class="table-sm  mt-1 table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>NO</th>
