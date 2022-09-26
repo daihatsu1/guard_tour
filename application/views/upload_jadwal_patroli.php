@@ -159,7 +159,7 @@
                                     $plt = $cekplant->row();
                                     $cekJadwalPatroli = $this->db->query('SELECT date_patroli FROM `admisecsgp_trans_jadwal_patroli`
                                     WHERE DATE_FORMAT(date_patroli,"%Y-%m") = "' . $date . '" 
-                                    GROUP BY DATE_FORMAT(date_patroli,"%Y-%m")');
+                                    GROUP BY DATE_FORMAT(date_patroli,"%Y-%m") and admisecsgp_mstplant_plant_id ="' . $plant . '" ');
 
 
                                     if ($cekJadwalPatroli->num_rows() >= 1) {
