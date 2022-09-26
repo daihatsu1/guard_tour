@@ -6,7 +6,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Upload_Jadwal_Patroli') ?>">Upload Jadwal Patroli</a></li>
+                    <li class="breadcrumb-item"><a href="<?= base_url('Admin/Upload_Jadwal_Patroli') ?>">Jadwal</a></li>
                 </ol>
             </div>
         </div>
@@ -214,7 +214,7 @@
                                         for ($l = 0; $l < count($shift); $l++) {
                                             //cek shift 
                                             if ($shift[$l]['tanggal_' . $o] != 'LIBUR') {
-                                                $cekshift = $this->db->get_where("admisecsgp_mstshift", ['nama_shift' => $shift[$l]['tanggal_' . $o], 'status' => 1]);
+                                                $cekshift = $this->db->get_where("admisecsgp_mstshift", ['nama_shift' => strval($shift[$l]['tanggal_' . $o]), 'status' => 1]);
                                                 //jika tidak maka muncul alert 
                                                 if ($cekshift->num_rows() <= 0) {
                                                     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">SHIFT <b class="font-italice">' . $shift[$l]['tanggal_' . $o] . '</b> tidak terdaftar di database<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';

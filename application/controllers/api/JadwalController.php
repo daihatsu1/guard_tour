@@ -45,11 +45,11 @@ class JadwalController extends RestController
 		$response = [];
 
 		$jadwalHariIni = $this->M_restPatrol->getJadwal($this->dateNow, $this->user['npk'], $this->user['admisecsgp_mstplant_plant_id']);
-		if($jadwalHariIni!=null) {
+		if ($jadwalHariIni != null) {
 			$response[] = $jadwalHariIni;
 		}
 		$jadwalSelanjutnya = $this->M_restPatrol->getJadwal($this->dateTomorrow, $this->user['npk'], $this->user['admisecsgp_mstplant_plant_id']);
-		if($jadwalSelanjutnya!=null){
+		if ($jadwalSelanjutnya != null) {
 			$response[] = $jadwalSelanjutnya;
 		}
 		$this->response($response, 200);

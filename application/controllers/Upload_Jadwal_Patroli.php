@@ -24,6 +24,7 @@ class Upload_Jadwal_Patroli extends CI_Controller
         if ($role != "SUPERADMIN") {
             redirect('Login');
         }
+        $this->load->helper('string');
     }
 
     public function index()
@@ -80,6 +81,7 @@ class Upload_Jadwal_Patroli extends CI_Controller
     public function uploadjadwalPatroli()
     {
         # code...
+
         $filename = "upload_jadwal_patroli_" . $this->session->userdata("id_token");
         $path_xlsx        = "./assets/path_upload/" . $filename . ".xlsx";
         $reader           = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -119,8 +121,11 @@ class Upload_Jadwal_Patroli extends CI_Controller
             $o = 1;
             $l = 1;
             for ($t = 0; $t < count($shift); $t++) {
-                $d = time();
-                $gen = uniqid("ADMJP".rand());
+                $d = new DateTime();
+                $uniq = $d->format("dmyHisv");
+                $id                 = uniqid($uniq);
+                $gen =  'ADMJP' . substr($id, 0, 6) . substr($id, 22, 10) . random_string('alnum', 3);
+
                 $Shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift[$t]['tanggal_' . $o] . "' ")->row();
                 $User = $this->db->query("select npk from admisecsgp_mstusr where npk ='" . $npk .  "' and name='" . $nama . "' and admisecsgp_mstplant_plant_id = '" . $plant->plant_id . "' ")->row();
                 $var = [

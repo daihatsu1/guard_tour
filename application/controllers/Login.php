@@ -33,6 +33,7 @@ class Login extends CI_Controller
         $cekUser = $this->db->query("SELECT   usr.npk , usr.name , ru.level  , usr.admisecsgp_mstsite_site_id , usr.admisecsgp_mstplant_plant_id 
         FROM admisecsgp_mstusr usr  , admisecsgp_mstroleusr  ru
         WHERE ru.role_id = usr.admisecsgp_mstroleusr_role_id and usr.password = '" . $password . "' and usr.name = '" . $name . "' ");
+        // var_dump($cekUser->row());
 
         if ($cekUser->num_rows() > 0) {
             $data = $cekUser->row();
@@ -46,6 +47,7 @@ class Login extends CI_Controller
                     $this->session->set_userdata("site_id", $data->admisecsgp_mstsite_site_id);
                     $this->session->set_userdata("plant_id", $data->admisecsgp_mstplant_plant_id);
                     redirect('Dashboard');
+                    // echo $this->session->userdata('role');
                     break;
                 case 'ADMIN':
                     $this->session->set_userdata("id_token", $data->npk);

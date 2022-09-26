@@ -190,5 +190,4 @@ class PatroliController extends RestController
 		$result = $this->M_restPatrol->getDataTemuan($id);
 		$this->response($result, 200);
 	}
-
 }
