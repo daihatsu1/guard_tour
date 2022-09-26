@@ -157,9 +157,9 @@
                                 } else {
                                     //cek data jadwal di bulan ini 
                                     $plt = $cekplant->row();
-                                    $cekJadwalPatroli = $this->db->query('SELECT date_patroli FROM `admisecsgp_trans_zona_patroli`
-                                    WHERE DATE_FORMAT(date_patroli,"%Y-%m") = "' . $date . '"  and admisecsgp_mstplant_plant_id ="' . $plant . '"
-                                    GROUP BY DATE_FORMAT(date_patroli,"%Y-%m")');
+                                    $cekJadwalPatroli =  $this->db->query("SELECT  format(date_patroli,'yyyy-MM','en-US')  from  admisecsgp_trans_zona_patroli atjp 
+                                    WHERE format(date_patroli,'yyyy-MM','en-US') = '" . $date  . "' AND  admisecsgp_mstplant_plant_id ='" . $plt->plant_id   . "'
+                              GROUP BY format(date_patroli,'yyyy-MM','en-US') ");
 
                                     if ($cekJadwalPatroli->num_rows() >= 1) {
                                         echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -183,21 +183,21 @@
 
                                         if ($var_zona->num_rows() <= 0) {
                                             echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <b class="font-italice">' . $zona . ' di ' .  $plant . '</b> tidak terdaftar di database
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>';
+                                                <b class="font-italice">' . $zona . ' di ' .  $plant . '</b> tidak terdaftar di database
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>';
                                             $count += 1;
                                         }
 
                                         if ($var_shift->num_rows() <= 0) {
                                             echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <b class="font-italice">shift ' . $shift . ' </b> tidak terdaftar di database
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>';
+                                                <b class="font-italice">shift ' . $shift . ' </b> tidak terdaftar di database
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>';
                                             $count += 1;
                                         }
                                         for ($p = 2; $p <= count($jadwal[7]) - 2; $p += 2) {
@@ -205,11 +205,11 @@
 
                                             if ($produksi->num_rows() <= 0) {
                                                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                <b class="font-italice">status produksi ' . $jdl[$p] . ' </b> tidak sesuai , hanya ada produksi dan non-produksi di kolom tanggal
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>';
+                                                    <b class="font-italice">status produksi ' . $jdl[$p] . ' </b> tidak sesuai , hanya ada produksi dan non-produksi di kolom tanggal
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>';
                                                 $count += 1;
                                             }
 
@@ -217,11 +217,11 @@
                                             if (strval($jdl[$var]) == "on" || strval($jdl[$var]) == "off") {
                                             } else {
                                                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                    <b class="font-italice">status zona ' . $jdl[$var] . ' </b> tidak sesuai , hanya ada on dan off di status zona
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>';
+                                                        <b class="font-italice">status zona ' . $jdl[$var] . ' </b> tidak sesuai , hanya ada on dan off di status zona
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>';
                                                 $count += 1;
                                             }
 

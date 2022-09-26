@@ -55,7 +55,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
                 $data['plant_name']       = $nama_plant;
                 $data['bulan_patroli']    = strtoupper($bulan_jadwal_patroli);
                 $data['tahun_patroli']    = $tahun_jadwal_patroli;
-                $data['date']             = $tahun_jadwal_patroli . convert_bulan($bulan_jadwal_patroli);
+                $data['date']             = $tahun_jadwal_patroli  . '-' . convert_bulan($bulan_jadwal_patroli);
                 $data['bulan_input']      = strtoupper($this->input->post("bulan_input"));
                 $data['tahun_input']      = strtoupper($this->input->post("tahun_input"));
 

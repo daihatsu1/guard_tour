@@ -54,7 +54,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         $this->load->view("template/footer");
     }
 
-    public function showZone(Type $var = null)
+    public function showZone()
     {
         $id = $this->input->post('id');
         $data = [
@@ -65,7 +65,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
 
 
     //form koreksi jadwal petugas patroli
-    public function form_rubah_jadwal_produksi(Type $var = null)
+    public function form_rubah_jadwal_produksi()
     {
         $data['session_plant'] = "";
         $data['session_date'] = "";
@@ -98,7 +98,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
 
 
 
-    public function load_data_produksi(Type $var = null)
+    public function load_data_produksi()
     {
         $id = $this->input->post("id");
         $zona = $this->input->post("zona");
@@ -121,7 +121,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
     }
 
     //update jadwal patroli per tanggal
-    public function update_jadwal_produksi(Type $var = null)
+    public function update_jadwal_produksi()
     {
 
         $id               = $this->input->post("id_update");
@@ -145,7 +145,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
 
 
     //form upload ulang jadwal patroli
-    public function form_revisi_upload_jadwal(Type $var = null)
+    public function form_revisi_upload_jadwal()
     {
 
         $filename = "rev_upload_jadwal_" . $this->session->userdata("id_token");
@@ -195,7 +195,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
 
 
     //function revisi 
-    public function revisi_upload_jadwal(Type $var = null)
+    public function revisi_upload_jadwal()
     {
         // $filename = "upload_jadwal-format";
         $filename = "rev_upload_jadwal_" . $this->session->userdata("id_token");
