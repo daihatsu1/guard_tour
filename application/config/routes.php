@@ -61,14 +61,16 @@ $route['api/auth/login'] = 'api/AuthController/login';
 //$route['api/patroli/login']         = 'api/Patroli/Login';
 
 //jadwal patroli per plant 
-$route['api/patroli/jadwalPatroli']		= 'api/JadwalController/jadwalUser';
-$route['api/patroli/dataPatroli']		= 'api/PatroliController/dataPatroli';
-$route['api/patroli/dataTemuan']		= 'api/PatroliController/dataTemuan';
-$route['api/patroli/getDataTemuan']		= 'api/PatroliController/getdataTemuan';
-$route['api/patroli/jadwalProduksi']    = 'api/Patroli/jadwalProduksi';
+$route['api/patroli/jadwalPatroli'] = 'api/JadwalController/jadwalUser';
+$route['api/patroli/dataPatroli'] = 'api/PatroliController/dataPatroli';
+$route['api/patroli/dataTemuan'] = 'api/PatroliController/dataTemuan';
+$route['api/patroli/getDataTemuan'] = 'api/PatroliController/getdataTemuan';
+$route['api/patroli/getPatrolActivity'] = 'api/PatroliController/getPatrolActivity';
+$route['api/patroli/setPatrolActivity'] = 'api/PatroliController/setPatrolActivity';
+$route['api/patroli/jadwalProduksi'] = 'api/Patroli/jadwalProduksi';
 
 
-$route['api/patroli/zonaPatroli']   = 'api/Patroli/showZonaPatroli';
-$route['api/patroli/checkpoint']    = 'api/Patroli/showCheckpoint';
-$route['api/patroli/objek']         = 'api/Patroli/showObjek';
-$route['api/patroli/event_objek']   = 'api/Patroli/showEvent';
+$route['api/patroli/zonaPatroli'] = 'api/Patroli/showZonaPatroli';
+$route['api/patroli/checkpoint'] = 'api/Patroli/showCheckpoint';
+$route['api/patroli/objek'] = 'api/Patroli/showObjek';
+$route['api/patroli/event_objek'] = 'api/Patroli/showEvent';
