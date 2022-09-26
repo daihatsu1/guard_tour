@@ -158,7 +158,7 @@
                                     //cek data jadwal di bulan ini 
                                     $plt = $cekplant->row();
                                     $cekJadwalPatroli = $this->db->query('SELECT date_patroli FROM `admisecsgp_trans_zona_patroli`
-                                    WHERE DATE_FORMAT(date_patroli,"%Y-%m") = "' . $date . '" 
+                                    WHERE DATE_FORMAT(date_patroli,"%Y-%m") = "' . $date . '"  and admisecsgp_mstplant_plant_id ="' . $plant . '"
                                     GROUP BY DATE_FORMAT(date_patroli,"%Y-%m")');
 
                                     if ($cekJadwalPatroli->num_rows() >= 1) {
