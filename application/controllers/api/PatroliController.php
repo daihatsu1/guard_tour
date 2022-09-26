@@ -26,7 +26,7 @@ class PatroliController extends RestController
 		$this->load->model(['M_restPatrol', 'M_restAuth', 'M_api']);
 		$this->dateNow = new DateTimeImmutable('now', new DateTimeZone('Asia/Jakarta'));
 		$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
-		if ($this->_apiuser){
+		if ($this->_apiuser) {
 			$this->user = $this->M_restAuth->getRows(['npk' => $this->_apiuser->user_id]);
 		}
 		$this->zero_clock = new DateTime('00:00:00', new DateTimeZone('Asia/Jakarta'));
@@ -114,7 +114,6 @@ class PatroliController extends RestController
 					'admisecsgp_trans_headers_trans_headers_id' => $id,
 					'admisecsgp_mstobj_objek_id' => $detail['admisecsgp_mstobj_objek_id'],
 					'conditions' => $detail['conditions'],
-					'admisecsgp_mstevent_event_id' => $detail['admisecsgp_mstevent_event_id'],
 					'description' => $detail['description'],
 
 					'is_laporan_kejadian' => $detail['is_laporan_kejadian'],
@@ -128,6 +127,9 @@ class PatroliController extends RestController
 					'sync_token' => $detail['sync_token'],
 					'created_by' => $this->user['npk'],
 				);
+				if (array_key_exists('admisecsgp_mstevent_event_id', $detail)) {
+					$dataDetail['admisecsgp_mstevent_event_id'] = $detail['admisecsgp_mstevent_event_id'];
+				}
 				if ($_FILES != null) {
 					$files = array_key_exists('detail_temuan', $_FILES) ? $_FILES['detail_temuan'] : null;
 					$upload_result = array('image_1' => null, 'image_2' => null, 'image_3' => null,);
@@ -165,7 +167,7 @@ class PatroliController extends RestController
 							}
 						}
 					}
-					$dataDetail['image_1'] =$upload_result['image_1'];
+					$dataDetail['image_1'] = $upload_result['image_1'];
 					$dataDetail['image_2'] = $upload_result['image_2'];
 					$dataDetail['image_3'] = $upload_result['image_3'];
 				}
@@ -189,5 +191,46 @@ class PatroliController extends RestController
 
 		$result = $this->M_restPatrol->getDataTemuan($id);
 		$this->response($result, 200);
+	}
+
+	public function setPatrolActivity_post()
+	{
+		$data = array(
+			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->post('id_jadwal_patroli'),
+			'status' => $this->post('status'),
+			'start_at' => $this->post('start_at'),
+		);
+
+		if ($this->input->post('end_at')) {
+			$data['end_at'] =  $this->post('end_at');
+		}
+		$activity = $this->db->get_where('admisecsgp_patrol_activity', array(
+			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->post('id_jadwal_patroli')
+		), 1, 0);
+		$count = $activity->num_rows();
+
+		if ($count > 0) {
+			$existingData = $activity->row();
+			$id = $existingData->activity_id;
+			$this->M_restPatrol->updateData('admisecsgp_patrol_activity', $data, 'activity_id', $id);
+		} else {
+			$id = $this->M_restPatrol->saveData('admisecsgp_patrol_activity', $data);
+		}
+
+		$activity = $this->db->get_where('admisecsgp_patrol_activity', array(
+			'activity_id' => $id
+		), 1, 0);
+		$existingData = $activity->row();
+		$this->response($existingData, 200);
+
+	}
+
+	public function getPatrolActivity_get(){
+		$activity = $this->db->get_where('admisecsgp_patrol_activity', array(
+			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->get('id_jadwal_patroli')
+		), 1, 0);
+		$existingData = $activity->row();
+		$this->response($existingData, 200);
+
 	}
 }
