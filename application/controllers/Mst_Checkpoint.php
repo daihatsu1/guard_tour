@@ -193,7 +193,7 @@ class Mst_Checkpoint extends CI_Controller
             'link'       => $this->uri->segment(1),
             'data'       => $this->M_patrol->detailCheckpoint($id)->row(),
             'zona_id'    => $this->input->get('id_zona'),
-            "zone"       => $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $this->input->get('id_plant')]),
+            "zone"       => $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $this->input->get('id_plant'), 'status' => 1]),
             'plant_id'   => $this->input->get('id_plant'),
             "plant"      => $this->M_patrol->ambilData("admisecsgp_mstplant"),
         ];
