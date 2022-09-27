@@ -30,7 +30,7 @@ class PatroliController extends RestController
 			$this->user = $this->M_restAuth->getRows(['npk' => $this->_apiuser->user_id]);
 		}
 		$this->zero_clock = new DateTime('00:00:00', new DateTimeZone('Asia/Jakarta'));
-		$this->six_clock = new DateTime('06:00:00', new DateTimeZone('Asia/Jakarta'));
+		$this->six_clock = new DateTime('06:30:00', new DateTimeZone('Asia/Jakarta'));
 		$this->accessTime = $this->dateNow;
 		// uncomment to test
 		// $this->accessTime = new DateTime('06:00:01', new DateTimeZone('Asia/Jakarta'));
@@ -229,8 +229,14 @@ class PatroliController extends RestController
 		$activity = $this->db->get_where('admisecsgp_patrol_activity', array(
 			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->get('id_jadwal_patroli')
 		), 1, 0);
-		$existingData = $activity->row();
-		$this->response($existingData, 200);
+		$count = $activity->num_rows();
+		if ($count > 0) {
+			$data = $activity->row();
+		}else{
+			$data = new stdClass();
+
+		}
+		$this->response($data, 200);
 
 	}
 }
