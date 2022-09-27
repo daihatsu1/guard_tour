@@ -349,18 +349,16 @@ class M_patrol extends CI_Model
 
     public function headerjadwalProduksi($plant_id, $date)
     {
-        $query = $this->db->query("SELECT 
-        am.zone_name AS zona  ,  pl.plant_name AS plant , sh.shift_id AS shift_id ,  sh.nama_shift AS shift ,
-        zp.admisecsgp_mstzone_zone_id  AS zona_id  
-            from admisecsgp_trans_zona_patroli zp
-            inner join admisecsgp_mstzone am on am.zone_id  = zp.admisecsgp_mstzone_zone_id 
-            inner join admisecsgp_mstplant pl on pl.plant_id  = am.admisecsgp_mstplant_plant_id 
-            inner join admisecsgp_mstshift sh on sh.shift_id  = zp.admisecsgp_mstshift_shift_id 
-            where
-                format(zp.date_patroli,'yyyy-MM','en-US') = '" . $date . "'
-                and pl.plant_id  = '" . $plant_id . "'
-                and zp.status  = 1 
-                group by  am.zone_name ,  pl.plant_name, sh.shift_id,  sh.nama_shift ,zp.admisecsgp_mstzone_zone_id 
+        $query = $this->db->query("SELECT zn.zone_name as zona , pl.plant_name  as plant  , sh.shift_id AS shift_id ,  sh.nama_shift AS shift ,
+        atzp.admisecsgp_mstzone_zone_id  AS zona_id 
+FROM admisecsgp_trans_zona_patroli atzp 
+	inner join admisecsgp_mstzone zn  on zn.zone_id  = atzp.admisecsgp_mstzone_zone_id 
+	inner join admisecsgp_mstplant pl on pl.plant_id  = atzp.admisecsgp_mstplant_plant_id AND pl.plant_id  = '" . $plant_id . "'
+	inner join admisecsgp_mstshift sh on  sh.shift_id  = atzp.admisecsgp_mstshift_shift_id 
+	WHERE
+FORMAT(atzp.date_patroli,'yyyy-MM','en-US') = '" . $date . "'
+GROUP BY zn.zone_name , pl.plant_name  , sh.shift_id  ,  sh.nama_shift ,
+        atzp.admisecsgp_mstzone_zone_id  
         ");
         return $query;
     }
