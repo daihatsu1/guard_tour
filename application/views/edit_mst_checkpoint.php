@@ -61,9 +61,8 @@
                                 <label for="">ZONA</label>
                                 <select class="form-control" name="zone_id" id="zone_id">
                                     <?php foreach ($zone->result() as $znp) :
-
-                                        if ($znp->zona_id == $zona_id) { ?>
-                                            <option selected value="<?= $data->admisecsgp_mstzone_zone_id ?>"><?= $znp->zone_name ?></option>
+                                        if (strval($znp->zone_id) == strval($zona_id)) { ?>
+                                            <option selected value="<?= $data->admisecsgp_mstzone_zone_id ?>"><?= $data->zone_name ?></option>
                                         <?php } else { ?>
                                             <option value="<?= $znp->zone_id ?>"><?= $znp->zone_name ?></option>
                                         <?php } ?>

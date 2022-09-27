@@ -14,6 +14,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $id = $this->session->userdata('id_token');
         $this->load->helper('ConvertBulan');
+        $this->load->helper('string');
         if ($id == null || $id == "") {
             $this->session->set_flashdata('info_login', 'anda harus login dulu');
             redirect('Login');
@@ -26,6 +27,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
     public function index()
     {
         $filename = "upload_jadwal_produksi_" . $this->session->userdata("id_token");
+        $id_wil_user = $this->session->userdata('site_id');
         $data['plant_3'] = "";
         // $filename = "upload_jadwal-format";
         if (isset($_POST['view'])) {
@@ -53,7 +55,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
                 $data['plant_name']       = $nama_plant;
                 $data['bulan_patroli']    = strtoupper($bulan_jadwal_patroli);
                 $data['tahun_patroli']    = $tahun_jadwal_patroli;
-                $data['date']             = $tahun_jadwal_patroli . convert_bulan($bulan_jadwal_patroli);
+                $data['date']             = $tahun_jadwal_patroli  . '-' . convert_bulan($bulan_jadwal_patroli);
                 $data['bulan_input']      = strtoupper($this->input->post("bulan_input"));
                 $data['tahun_input']      = strtoupper($this->input->post("tahun_input"));
 
@@ -65,7 +67,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
             }
         }
         $data['link'] =  $this->uri->segment(2);
-        $data['plant_master']  = $this->M_admin->ambilData("admisecsgp_mstplant", ['status' => 1]);
+        $data['plant_master']  = $this->M_admin->ambilData("admisecsgp_mstplant", ['status' => 1, 'admisecsgp_mstsite_site_id' => $id_wil_user]);
 
         $this->load->view("template/admin/sidebar", $data);
         $this->load->view("admin/upload_jadwal_produksi", $data);
@@ -111,7 +113,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
                 $d = new DateTime();
                 $uniq = $d->format("dmyHisv");
                 $id                 = uniqid($uniq);
-                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10);
+                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10) . random_string('alnum', 3);;
                 $data =  [
                     'id_zona_patroli'                    => $gen,
                     'date_patroli'                       => $date . "-" . $prt,
@@ -122,7 +124,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
                     'status_zona'                        => $jdl[$var] == 'on' ? 1 : 0,
                     'status'                             => 1,
                     'created_at'                         => date('Y-m-d H:i:s'),
-                    'created_by'                         => 1
+                    'created_by'                         => $this->session->userdata("id_token")
                 ];
                 array_push($dataprd, $data);
                 $var += 2;

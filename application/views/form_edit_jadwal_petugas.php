@@ -104,7 +104,13 @@
                                     </thead>
                                     <tbody>
                                         <?php $no = 1;
-                                        foreach ($petugas->result() as $ptg) : ?>
+                                        foreach ($petugas->result() as $ptg) :
+                                            $date_sistem = $ptg->tanggal;
+                                            $today       = date('Y-m-d H:i:s');
+
+                                            $tanggal_terpilih = strtotime($date_sistem . "23:59:59");
+                                            $tanggal_sekarang = strtotime($today);
+                                        ?>
                                             <tr>
 
                                                 <td><?= $no++ ?></td>
@@ -114,7 +120,13 @@
                                                 <td><?= $ptg->tanggal ?></td>
                                                 <td><?= $ptg->shift ?></td>
                                                 <td>
-                                                    <a id="petugasData" data-toggle="modal" onclick="showuserdetail('<?= $ptg->plant_id ?>' , '<?= $ptg->user_id ?>' , '<?= $ptg->shift ?>', '<?= $ptg->tanggal ?>' , '<?= $ptg->shift_id ?>' , '<?= $ptg->nama ?>', '<?= $ptg->npk ?>')" href="#modal_userDetail" class="text-success" data-backdrop="static" data-keyboard="false"><i class="fa fa-edit"></i></a>
+                                                    <?php
+                                                    if ($tanggal_terpilih >= $tanggal_sekarang) { ?>
+                                                        <a id="petugasData" data-toggle="modal" onclick="showuserdetail('<?= $ptg->plant_id ?>' , '<?= $ptg->user_id ?>' , '<?= $ptg->shift ?>', '<?= $ptg->tanggal ?>' , '<?= $ptg->shift_id ?>' , '<?= $ptg->nama ?>', '<?= $ptg->npk ?>')" href="#modal_userDetail" class="text-success" data-backdrop="static" data-keyboard="false"><i class="fa fa-edit"></i></a>
+                                                    <?php } else { ?>
+                                                        <!-- echo "expired date"; -->
+                                                        <span class="font-italic text-danger">exp-date</span>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach ?>

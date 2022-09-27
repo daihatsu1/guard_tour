@@ -14,6 +14,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         $id = $this->session->userdata('id_token');
         date_default_timezone_set('Asia/Jakarta');
         $this->load->helper('convertbulan');
+        $this->load->helper('string');
         if ($id == null || $id == "") {
             $this->session->set_flashdata('info_login', 'anda harus login dulu');
             redirect('Login');
@@ -53,7 +54,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         $this->load->view("template/footer");
     }
 
-    public function showZone(Type $var = null)
+    public function showZone()
     {
         $id = $this->input->post('id');
         $data = [
@@ -64,7 +65,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
 
 
     //form koreksi jadwal petugas patroli
-    public function form_rubah_jadwal_produksi(Type $var = null)
+    public function form_rubah_jadwal_produksi()
     {
         $data['session_plant'] = "";
         $data['session_date'] = "";
@@ -97,7 +98,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
 
 
 
-    public function load_data_produksi(Type $var = null)
+    public function load_data_produksi()
     {
         $id = $this->input->post("id");
         $zona = $this->input->post("zona");
@@ -120,7 +121,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
     }
 
     //update jadwal patroli per tanggal
-    public function update_jadwal_produksi(Type $var = null)
+    public function update_jadwal_produksi()
     {
 
         $id               = $this->input->post("id_update");
@@ -144,7 +145,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
 
 
     //form upload ulang jadwal patroli
-    public function form_revisi_upload_jadwal(Type $var = null)
+    public function form_revisi_upload_jadwal()
     {
 
         $filename = "rev_upload_jadwal_" . $this->session->userdata("id_token");
@@ -194,7 +195,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
 
 
     //function revisi 
-    public function revisi_upload_jadwal(Type $var = null)
+    public function revisi_upload_jadwal()
     {
         // $filename = "upload_jadwal-format";
         $filename = "rev_upload_jadwal_" . $this->session->userdata("id_token");
@@ -230,7 +231,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
                 $d = new DateTime();
                 $uniq = $d->format("dmyHisv");
                 $id                 = uniqid($uniq);
-                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10);
+                $gen = 'ADMZP' . substr($id, 0, 6) . substr($id, 22, 10) . random_string('alnum', 3);
                 $data =  [
                     'id_zona_patroli'                        => $gen,
                     'date_patroli'                           => $date . "-" . $prt,
@@ -241,7 +242,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
                     'status_zona'                            => $jdl[$var] == 'on' ? 1 : 0,
                     'status'                                 => 1,
                     'created_at'                             => date('Y-m-d H:i:s'),
-                    'created_by'                             => 1
+                    'created_by'                             => $this->session->userdata("id_token")
                 ];
 
                 array_push($dataprd, $data);
@@ -251,7 +252,7 @@ class Mst_Jadwal_Produksi extends CI_Controller
         }
 
 
-        $this->db->query("DELETE FROM admisecsgp_trans_zona_patroli WHERE admisecsgp_mstplant_plant_id='" . $plant->plant_id . "' AND date_format(date_patroli,'%Y-%m') = '" . $date . "' ");
+        $this->db->query("DELETE FROM admisecsgp_trans_zona_patroli WHERE admisecsgp_mstplant_plant_id='" . $plant->plant_id . "' AND format(date_patroli,'yyyy-MM','en-US') = '" . $date . "' ");
         // $this->db->delete("admisecsgp_trans_zona_patroli");
         if ($this->db->affected_rows() > 0) {
             $this->db->insert_batch('admisecsgp_trans_zona_patroli', $dataprd);

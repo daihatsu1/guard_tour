@@ -78,8 +78,8 @@ class Mst_Checkpoint extends CI_Controller
                 'admisecsgp_mstzone_zone_id'      => $zone_id,
                 'check_name'                      => strtoupper($check_name),
                 'check_no'                        => $check_no,
-                'durasi_batas_atas'               => $durasi,
-                'durasi_batas_bawah'              => $durasi2,
+                'durasi_batas_atas'               => $durasi2,
+                'durasi_batas_bawah'              => $durasi,
                 'others'                          => $others,
                 'status'                          => $status,
                 'created_at'                      => date('Y-m-d H:i:s'),
@@ -94,7 +94,7 @@ class Mst_Checkpoint extends CI_Controller
 
     public function form_upload()
     {
-        $filename = "upload_checkpoint_" . $this->session->flashdata('id_token');
+        $filename = "upload_checkpoint_" . $this->session->userdata('id_token');
         $data['plant_kode_input'] = "";
         if (isset($_POST['view'])) {
             $upload = $this->M_patrol->uploadCheckpoint($filename);
@@ -123,15 +123,16 @@ class Mst_Checkpoint extends CI_Controller
 
     public function upload()
     {
-        $filename = "upload_checkpoint_" . $this->session->flashdata('id_token');
+        $filename = "upload_checkpoint_" . $this->session->userdata('id_token');
         $path_xlsx = "./assets/path_upload/" . $filename . ".xlsx";
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet = $reader->load($path_xlsx);
         $d = $spreadsheet->getSheet(0)->toArray();
         unset($d[0]);
         $datas = array();
+        // echo "<pre>";
         foreach ($d as $t) {
-            $cek_id = $this->db->query("select zone_id , zone_name , kode_zona from admisecsgp_mstzone where kode_zona='" . $t[1] . "' ")->row();
+            $cek_id = $this->db->query("select zone_id , zone_name , kode_zona from admisecsgp_mstzone where kode_zona='" . $t[1] . "'   ")->row();
             $params = [
                 'checkpoint_id'              => 'ADMC' . substr(uniqid(rand(), true), 4, 4),
                 'check_no'                   => strval($t[3]),
@@ -143,7 +144,6 @@ class Mst_Checkpoint extends CI_Controller
                 'created_at'                 => date('Y-m-d H:i:s'),
                 'created_by'                 => $this->session->userdata('id_token'),
             ];
-
             array_push($datas, $params);
         }
         $table = "admisecsgp_mstckp";
@@ -193,7 +193,7 @@ class Mst_Checkpoint extends CI_Controller
             'link'       => $this->uri->segment(1),
             'data'       => $this->M_patrol->detailCheckpoint($id)->row(),
             'zona_id'    => $this->input->get('id_zona'),
-            "zone"       => $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $this->input->get('id_plant')]),
+            "zone"       => $this->M_patrol->ambilData("admisecsgp_mstzone", ['admisecsgp_mstplant_plant_id' => $this->input->get('id_plant'), 'status' => 1]),
             'plant_id'   => $this->input->get('id_plant'),
             "plant"      => $this->M_patrol->ambilData("admisecsgp_mstplant"),
         ];

@@ -157,9 +157,9 @@
                                 } else {
                                     //cek data jadwal di bulan ini 
                                     $plt = $cekplant->row();
-                                    $cekJadwalPatroli = $this->db->query('SELECT date_patroli FROM `admisecsgp_trans_zona_patroli`
-                                    WHERE DATE_FORMAT(date_patroli,"%Y-%m") = "' . $date . '" 
-                                    GROUP BY DATE_FORMAT(date_patroli,"%Y-%m")');
+                                    $cekJadwalPatroli =  $this->db->query("SELECT  format(date_patroli,'yyyy-MM','en-US')  from  admisecsgp_trans_zona_patroli atjp 
+                                    WHERE format(date_patroli,'yyyy-MM','en-US') = '" . $date  . "' AND  admisecsgp_mstplant_plant_id ='" . $plt->plant_id   . "'
+                              GROUP BY format(date_patroli,'yyyy-MM','en-US') ");
 
                                     if ($cekJadwalPatroli->num_rows() >= 1) {
                                         echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">

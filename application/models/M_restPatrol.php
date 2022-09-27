@@ -16,13 +16,14 @@ class M_restPatrol extends CI_Model
 	{
 		$date = $dateTime->format('Y-m-d');
 		$settings = get_setting('end_patrol_time_threshold');
-		$sql = "select s.nama_shift                                                                 as shift,
-					   s.shift_id,
-					   CONVERT(varchar,s.jam_masuk, 24) as jam_masuk,
+		$sql = "select id_jadwal_patroli,
+    					s.nama_shift                                                                 as shift,
+					   	s.shift_id,
+					   	CONVERT(varchar,s.jam_masuk, 24) as jam_masuk,
 						IIF(s.nama_shift = 'LIBUR', CONVERT(varchar, s.jam_pulang, 24),
 						   CONVERT(varchar, DATEADD(MINUTE, -29, s.jam_pulang), 24)) as jam_pulang,
-					   p.plant_name,
-					   p.plant_id                                                                   as plant_id
+					   	p.plant_name,
+					   	p.plant_id                                                                   as plant_id
 				from admisecsgp_trans_jadwal_patroli,
 					 admisecsgp_mstplant p,
 					 admisecsgp_mstshift s
@@ -138,7 +139,7 @@ class M_restPatrol extends CI_Model
 		$sql = "SELECT TOP 1  * from admisecsgp_trans_headers where trans_header_id ='" . $id . "'";
 		$data = $this->db->query($sql)->row();
 		$sqlDetail = "select * from admisecsgp_trans_details where admisecsgp_trans_headers_trans_headers_id ='" . $id . "'";
-		$dataDetail = $this->db->query($sqlDetail)->result();;
+		$dataDetail = $this->db->query($sqlDetail)->result();
 		$data->detail_temuan = $dataDetail;
 		return $data;
 	}
@@ -161,7 +162,7 @@ class M_restPatrol extends CI_Model
 					where status_temuan = 0";
 		$dataDetail = $this->db->query($sqlDetail)->result();;
 		return $dataDetail;
-
 	}
+
 
 }

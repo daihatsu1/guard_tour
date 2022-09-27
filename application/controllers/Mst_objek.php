@@ -11,7 +11,7 @@ class Mst_objek extends CI_Controller
         parent::__construct();
         $id = $this->session->userdata('id_token');
         date_default_timezone_set('Asia/Jakarta');
-        $this->load->helper('generate');
+//        $this->load->helper('generate');
         if ($id = null || $id = "") {
             $this->session->set_flashdata('info_login', 'anda harus login dulu');
             redirect('Login');
@@ -109,7 +109,7 @@ class Mst_objek extends CI_Controller
 
     public function form_upload()
     {
-        $filename = "upload_objek_" . $this->session->flashdata('id_token');
+        $filename = "upload_objek_" . $this->session->userdata('id_token');
         $data['plant_name_id'] = "";
         if (isset($_POST['view'])) {
             $upload = $this->M_patrol->uploadObjek($filename);
@@ -139,7 +139,7 @@ class Mst_objek extends CI_Controller
 
     public function upload()
     {
-        $filename = "upload_objek_" . $this->session->flashdata('id_token');
+        $filename = "upload_objek_" . $this->session->userdata('id_token');
         $path_xlsx = "./assets/path_upload/" . $filename . ".xlsx";
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet = $reader->load($path_xlsx);
