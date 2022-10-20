@@ -12,6 +12,24 @@ class M_restPatrol extends CI_Model
 		$ci->load->helper(['date_time', 'db_settings']);
 	}
 
+	function getCurrentShift($dateTime)
+	{
+		$date = $dateTime->format('Y-m-d');
+		$sql = "select *
+				from (
+						select shift_id,
+							 nama_shift,
+							 CAST('" . $date . "' AS DATETIME) + CAST(jam_masuk AS DATETIME)       as jam_masuk,
+							 IIF(s.jam_masuk > s.jam_pulang,
+								 DATEADD(day, 1, CAST('" . $date . "' AS DATETIME) + CAST(jam_pulang AS DATETIME)),
+								 CAST('" . $date . "' AS DATETIME) + CAST(jam_pulang AS DATETIME)) as jam_pulang
+					  	from admisecsgp_mstshift s
+					  	where nama_shift != 'LIBUR') as shift
+				WHERE getdate() between shift.jam_masuk and shift.jam_pulang";
+		return $this->db->query($sql)->row();
+
+	}
+
 	function getJadwal($dateTime, $user_id, $plant_id)
 	{
 		$date = $dateTime->format('Y-m-d');
@@ -66,20 +84,14 @@ class M_restPatrol extends CI_Model
 	function getZones($dateTime, $shift_id, $plant_id)
 	{
 		$date = $dateTime->format('Y-m-d');
-		$sql = "select z.zone_id   as id,
-					   am.plant_id as plant_id,
-					   am.plant_name,
-					   z.zone_name
+		$sql = "select z.zone_name, zp.admisecsgp_mstzone_zone_id as id, am.plant_name as plant_name, zp.admisecsgp_mstplant_plant_id as plant_name
 				from admisecsgp_trans_zona_patroli zp
-						 left join admisecsgp_mstplant am on am.plant_id = zp.admisecsgp_mstplant_plant_id
-						 left join admisecsgp_mstzone z on zp.admisecsgp_mstzone_zone_id = z.zone_id and
-														   zp.admisecsgp_mstplant_plant_id = z.admisecsgp_mstplant_plant_id
-						 left join admisecsgp_mstshift ams on zp.admisecsgp_mstshift_shift_id = ams.shift_id
-				where z.status = 1
-				  and zp.status_zona = 1
-				  and am.plant_id = '" . $plant_id . "'
-				  and ams.nama_shift = '" . $shift_id . "'
-				and date_patroli ='" . $date . "'";
+				left join admisecsgp_mstzone z on z.zone_id = zp.admisecsgp_mstzone_zone_id
+				left join admisecsgp_mstplant am on am.plant_id = zp.admisecsgp_mstplant_plant_id
+				where admisecsgp_mstshift_shift_id = '" . $shift_id . "'
+				  and date_patroli = '" . $date . "'
+				  and zp.admisecsgp_mstplant_plant_id = '" . $plant_id . "'
+				  and status_zona = 1";
 
 		return $this->db->query($sql)->result();
 	}
@@ -138,7 +150,37 @@ class M_restPatrol extends CI_Model
 	{
 		$sql = "SELECT TOP 1  * from admisecsgp_trans_headers where trans_header_id ='" . $id . "'";
 		$data = $this->db->query($sql)->row();
-		$sqlDetail = "select * from admisecsgp_trans_details where admisecsgp_trans_headers_trans_headers_id ='" . $id . "'";
+		$sqlDetail = "select trans_detail_id,
+					   admisecsgp_trans_headers_trans_headers_id,
+					   admisecsgp_mstobj_objek_id,
+					   conditions,
+					   admisecsgp_mstevent_event_id,
+					   description,
+					   (CASE WHEN image_1 IS NOT NULL 
+							 THEN concat('" . base_url() . "',image_1) 
+							 ELSE NULL
+						END) as image_1, 
+					   (CASE WHEN image_2 IS NOT NULL 
+							 THEN concat('" . base_url() . "',image_2) 
+							 ELSE NULL
+						END) as image_2,
+					   (CASE WHEN image_3 IS NOT NULL 
+							 THEN concat('" . base_url() . "',image_3) 
+							 ELSE NULL
+						END) as image_3,
+					   is_laporan_kejadian,
+					   laporkan_pic,
+					   is_tindakan_cepat,
+					   status_temuan,
+					   deskripsi_tindakan,
+					   note_tindakan_cepat,
+					   status,
+					   created_at,
+					   created_by,
+					   updated_at,
+					   updated_by,
+					   sync_token
+				from admisecsgp_trans_details where admisecsgp_trans_headers_trans_headers_id ='" . $id . "'";
 		$dataDetail = $this->db->query($sqlDetail)->result();
 		$data->detail_temuan = $dataDetail;
 		return $data;
@@ -146,13 +188,18 @@ class M_restPatrol extends CI_Model
 
 	public function getAllDataTemuan()
 	{
-		$sqlDetail = "select sh.shift_id,
+
+		$sqlDetail = "select trans_detail_id, 
+    					   sh.shift_id,
 						   sh.nama_shift,
 						   admisecsgp_mstobj_objek_id as object_id,
 						   am.nama_objek,
 						   ath.admisecsgp_mstckp_checkpoint_id as chekpoint_id,
 						   description,
-						   image_1 as image,
+							(CASE WHEN image_1 IS NOT NULL
+								 THEN concat('" . base_url() . "',image_1)
+								 ELSE NULL
+							END) as image_1,   
 						   ath.date_patroli
 						from admisecsgp_trans_details
 							 left join admisecsgp_trans_headers ath

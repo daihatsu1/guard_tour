@@ -63,17 +63,19 @@ class PatroliController extends RestController
 	 */
 	public function dataPatroli_get()
 	{
-		$jadwalHariIni = $this->M_restPatrol->getJadwal($this->dateNow, $this->user['npk'], $this->user['admisecsgp_mstplant_plant_id']);
-		$data = $this->M_restPatrol->getDataPatroli($this->dateNow, $jadwalHariIni->shift, $this->user['admisecsgp_mstplant_plant_id']);
+		$shift = $this->M_restPatrol->getCurrentShift($this->dateNow);
+		if ($shift != null) {
+			$data = $this->M_restPatrol->getDataPatroli($this->dateNow, $shift->shift_id, $this->user['admisecsgp_mstplant_plant_id']);
+			$this->response($data, 200);
+		}
+		$this->response([], 200);
 
-		$this->response($data, 200);
 	}
 
 	public function getdataTemuan_get()
 	{
 		$dataTemuan = $this->M_restPatrol->getAllDataTemuan();
 		$this->response($dataTemuan, 200);
-
 	}
 
 	public function dataTemuan_post()
@@ -87,6 +89,7 @@ class PatroliController extends RestController
 			'date_patroli' => $this->post('date_patroli'),
 			'checkin_checkpoint' => $this->post('checkin_checkpoint'),
 			'checkout_checkpoint' => $this->post('checkout_checkpoint'),
+			'type_patrol' => $this->post('type_patrol'),
 			'status' => $this->post('status'),
 			'sync_token' => $syncToken,
 			'created_at' => $this->dateNow->format('Y-m-d H:i:s'),
@@ -119,7 +122,7 @@ class PatroliController extends RestController
 					'is_laporan_kejadian' => $detail['is_laporan_kejadian'],
 					'laporkan_pic' => $detail['laporkan_pic'],
 					'is_tindakan_cepat' => $detail['is_tindakan_cepat'],
-					'status_temuan' => $detail['status'],
+					'status_temuan' => $detail['status_temuan'],
 					'deskripsi_tindakan' => $detail['deskripsi_tindakan'],
 					'note_tindakan_cepat' => $detail['note_tindakan_cepat'],
 					'status' => $detail['status'],
@@ -155,9 +158,10 @@ class PatroliController extends RestController
 
 									if (!$this->upload->do_upload($field)) {
 										$upload_result[$field] = null;
+										error_log($this->upload->display_errors());
 									} else {
 										$data = $this->upload->data();
-										$upload_result[$field] = base_url() . 'assets/temuan/' . $data['file_name'];
+										$upload_result[$field] =  'assets/temuan/' . $data['file_name'];
 									}
 								} else {
 									$upload_result[$field] = null;
@@ -170,8 +174,17 @@ class PatroliController extends RestController
 					$dataDetail['image_1'] = $upload_result['image_1'];
 					$dataDetail['image_2'] = $upload_result['image_2'];
 					$dataDetail['image_3'] = $upload_result['image_3'];
+				} else {
+					if (array_key_exists('image_1', $detail)) {
+						$dataDetail['image_1'] = $detail['image_1'];
+					}
+					if (array_key_exists('image_2', $detail)) {
+						$dataDetail['image_2'] = $detail['image_2'];
+					}
+					if (array_key_exists('image_3', $detail)) {
+						$dataDetail['image_3'] = $detail['image_3'];
+					}
 				}
-
 
 				$headerDetail = $this->db->get_where('admisecsgp_trans_details', array(
 					'sync_token' => $detail['sync_token']
@@ -202,7 +215,7 @@ class PatroliController extends RestController
 		);
 
 		if ($this->input->post('end_at')) {
-			$data['end_at'] =  $this->post('end_at');
+			$data['end_at'] = $this->post('end_at');
 		}
 		$activity = $this->db->get_where('admisecsgp_patrol_activity', array(
 			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->post('id_jadwal_patroli')
@@ -225,14 +238,15 @@ class PatroliController extends RestController
 
 	}
 
-	public function getPatrolActivity_get(){
+	public function getPatrolActivity_get()
+	{
 		$activity = $this->db->get_where('admisecsgp_patrol_activity', array(
 			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->get('id_jadwal_patroli')
 		), 1, 0);
 		$count = $activity->num_rows();
 		if ($count > 0) {
 			$data = $activity->row();
-		}else{
+		} else {
 			$data = new stdClass();
 
 		}

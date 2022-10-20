@@ -28,7 +28,9 @@
        <script src="<?= base_url('assets') ?>/dist/js/dataTables.responsive.min.js"></script>
        <script src="<?= base_url('assets') ?>/dist/js/responsive.bootstrap4.min.js"></script>
        <script src="<?= base_url('assets') ?>/dist/js/dataTables.buttons.min.js"></script>
-       <script src="<?= base_url('assets') ?>/dist/js/buttons.bootstrap4.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/buttons.bootstrap4.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/buttons.print.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/buttons.html5.js"></script>
        <!-- Select2 -->
        <script src="<?= base_url('assets') ?>/dist/select2/js/select2.full.min.js"></script>
        <!-- date-range-picker -->

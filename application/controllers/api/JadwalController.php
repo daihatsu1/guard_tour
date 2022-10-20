@@ -26,8 +26,9 @@ class JadwalController extends RestController
 		$this->load->model(['M_restPatrol', 'M_restAuth']);
 		$this->dateNow = new DateTimeImmutable('now', new DateTimeZone('Asia/Jakarta'));
 		$this->dateTomorrow = $this->dateNow->add(new DateInterval('P1D'));
-		$this->user = $this->M_restAuth->getRows(['npk' => $this->_apiuser->user_id]);
-	}
+		if ($this->_apiuser) {
+			$this->user = $this->M_restAuth->getRows(['npk' => $this->_apiuser->user_id]);
+		}	}
 
 	public function jadwalUser_get()
 	{
