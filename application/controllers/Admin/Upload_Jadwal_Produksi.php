@@ -105,7 +105,7 @@ class Upload_Jadwal_Produksi extends CI_Controller
             $var   = 3;
             $zona  = $jdl[0];
             $shift = $jdl[1];
-            $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' ")->row();
+            $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' and admisecsgp_mstplant_plant_id = '" . $plant->plant_id . "' ")->row();
             $var_shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift . "' ")->row();
             $l = 1;
             for ($p = 2; $p <= count($datajadwal[7]) - 2; $p += 2) {

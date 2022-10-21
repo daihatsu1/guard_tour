@@ -178,7 +178,7 @@
                                         $var   = 3;
                                         $zona  = $jdl[0];
                                         $shift = $jdl[1];
-                                        $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' ");
+                                        $var_zona  = $this->db->query("select zone_id from admisecsgp_mstzone where zone_name='" . $zona . "' AND admisecsgp_mstplant_plant_id ='" . $plt->plant_id   . "' ");
                                         $var_shift = $this->db->query("select shift_id from admisecsgp_mstshift where nama_shift='" . $shift . "' ");
 
                                         if ($var_zona->num_rows() <= 0) {
