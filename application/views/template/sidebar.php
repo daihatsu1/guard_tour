@@ -272,7 +272,15 @@ date_default_timezone_set('Asia/Jakarta');
 								</a>
 							</li>
 
-
+							<li class="nav-item">
+								<a href="<?= base_url('Mst_Settings') ?>" class="nav-link
+                                    <?php if ($link == 'Mst_Settings') {
+									echo 'active';
+								} ?>">
+									<i class=" far fa-circle nav-icon"></i>
+									<p>Master Settings</p>
+								</a>
+							</li>
 						</ul>
 					</li>
 					<li class="nav-item

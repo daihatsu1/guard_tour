@@ -313,18 +313,24 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Laporan Patroli</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Laporan Temuan</p>
-                                    </a>
-                                </li>
+								<li class="nav-item">
+									<a href="<?= base_url('Admin/Laporan_Patroli') ?>"
+									   class="nav-link <?php if ($link == 'Laporan_Patroli') {
+										   echo 'active';
+									   } ?>">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Laporan Patroli</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="<?= base_url('Admin/Laporan_Temuan') ?>"
+									   class="nav-link <?php if ($link == 'Laporan_Temuan') {
+										   echo 'active';
+									   } ?>">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Laporan Temuan</p>
+									</a>
+								</li>
                             </ul>
                         </li>
                     </ul>

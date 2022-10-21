@@ -38,45 +38,20 @@
 			<!-- Left col -->
 			<div class="col-md-12">
 				<div class="row justify-content-center">
-
-				<div class="card col-6 "><!-- /.card-header -->
-					<div class="card-body p-4">
-						<div class="row justify-content-center">
-							<div class="col-lg-4">
-								<div class="form-group">
-									<label for="">PLANT</label>
-									<select name="plant" class="form-control" id="plant">
-										<option value="">--- Pilih Plant ---</option>
-										<?php foreach ($plant->result() as $pl) :
-											if ($pl->plant_id == $plant_id) { ?>
-												<option selected
-														value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
-											<?php } else { ?>
-												<option value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
-											<?php }
-										endforeach ?>
-									</select>
-								</div>
-							</div>
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label for="reportrange">TANGGAL</label>
-									<input type="text" id="reportrange" class="form-control">
-									<!--										<input type="text" class="form-control" id="date-range">-->
-								</div>
-							</div>
-
-							<div class="col-lg-2">
-								<div style="margin-top: 10px;position:absolute" class="form-group">
-									<button name="filter" id="filter" class="btn btn-primary btn-sm mt-4"><i
-												class="fa fa-search"></i> FILTER
-									</button>
+					<div class="card col-4 "><!-- /.card-header -->
+						<div class="card-body p-4">
+							<div class="form-group row">
+								<label for="reportrange" class="col-sm-2 col-form-label">Tanggal</label>
+								<div class="col-sm-10 input-group ">
+									<input type="email" class="form-control" id="reportrange" placeholder="Email">
+									<div class="input-group-append">
+										<button class="btn btn-primary" type="button" name="filter" id="filter" >Filter</button>
+									</div>
 								</div>
 							</div>
 						</div>
+						<!-- /.card-footer -->
 					</div>
-					<!-- /.card-footer -->
-				</div>
 				</div>
 
 				<div class="card">
@@ -136,7 +111,8 @@
 					<!-- /.card-header -->
 					<div class="card-body p-4">
 						<div class="table-responsive ">
-							<table class="table table-sm m-0 table-hover" id="tablePatroliDiluarJadwal" style="width: 100%">
+							<table class="table table-sm m-0 table-hover" id="tablePatroliDiluarJadwal"
+								   style="width: 100%">
 								<thead>
 								<tr>
 									<th>Tgl Patroli</th>
@@ -244,7 +220,6 @@
 		}
 
 
-
 		let tablePatroli = $('#tablePatroli').DataTable({
 			paging: true,
 			scrollX: true,
@@ -255,14 +230,14 @@
 			processing: true,
 			serverSide: false,
 			ajax: {
-				url: "<?=base_url('Laporan_patroli/list_patroli') ?>",
+				url: "<?=base_url('Admin/Laporan_patroli/list_patroli')?>",
 				dataSrc: '',
 				data: function () {
 					var drp = $('#reportrange').data('daterangepicker');
 					var param = {
 						'start': drp.startDate.format('YYYY-MM-DD'),
 						'end': drp.endDate.format('YYYY-MM-DD'),
-						'plantId': $('#plant').find(":selected").val(),
+						'plantId': '<?=$plant->plant_id?>',
 						'type': 0
 					}
 					return param
@@ -278,18 +253,18 @@
 				{data: 'name'},
 				{
 					data: 'start_at', render: function (data, type, row) {
-						if(data){
+						if (data) {
 							return moment(data).format('lll')
-						}else {
+						} else {
 							return '-'
 						}
 					}
 				},
 				{
 					data: 'end_at', render: function (data, type, row) {
-						if(data){
+						if (data) {
 							return moment(data).format('lll')
-						}else{
+						} else {
 							return '-'
 						}
 					}
@@ -351,7 +326,7 @@
 				}, {
 					data: null,
 					render: function (data, type, row) {
-						return '<a href="<?=base_url('Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk='+row.npk+'&type=0" class="btn btn-sm btn-info">Detail</a>'
+						return '<a href="<?=base_url('Admin/Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=0" class="btn btn-sm btn-info">Detail</a>'
 					}
 				},
 			],
@@ -372,7 +347,7 @@
 			processing: true,
 			serverSide: false,
 			ajax: {
-				url: "<?=base_url('Laporan_patroli/list_patroli')?>",
+				url: "<?=base_url('Admin/Laporan_patroli/list_patroli')?>",
 				dataSrc: '',
 				data: function () {
 					var drp = $('#reportrange').data('daterangepicker');
@@ -395,18 +370,18 @@
 				{data: 'name'},
 				{
 					data: 'start_at', render: function (data, type, row) {
-						if(data){
+						if (data) {
 							return moment(data).format('lll')
-						}else {
+						} else {
 							return '-'
 						}
 					}
 				},
 				{
 					data: 'end_at', render: function (data, type, row) {
-						if(data){
+						if (data) {
 							return moment(data).format('lll')
-						}else{
+						} else {
 							return '-'
 						}
 					}
@@ -468,7 +443,7 @@
 				}, {
 					data: null,
 					render: function (data, type, row) {
-						return '<a href="<?=base_url('Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk='+row.npk+'&type=1" class="btn btn-sm btn-info">Detail</a>'
+						return '<a href="<?=base_url('Admin/Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=1" class="btn btn-sm btn-info">Detail</a>'
 					}
 				},
 			],
@@ -488,7 +463,7 @@
 					exportOptions: {
 						columns: ':visible'
 					},
-					filename: function(){
+					filename: function () {
 						var d = new Date();
 						return 'laporan_patroli_' + d.getTime();
 					},
@@ -518,7 +493,7 @@
 					exportOptions: {
 						columns: ':visible'
 					},
-					filename: function(){
+					filename: function () {
 						var d = new Date();
 						return 'laporan_patroli_' + d.getTime();
 					},

@@ -27,21 +27,58 @@ class M_LaporanTemuan extends CI_Model
 		return $data;
 	}
 
-	public function getTotalTemuan()
+	public function getTotalTemuan($plant_id = null)
 	{
-		$sql = "select (select count(*) from admisecsgp_trans_details td where td.status = 0)               as total_temuan,
-			   (select count(*) from admisecsgp_trans_details td where status_temuan = 1 and td.status = 0) as temuan_selesai,
-			   (select count(*) from admisecsgp_trans_details td where status_temuan = 0 and td.status = 0) as temuan_belum_selesai,
-			   (select count(*) from admisecsgp_trans_details td
-			 	join admisecsgp_trans_headers ath on ath.trans_header_id = td.admisecsgp_trans_headers_trans_headers_id
-				where td.status = 0 and date_patroli = cast(getdate() as date))                         	as temuan_hari_ini,
-			   (select count(*) from admisecsgp_trans_details td where laporkan_pic = 1 and td.status = 0) 	as laporkan_pic,
-			   (select count(*) from admisecsgp_trans_details td where is_tindakan_cepat = 1 and td.status = 0) as tindakan_cepat";
+		$where = '';
+		if ($plant_id != null) {
+			$where = "and zn.admisecsgp_mstplant_plant_id ='" . $plant_id . "'";
+		}
+
+		$sql = "select (select count(*)
+							from admisecsgp_trans_details td
+									 join admisecsgp_trans_headers ath on ath.trans_header_id = td.admisecsgp_trans_headers_trans_headers_id
+									 join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+							where td.status = 0 ".$where." ) as total_temuan,
+					   (select count(*)
+						from admisecsgp_trans_details td
+								 join admisecsgp_trans_headers ath on ath.trans_header_id = td.admisecsgp_trans_headers_trans_headers_id
+								 join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+						where status_temuan = 1
+						  and td.status = 0 ".$where.")                                                  as temuan_selesai,
+					   (select count(*)
+						from admisecsgp_trans_details td
+								 join admisecsgp_trans_headers ath on ath.trans_header_id = td.admisecsgp_trans_headers_trans_headers_id
+								 join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+						where status_temuan = 0
+						  and td.status = 0 ".$where.")                                                  as temuan_belum_selesai,
+					   (select count(*)
+						from admisecsgp_trans_details td
+								 join admisecsgp_trans_headers ath on ath.trans_header_id = td.admisecsgp_trans_headers_trans_headers_id
+								 join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+						where td.status = 0
+						  and date_patroli = cast(getdate() as date) ".$where.")                         as temuan_hari_ini,
+					   (select count(*)
+						from admisecsgp_trans_details td
+								 join admisecsgp_trans_headers ath on ath.trans_header_id = td.admisecsgp_trans_headers_trans_headers_id
+								 join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+						where laporkan_pic = 1
+						  and td.status = 0 ".$where.")                                                  as laporkan_pic,
+					   (select count(*)
+						from admisecsgp_trans_details td
+								 join admisecsgp_trans_headers ath on ath.trans_header_id = td.admisecsgp_trans_headers_trans_headers_id
+								 join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+						where is_tindakan_cepat = 1
+						  and td.status = 0 ".$where.")                                                  as tindakan_cepat";
 		return $this->db->query($sql)->row();
 	}
 
-	public function getDataTemuan()
+	public function getDataTemuan($plant_id = null)
 	{
+		$where = '';
+		if ($plant_id != null) {
+			$where = "and pl.plant_id ='" . $plant_id . "'";
+		}
+
 		$sqlDetail = "  select usr.name                            as pelaksana,
 							   pl.plant_name,
 							   pl.plant_id,
@@ -71,13 +108,17 @@ class M_LaporanTemuan extends CI_Model
 								 left join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
 								 left join admisecsgp_mstplant pl on zn.admisecsgp_mstplant_plant_id = pl.plant_id
 								 left join admisecsgp_mstusr usr on usr.npk = ath.admisecsgp_mstusr_npk
-						where atd.status = 0
+						where atd.status = 0  " . $where . "
 						order by atd.status_temuan, atd.created_at desc;";
 		return $this->db->query($sqlDetail)->result();
 	}
 
-	public function getTemuanPlant($year)
+	public function getTemuanPlant($year, $plant_id = null)
 	{
+		$where = '';
+		if ($plant_id != null) {
+			$where = "and plant_id ='" . $plant_id . "'";
+		}
 		$sql = "select distinct plant_name,
 								plant_id,
 								FORMAT(ath.date_patroli, 'MM')                as month,
@@ -87,13 +128,17 @@ class M_LaporanTemuan extends CI_Model
 						 left join admisecsgp_trans_headers ath on mz.zone_id = ath.admisecsgp_mstzone_zone_id
 						 inner join admisecsgp_trans_details td on td.admisecsgp_trans_headers_trans_headers_id = ath.trans_header_id
 				where td.status = 0
-				  and DATEPART(YEAR, ath.date_patroli) = '".$year."'
+				  and DATEPART(YEAR, ath.date_patroli) = '" . $year . "' " . $where . " 
 				group by plant_id, plant_name, FORMAT(ath.date_patroli, 'MM')";
 		return $this->db->query($sql)->result();
 	}
 
-	public function getTotalTemuanByKategoriObject()
+	public function getTotalTemuanByKategoriObject($plant_id = null)
 	{
+		$where = '';
+		if ($plant_id != null) {
+			$where = "where m.plant_id ='" . $plant_id . "'";
+		}
 		$sql = "select top 10 *, total_temuan*100/total_objek as 'percentage'
 				from (select count(distinct atd.trans_detail_id)       total_temuan,
 							 (select count(distinct objek_id) total_obj
@@ -113,13 +158,19 @@ class M_LaporanTemuan extends CI_Model
 							   join admisecsgp_trans_details atd on am.event_id = atd.admisecsgp_mstevent_event_id
 							   join admisecsgp_trans_headers ath on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
 							   join admisecsgp_mstzone az on ath.admisecsgp_mstzone_zone_id = az.zone_id
-							   join admisecsgp_mstplant m on az.admisecsgp_mstplant_plant_id = m.plant_id
+							   join admisecsgp_mstplant m on az.admisecsgp_mstplant_plant_id = m.plant_id	
+					  " . $where . "
 					  group by kobj.kategori_id, kobj.kategori_name, m.plant_name, m.plant_id) as ax
 				order by total_temuan desc";
 		return $this->db->query($sql)->result();
 	}
 
-	public function getTemuanByUser(){
+	public function getTemuanByUser($plant_id = null)
+	{
+		$where = '';
+		if ($plant_id != null) {
+			$where = "and m.plant_id ='" . $plant_id . "'";
+		}
 		$sql = "select count(distinct atd.trans_detail_id) as total_temuan,
 					   usr.npk                             as npk,
 					   m.plant_name                        as plant_name,
@@ -131,7 +182,7 @@ class M_LaporanTemuan extends CI_Model
 						 join admisecsgp_mstzone az on ath.admisecsgp_mstzone_zone_id = az.zone_id
 						 join admisecsgp_mstplant m on az.admisecsgp_mstplant_plant_id = m.plant_id
 				where status_temuan = 0
-				  and ath.status = 1
+				  and ath.status = 1 " . $where . "
 				group by usr.npk, m.plant_name, m.plant_id, FORMAT(ath.date_patroli, 'MM')
 				order by m.plant_name, npk";
 		return $this->db->query($sql)->result();
