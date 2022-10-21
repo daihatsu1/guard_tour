@@ -50,7 +50,8 @@
                                 <tr>
                                     <th style="width: 50px;">NO</th>
                                     <th>NPK</th>
-                                    <th>NAMA</th>
+									<th>NAMA</th>
+									<th>EMAIL</th>
                                     <th>ROLE AKSES</th>
                                     <th>LEVEL</th>
                                     <th>STATUS</th>
@@ -63,7 +64,8 @@
                                     <tr>
                                         <td><?= $no++ ?></td>
                                         <td><?= $zn->npk  ?></td>
-                                        <td><?= strtoupper($zn->name) ?></td>
+										<td><?= strtoupper($zn->name) ?></td>
+										<td><?= strtoupper($zn->email) ?></td>
                                         <td>
                                             <?php
                                             $plant = $this->db->query("select plant_name from admisecsgp_mstplant where admisecsgp_mstsite_site_id = '" . $zn->site_id . "'");

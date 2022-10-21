@@ -161,7 +161,7 @@ class PatroliController extends RestController
 										error_log($this->upload->display_errors());
 									} else {
 										$data = $this->upload->data();
-										$upload_result[$field] =  'assets/temuan/' . $data['file_name'];
+										$upload_result[$field] = 'assets/temuan/' . $data['file_name'];
 									}
 								} else {
 									$upload_result[$field] = null;
@@ -208,14 +208,15 @@ class PatroliController extends RestController
 
 	public function setPatrolActivity_post()
 	{
+		$idJadwalPatroli = $this->post('id_jadwal_patroli');
 		$data = array(
 			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->post('id_jadwal_patroli'),
 			'status' => $this->post('status'),
 			'start_at' => $this->post('start_at'),
 		);
-
 		if ($this->input->post('end_at')) {
 			$data['end_at'] = $this->post('end_at');
+			$this->sendEmailPIC($idJadwalPatroli);
 		}
 		$activity = $this->db->get_where('admisecsgp_patrol_activity', array(
 			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->post('id_jadwal_patroli')
@@ -235,6 +236,40 @@ class PatroliController extends RestController
 		), 1, 0);
 		$existingData = $activity->row();
 		$this->response($existingData, 200);
+
+	}
+
+	public function sendEmailPIC($idJadwalPatroli)
+	{
+		$this->load->helper('email');
+		$activity = $this->db->select('distinct (usr.email), pl.plant_name')->from('admisecsgp_trans_jadwal_patroli jp')
+			->join('admisecsgp_mstusr as usr', 'usr.admisecsgp_mstplant_plant_id = jp.admisecsgp_mstplant_plant_id')
+			->join('admisecsgp_mstplant as pl', 'pl.plant_id = jp.admisecsgp_mstplant_plant_id')
+			->join('admisecsgp_mstzone as zn', 'pl.plant_id = zn.admisecsgp_mstplant_plant_id')
+			->join('admisecsgp_trans_headers ath ', 'zn.zone_id = ath.admisecsgp_mstzone_zone_id')
+			->join('admisecsgp_trans_details atd ', 'ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id')
+			->where("usr.admisecsgp_mstroleusr_role_id ='ADMRL0768'")
+			->where("usr.email IS NOT NULL")
+			->where("atd.laporkan_pic =  1")
+			->where('jp.id_jadwal_patroli', $idJadwalPatroli)->get();
+
+		$PICEmail = $activity->result_array();
+		foreach ($PICEmail as $pic) {
+			if ($pic['email'] != null) {
+				$params = [
+					'plant_name' => $pic['plant_name']
+				];
+				$to = $pic['email'];
+				$subject = 'TEMUAN PATROLI DI ' . strtoupper($pic['plant_name']);
+				$body = $this->load->view('template/email/email_laporkan_pic', $params, true);
+				if (sendMail($to, $subject, $body)) {
+					echo "email sent successfully";
+				} else {
+					echo "Failed sent email";
+				}
+			}
+		}
+		return $PICEmail;
 
 	}
 

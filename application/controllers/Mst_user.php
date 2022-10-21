@@ -51,7 +51,8 @@ class Mst_user extends CI_Controller
     {
         $npk            = $this->input->post("npk");
         $name           = strtoupper($this->input->post("nama"));
-        $id_role        = $this->input->post("level");
+		$email        	= $this->input->post("email");
+		$id_role        = $this->input->post("level");
         $id_site        = $this->input->post("site_id");
         $id_plant       = $this->input->post("plant_id");
         $status         = $this->input->post("status");
@@ -67,7 +68,8 @@ class Mst_user extends CI_Controller
             $id_comp = $cari_company->admisecsgp_mstcmp_company_id;
             $data = [
                 'npk'                             => $npk,
-                'name'                            => $name,
+				'name'                            => $name,
+				'email'                           => $email,
                 'admisecsgp_mstroleusr_role_id'   => $id_role,
                 'admisecsgp_mstsite_site_id'      => $id_site,
                 'admisecsgp_mstplant_plant_id'    => $id_plant,
@@ -82,9 +84,6 @@ class Mst_user extends CI_Controller
             redirect('Mst_user');
         }
     }
-
-
-
 
     public function hapus($id)
     {
@@ -119,8 +118,9 @@ class Mst_user extends CI_Controller
     public function update()
     {
         $id             = $this->input->post("id");
-        $npk            = $this->input->post("npk");
-        $name           = strtoupper($this->input->post("nama"));
+		$npk            = $this->input->post("npk");
+		$name           = strtoupper($this->input->post("nama"));
+		$email          = $this->input->post("email");
         $id_role        = $this->input->post("level");
         $id_site        = $this->input->post("site_id");
         $id_plant       = $this->input->post("plant_id");
@@ -129,8 +129,8 @@ class Mst_user extends CI_Controller
         $cari_company   = $this->db->query("select site_id , admisecsgp_mstcmp_company_id from admisecsgp_mstsite where site_id='" .  $id_site . "'")->row();
         $id_comp = $cari_company->admisecsgp_mstcmp_company_id;
         $data = [
-            // 'npk'                        => $npk,
-            'name'                              => $name,
+			'name'                              => $name,
+			'email'                             => $email,
             'admisecsgp_mstroleusr_role_id'     => $id_role,
             'admisecsgp_mstsite_site_id'        => $id_site,
             'admisecsgp_mstplant_plant_id'      => $id_plant,

@@ -251,7 +251,7 @@ class M_patrol extends CI_Model
     //tampilkan user
     public function showUser()
     {
-        $query =  $this->db->query("SELECT  u.name , u.npk , u.admisecsgp_mstroleusr_role_id , r.level , c.comp_name , s.site_name , p.plant_name  , u.status , u.admisecsgp_mstsite_site_id as site_id
+        $query =  $this->db->query("SELECT  u.name , u.npk, u.email, u.admisecsgp_mstroleusr_role_id , r.level , c.comp_name , s.site_name , p.plant_name  , u.status , u.admisecsgp_mstsite_site_id as site_id
         FROM admisecsgp_mstusr u , admisecsgp_mstroleusr r , admisecsgp_mstcmp c , admisecsgp_mstsite s
         , admisecsgp_mstplant p
         WHERE u.admisecsgp_mstroleusr_role_id = r.role_id and c.company_id = s.admisecsgp_mstcmp_company_id and u.admisecsgp_mstsite_site_id = s.site_id and p.plant_id = u.admisecsgp_mstplant_plant_id ");
@@ -260,7 +260,7 @@ class M_patrol extends CI_Model
 
     public function detailUser($id)
     {
-        $query =  $this->db->query("SELECT  u.name , u.npk , u.admisecsgp_mstroleusr_role_id , r.level , c.comp_name , s.site_name , p.plant_name  , u.status , u.admisecsgp_mstplant_plant_id , u.admisecsgp_mstsite_site_id 
+        $query =  $this->db->query("SELECT  u.name , u.npk, u.email , u.admisecsgp_mstroleusr_role_id , r.level , c.comp_name , s.site_name , p.plant_name  , u.status , u.admisecsgp_mstplant_plant_id , u.admisecsgp_mstsite_site_id 
         FROM admisecsgp_mstusr u , admisecsgp_mstroleusr r , admisecsgp_mstcmp c , admisecsgp_mstsite s
         , admisecsgp_mstplant p
         WHERE u.admisecsgp_mstroleusr_role_id = r.role_id and c.company_id = s.admisecsgp_mstcmp_company_id and u.admisecsgp_mstsite_site_id = s.site_id and p.plant_id = u.admisecsgp_mstplant_plant_id and u.npk = '" . $id . "' ");

@@ -75,7 +75,10 @@
                                 <label for="">USERNAME</label>
                                 <input type="text" name="nama" autocomplete="off" id="nama" class="form-control">
                             </div>
-
+							<div class="form-group">
+								<label for="email">EMAIL</label>
+								<input type="text" name="email" autocomplete="off" id="email" class="form-control">
+							</div>
                             <div class="form-group">
                                 <label for="">PASSWORD</label>
                                 <input type="password" name="password" autocomplete="off" id="password" class="form-control">

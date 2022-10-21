@@ -81,6 +81,10 @@
                                 <label for="">USERNAME</label>
                                 <input type="text" name="nama" autocomplete="off" value="<?= $data->name ?>" id="nama" class="form-control">
                             </div>
+							<div class="form-group">
+								<label for="email">EMAIL</label>
+								<input type="email" name="email" autocomplete="off" value="<?= $data->email ?>" id="email" class="form-control">
+							</div>
 
                             <div class="form-group">
                                 <label for="">LEVEL</label>

@@ -373,7 +373,8 @@
 								<tr>
 									<td>
 										<p>Hi there,</p>
-										<p>Terdapat laporan temuan dibeberapa object di zona xxxxxx yang membutuhkan penanganan.
+										<p>Terdapat laporan temuan dibeberapa object di plant <?= $plant_name ?> yang
+											membutuhkan penanganan atau perbaikan.
 											Untuk informasi lebih lanjut silakan buka dashboard di tautan berikut</p>
 										<table role="presentation" border="0" cellpadding="0" cellspacing="0"
 											   class="btn btn-primary">
@@ -384,7 +385,8 @@
 														   cellspacing="0">
 														<tbody>
 														<tr>
-															<td><a href="http://htmlemail.io" target="_blank">Buka Dashboard</a></td>
+															<td><a href="<?=base_url()?>" target="_blank">Buka
+																	Dashboard</a></td>
 														</tr>
 														</tbody>
 													</table>
