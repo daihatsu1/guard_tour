@@ -51,6 +51,7 @@
                                     <th style="width: 50px;">NO</th>
                                     <th>NPK</th>
 									<th>NAMA</th>
+									<th>GRUP PATROLI</th>
 									<th>EMAIL</th>
                                     <th>ROLE AKSES</th>
                                     <th>LEVEL</th>
@@ -65,6 +66,7 @@
                                         <td><?= $no++ ?></td>
                                         <td><?= $zn->npk  ?></td>
 										<td><?= strtoupper($zn->name) ?></td>
+										<td><?= strtoupper($zn->patrol_group) ?></td>
 										<td><?= strtoupper($zn->email) ?></td>
                                         <td>
                                             <?php
@@ -88,7 +90,7 @@
 
                                             <a href="<?= base_url('Mst_user/hapus/' . $zn->npk) ?>" onclick="return confirm('Yakin Hapus ?')" class='text-danger' title="hapus data"><i class="fa fa-trash"></i></a>
 
-                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2 " title="lihat data" data-backdrop="static" data-keyboard="false" data-level="<?= $zn->level ?>" data-npk="<?= $zn->npk ?>" data-status="<?= $zn->status ?>" data-plant="<?= strtoupper($zn->plant_name)  ?>" data-site="<?= strtoupper($zn->site_name) ?>" data-nama="<?= strtoupper($zn->name) ?>"><i class="fa fa-eye"></i></a>
+                                            <a href='' data-toggle="modal" data-target="#edit-data" class="text-primary ml-2 " title="lihat data" data-backdrop="static" data-keyboard="false" data-level="<?= $zn->level ?>" data-npk="<?= $zn->npk ?>" data-email="<?= $zn->email ?>" data-grup="<?= $zn->patrol_group ?>"   data-status="<?= $zn->status ?>" data-plant="<?= strtoupper($zn->plant_name)  ?>" data-site="<?= strtoupper($zn->site_name) ?>" data-nama="<?= strtoupper($zn->name) ?>"><i class="fa fa-eye"></i></a>
 
                                             <a href="<?= base_url('Mst_user/edit?user_id=' . $zn->npk) ?>" class='text-success  ml-2 ' title="edit data" data-backdrop="static" data-keyboard="false" data-id="<?= $zn->npk ?>"><i class="fa fa-edit"></i></a>
 
@@ -130,6 +132,10 @@
                         <label>NPK</label>
                         <input type="text" readonly class="form-control" id="npk">
                     </div>
+					<div class="form-group">
+						<label>EMAIL</label>
+						<input type="text" readonly class="form-control" id="email">
+					</div>
 
                     <div class="form-group">
                         <label>WILAYAH</label>
@@ -145,6 +151,10 @@
                         <label>LEVEL</label>
                         <input readonly type="text" class="form-control" id="level">
                     </div>
+					<div class="form-group">
+						<label>GRUP PATROLI</label>
+						<input readonly type="text" class="form-control" id="grup">
+					</div>
                     <div class="form-group">
                         <label>STATUS</label>
                         <input readonly type="text" class="form-control" id="status">
@@ -216,12 +226,14 @@
         var div = $(event.relatedTarget); // Tombol dimana modal di tampilkan
         var modal = $(this);
         // Isi nilai pada field
-        modal.find("#nama").attr("value", div.data("nama"));
+		modal.find("#nama").attr("value", div.data("nama"));
+		modal.find("#email").attr("value", div.data("email"));
         modal.find("#npk").attr("value", div.data("npk"));
         modal.find("#site").attr("value", div.data("site"));
         modal.find("#plant").attr("value", div.data("plant"));
         modal.find("#level").attr("value", div.data("level"));
-        if (div.data("status") == 1) {
+		modal.find("#grup").attr("value", div.data("grup"));
+		if (div.data("status") == 1) {
             modal.find("#status").attr("value", "ACTIVE");
         } else {
             modal.find("#status").attr("value", "INACTIVE");

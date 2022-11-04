@@ -123,7 +123,7 @@
 										<div class="row mb-5">
 											<div class="col-md-6">
 												<p class="text-center">
-													<strong>Temuan Group Per Plant <br/> Periode Tahun <?= $year; ?>
+													<strong>Temuan Group Per Plant <br/> Periode <?= $monthYear; ?>
 													</strong>
 												</p>
 
@@ -358,15 +358,10 @@
 			url: "<?=base_url('Admin/Dashboard/listPatroliByUser') ?>",
 			method: "GET",
 			success: function (data) {
-				let dataset_ = data.datasets
-
 				const chartTemuanByUser = document.getElementById('chartTemuanByUser').getContext('2d');
 				const chart = new Chart(chartTemuanByUser, {
 					type: 'bar',
-					data: {
-						labels: MONTHS,
-						datasets: dataset_
-					},
+					data: data
 					options: {
 						maintainAspectRatio: true,
 						responsive: true,

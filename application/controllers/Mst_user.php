@@ -17,14 +17,16 @@ class Mst_user extends CI_Controller
         if ($role != "SUPERADMIN") {
             redirect('Login');
         }
-    }
+		$this->load->helper('db_settings');
+
+	}
 
 
     public function index()
     {
         $data = [
             'link'          => $this->uri->segment(1),
-            'user'          => $this->M_patrol->showUser(),
+			'user'          => $this->M_patrol->showUser(),
             'role'          => $this->M_patrol->ambilData("admisecsgp_mstroleusr"),
             'company'       => $this->M_patrol->ambilData("admisecsgp_mstcmp")
         ];
@@ -36,11 +38,13 @@ class Mst_user extends CI_Controller
 
     public function form_add()
     {
+		$patrol_groups = get_setting('patrol_group')->nilai_setting;
         $data = [
             'link'       => $this->uri->segment(1),
             "wilayah"    => $this->M_patrol->ambilData("admisecsgp_mstsite", ['status' => 1]),
-            'role'       => $this->M_patrol->ambilData("admisecsgp_mstroleusr", ['status' => 1])
-        ];
+            'role'       => $this->M_patrol->ambilData("admisecsgp_mstroleusr", ['status' => 1]),
+			'groups' 	 => explode(',', $patrol_groups)
+		];
         // $this->template->load("template/template", "add_mst_user", $data);
         $this->load->view("template/sidebar", $data);
         $this->load->view("add_mst_user", $data);
@@ -100,13 +104,15 @@ class Mst_user extends CI_Controller
 
     public function edit()
     {
+		$patrol_groups = get_setting('patrol_group')->nilai_setting;
         $id =  $this->input->get('user_id');
         $data = [
             'link'       => $this->uri->segment(1),
             'data'       => $this->M_patrol->detailUser($id)->row(),
             "plant"      => $this->M_patrol->ambilData("admisecsgp_mstplant"),
             "wilayah"    => $this->M_patrol->ambilData("admisecsgp_mstsite"),
-            'role'          => $this->M_patrol->ambilData("admisecsgp_mstroleusr"),
+            'role'       => $this->M_patrol->ambilData("admisecsgp_mstroleusr"),
+			'groups' 	 => explode(',', $patrol_groups)
         ];
         // $this->template->load("template/template", "edit_mst_user", $data);
         $this->load->view("template/sidebar", $data);
@@ -123,7 +129,8 @@ class Mst_user extends CI_Controller
 		$email          = $this->input->post("email");
         $id_role        = $this->input->post("level");
         $id_site        = $this->input->post("site_id");
-        $id_plant       = $this->input->post("plant_id");
+		$id_plant       = $this->input->post("plant_id");
+		$group	        = $this->input->post("group");
         $status         = $this->input->post("status");
 
         $cari_company   = $this->db->query("select site_id , admisecsgp_mstcmp_company_id from admisecsgp_mstsite where site_id='" .  $id_site . "'")->row();
@@ -131,6 +138,7 @@ class Mst_user extends CI_Controller
         $data = [
 			'name'                              => $name,
 			'email'                             => $email,
+			'patrol_group'                      => $group,
             'admisecsgp_mstroleusr_role_id'     => $id_role,
             'admisecsgp_mstsite_site_id'        => $id_site,
             'admisecsgp_mstplant_plant_id'      => $id_plant,

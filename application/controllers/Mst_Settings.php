@@ -72,17 +72,6 @@ class Mst_Settings extends CI_Controller
 		}
 	}
 
-	public function testEmail()
-	{
-		$this->load->helper('email');
-		$to = 'imamsyahrudin1010@gmail.com';
-		$subject = 'TEMUAN PATROLI';
-		$body = $this->load->view('template/email/email_laporkan_pic','',true);
 
-		if(sendMail($to, $subject, $body)){
-			echo"email sent successfully";
-		}else{
-			echo"Failed sent email";
-		}
-	}
+
 }

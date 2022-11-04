@@ -138,6 +138,17 @@ date_default_timezone_set('Asia/Jakarta');
 							</p>
 						</a>
 					</li>
+					<li class="nav-item ">
+						<a href="<?= base_url('Laporan_Abnormal') ?>" class="nav-link
+                            <?php if ($link == 'Laporan_Abnormal' || $link == '') {
+							echo 'active';
+						} ?>">
+							<i class="nav-icon fas fa-exclamation-circle"></i>
+							<p>
+								Abnormality <span class="right badge badge-danger" id="badge_total_temuan">0</span>
+							</p>
+						</a>
+					</li>
 					<li class="nav-item">
 						<a href="<?= base_url('Mst_Company') ?>" class="nav-link
                             <?php if ($link == 'Mst_Company') {
@@ -260,6 +271,16 @@ date_default_timezone_set('Asia/Jakarta');
 								} ?>">
 									<i class="far fa-circle nav-icon"></i>
 									<p>Master User</p>
+								</a>
+							</li>
+
+							<li class="nav-item">
+								<a href="<?= base_url('Mst_user_ga') ?>" class="nav-link
+                                    <?php if ($link == 'Mst_user_ga') {
+									echo ' active';
+								} ?>">
+									<i class="far fa-circle nav-icon"></i>
+									<p>Master User GA</p>
 								</a>
 							</li>
 							<li class="nav-item">

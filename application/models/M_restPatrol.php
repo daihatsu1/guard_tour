@@ -30,6 +30,23 @@ class M_restPatrol extends CI_Model
 
 	}
 
+	function getShift($date)
+	{
+		$date = $date->format('Y-m-d');
+		$sql = "select *
+				from (
+						select shift_id,
+							 nama_shift,
+							 CAST('" . $date . "' AS DATETIME) + CAST(jam_masuk AS DATETIME)       as jam_masuk,
+							 IIF(s.jam_masuk > s.jam_pulang,
+								 DATEADD(day, 1, CAST('" . $date . "' AS DATETIME) + CAST(jam_pulang AS DATETIME)),
+								 CAST('" . $date . "' AS DATETIME) + CAST(jam_pulang AS DATETIME)) as jam_pulang
+					  	from admisecsgp_mstshift s
+					  	where nama_shift != 'LIBUR') as shift";
+		return $this->db->query($sql)->result();
+
+	}
+
 	function getJadwal($dateTime, $user_id, $plant_id)
 	{
 		$date = $dateTime->format('Y-m-d');
@@ -211,5 +228,38 @@ class M_restPatrol extends CI_Model
 		return $dataDetail;
 	}
 
+	public function sendEmailPIC($idJadwalPatroli)
+	{
+		$this->load->helper('email');
+		$activity = $this->db->select('distinct (usr.email), pl.plant_name')->from('admisecsgp_trans_jadwal_patroli jp')
+			->join('admisecsgp_mstusr_ga as usr', 'usr.admisecsgp_mstplant_plant_id = jp.admisecsgp_mstplant_plant_id')
+			->join('admisecsgp_mstplant as pl', 'pl.plant_id = jp.admisecsgp_mstplant_plant_id')
+			->join('admisecsgp_mstzone as zn', 'pl.plant_id = zn.admisecsgp_mstplant_plant_id')
+			->join('admisecsgp_trans_headers ath ', 'zn.zone_id = ath.admisecsgp_mstzone_zone_id')
+			->join('admisecsgp_trans_details atd ', 'ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id')
+			->where("usr.status = 1")
+			->where("usr.email IS NOT NULL")
+			->where("atd.laporkan_pic =  1")
+			->where('jp.id_jadwal_patroli', $idJadwalPatroli)->get();
 
+		$PICEmail = $activity->result_array();
+		foreach ($PICEmail as $pic) {
+			if ($pic['email'] != null) {
+				$params = [
+					'plant_name' => $pic['plant_name']
+				];
+				$to = $pic['email'];
+				$subject = 'TEMUAN PATROLI DI ' . strtoupper($pic['plant_name']);
+				$body = $this->load->view('template/email/email_laporkan_pic', $params, true);
+				if (sendMail($to, $subject, $body)) {
+					echo "email sent successfully";
+				} else {
+					echo "Failed sent email";
+				}
+			} else {
+				var_dump($pic);
+			}
+		}
+		return $PICEmail;
+	}
 }

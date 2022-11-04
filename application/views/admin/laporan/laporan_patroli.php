@@ -45,7 +45,8 @@
 								<div class="col-sm-10 input-group ">
 									<input type="email" class="form-control" id="reportrange" placeholder="Email">
 									<div class="input-group-append">
-										<button class="btn btn-primary" type="button" name="filter" id="filter" >Filter</button>
+										<button class="btn btn-primary" type="button" name="filter" id="filter">Filter
+										</button>
 									</div>
 								</div>
 							</div>
@@ -326,6 +327,9 @@
 				}, {
 					data: null,
 					render: function (data, type, row) {
+						if (data.start_at == null || data.end_at == null) {
+							return ''
+						}
 						return '<a href="<?=base_url('Admin/Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=0" class="btn btn-sm btn-info">Detail</a>'
 					}
 				},
@@ -456,6 +460,22 @@
 		new $.fn.dataTable.Buttons(tablePatroli, {
 			buttons: [
 				{
+					text: '<i class="fa fa-files-o"></i> XLSX',
+					titleAttr: 'EXCEL',
+					className: 'btn btn-default btn-sm',
+					action: function (e, dt, node, config) {
+						var drp = $('#reportrange').data('daterangepicker');
+						let start = drp.startDate.format('YYYY-MM-DD')
+						let end = drp.endDate.format('YYYY-MM-DD')
+						let type = 0
+
+						window.open(
+							'<?=base_url('Admin/Laporan_patroli/downloadLaporanPatroli?')?>start='+start+'&end='+end+'&type='+type,
+							'_blank'
+						);
+					}
+				},
+				{
 					extend: 'csv',
 					text: '<i class="fa fa-files-o"></i> CSV',
 					titleAttr: 'CSV',
@@ -481,10 +501,24 @@
 			]
 		});
 		tablePatroli.buttons().container().appendTo('#tablePatroli_filter');
-
-
 		new $.fn.dataTable.Buttons(tablePatroliDiluarJadwal, {
 			buttons: [
+				{
+					text: '<i class="fa fa-files-o"></i> XLSX',
+					titleAttr: 'EXCEL',
+					className: 'btn btn-default btn-sm',
+					action: function (e, dt, node, config) {
+						var drp = $('#reportrange').data('daterangepicker');
+						let start = drp.startDate.format('YYYY-MM-DD')
+						let end = drp.endDate.format('YYYY-MM-DD')
+						let type = 1
+
+						window.open(
+							'<?=base_url('Admin/Laporan_patroli/downloadLaporanPatroli?')?>start='+start+'&end='+end+'&type='+type,
+							'_blank'
+						);
+					}
+				},
 				{
 					extend: 'csv',
 					text: '<i class="fa fa-files-o"></i> CSV',
@@ -495,7 +529,7 @@
 					},
 					filename: function () {
 						var d = new Date();
-						return 'laporan_patroli_' + d.getTime();
+						return 'laporan_patroli_diluarjadwal' + d.getTime();
 					},
 				},
 				{
@@ -504,7 +538,7 @@
 					titleAttr: 'Print',
 					className: 'btn btn-default btn-sm',
 					exportOptions: {
-						columns: ':visible'
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 					},
 
 				},

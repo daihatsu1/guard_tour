@@ -97,6 +97,15 @@
                                 </select>
                             </div>
 
+							<div class="form-group">
+								<label for="">GROUP PATROLI</label>
+								<select name="group" class="form-control" id="">
+									<option value="">Pilih grup</option>
+									<?php foreach ($groups as $group) : ?>
+										<option value="<?= $group ?>" <?php if($group==$data->patrol_group) echo 'selected'; ?>><?= $group ?></option>
+									<?php endforeach ?>
+								</select>
+							</div>
 
                             <div class="form-group">
                                 <label for="">STATUS</label>

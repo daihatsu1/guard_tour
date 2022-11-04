@@ -176,13 +176,13 @@ class PatroliController extends RestController
 					$dataDetail['image_3'] = $upload_result['image_3'];
 				} else {
 					if (array_key_exists('image_1', $detail)) {
-						$dataDetail['image_1'] = $detail['image_1'];
+						$dataDetail['image_1'] = str_replace(base_url(),"", $detail['image_1']);
 					}
 					if (array_key_exists('image_2', $detail)) {
-						$dataDetail['image_2'] = $detail['image_2'];
+						$dataDetail['image_2'] = str_replace(base_url(),"", $detail['image_2']);
 					}
 					if (array_key_exists('image_3', $detail)) {
-						$dataDetail['image_3'] = $detail['image_3'];
+						$dataDetail['image_3'] = str_replace(base_url(),"", $detail['image_3']);
 					}
 				}
 
@@ -214,10 +214,12 @@ class PatroliController extends RestController
 			'status' => $this->post('status'),
 			'start_at' => $this->post('start_at'),
 		);
+
 		if ($this->input->post('end_at')) {
 			$data['end_at'] = $this->post('end_at');
-			$this->sendEmailPIC($idJadwalPatroli);
+			$this->M_restPatrol->sendEmailPIC($idJadwalPatroli);
 		}
+
 		$activity = $this->db->get_where('admisecsgp_patrol_activity', array(
 			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->post('id_jadwal_patroli')
 		), 1, 0);
@@ -239,39 +241,7 @@ class PatroliController extends RestController
 
 	}
 
-	public function sendEmailPIC($idJadwalPatroli)
-	{
-		$this->load->helper('email');
-		$activity = $this->db->select('distinct (usr.email), pl.plant_name')->from('admisecsgp_trans_jadwal_patroli jp')
-			->join('admisecsgp_mstusr as usr', 'usr.admisecsgp_mstplant_plant_id = jp.admisecsgp_mstplant_plant_id')
-			->join('admisecsgp_mstplant as pl', 'pl.plant_id = jp.admisecsgp_mstplant_plant_id')
-			->join('admisecsgp_mstzone as zn', 'pl.plant_id = zn.admisecsgp_mstplant_plant_id')
-			->join('admisecsgp_trans_headers ath ', 'zn.zone_id = ath.admisecsgp_mstzone_zone_id')
-			->join('admisecsgp_trans_details atd ', 'ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id')
-			->where("usr.admisecsgp_mstroleusr_role_id ='ADMRL0768'")
-			->where("usr.email IS NOT NULL")
-			->where("atd.laporkan_pic =  1")
-			->where('jp.id_jadwal_patroli', $idJadwalPatroli)->get();
 
-		$PICEmail = $activity->result_array();
-		foreach ($PICEmail as $pic) {
-			if ($pic['email'] != null) {
-				$params = [
-					'plant_name' => $pic['plant_name']
-				];
-				$to = $pic['email'];
-				$subject = 'TEMUAN PATROLI DI ' . strtoupper($pic['plant_name']);
-				$body = $this->load->view('template/email/email_laporkan_pic', $params, true);
-				if (sendMail($to, $subject, $body)) {
-					echo "email sent successfully";
-				} else {
-					echo "Failed sent email";
-				}
-			}
-		}
-		return $PICEmail;
-
-	}
 
 	public function getPatrolActivity_get()
 	{

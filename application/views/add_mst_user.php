@@ -42,12 +42,6 @@
                         <h3 class="card-title">Tambah Data</h3>
 
                         <div class="card-tools">
-                            <!-- <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                                <i class="fas fa-times"></i>
-                            </button> -->
                         </div>
                     </div>
                     <form onsubmit="return cek()" action="<?= base_url('Mst_user/input') ?>" method="post" id="inputPlant">
@@ -92,7 +86,14 @@
                                     <?php endforeach ?>
                                 </select>
                             </div>
-
+							<div class="form-group">
+								<label for="">GROUP PATROLI</label>
+								<select name="group" class="form-control" id="">
+									<?php foreach ($groups as $group) : ?>
+										<option value="<?= $group ?>"><?= $group ?></option>
+									<?php endforeach ?>
+								</select>
+							</div>
 
                             <div class="form-group">
                                 <label for="">STATUS</label>

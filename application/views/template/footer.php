@@ -23,7 +23,8 @@
        <!-- AdminLTE for demo purposes -->
        <script src="<?= base_url('assets') ?>/dist/js/demo.js"></script>
        <!-- DataTables  & Plugins -->
-       <script src="<?= base_url('assets') ?>/dist/js/jquery.dataTables.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/vendor/jszip/jszip.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/jquery.dataTables.min.js"></script>
        <script src="<?= base_url('assets') ?>/dist/js/dataTables.bootstrap4.min.js"></script>
        <script src="<?= base_url('assets') ?>/dist/js/dataTables.responsive.min.js"></script>
        <script src="<?= base_url('assets') ?>/dist/js/responsive.bootstrap4.min.js"></script>
@@ -39,8 +40,6 @@
        <script>
            //Initialize Select2 Elements
            $('.select2').select2()
-
-
            $("#example2").DataTable({
                "paging": true,
                "lengthChange": false,
@@ -131,6 +130,15 @@
                            });
                    },
                });
+
+			   $.ajax({
+				   url: "<?=base_url('Laporan_Abnormal/total_temuan')?>",
+				   type: 'GET',
+				   dataType: 'json', // added data type
+				   success: function(res) {
+					   $('#badge_total_temuan').text(res['total_temuan'])
+				   }
+			   });
            });
        </script>
 

@@ -1,6 +1,9 @@
 <?php
 
 
+/**
+ * @property DateTimeImmutable $dateNow
+ */
 class Laporan_Temuan extends CI_Controller
 {
 
@@ -13,6 +16,8 @@ class Laporan_Temuan extends CI_Controller
 			$this->session->set_flashdata('info_login', 'anda harus login dulu');
 			redirect('Login');
 		}
+		$this->dateNow = new DateTimeImmutable('now', new DateTimeZone('Asia/Jakarta'));
+
 		$role = $this->session->userdata('role');
 		if ($role != "SUPERADMIN") {
 			redirect('Login');
@@ -24,13 +29,13 @@ class Laporan_Temuan extends CI_Controller
 	public function index()
 	{
 		$dataTemuan = $this->M_LaporanTemuan->getTotalTemuan();
-		$byKategoriObjek = $this->M_LaporanTemuan->getTotalTemuanByKategoriObject();
+//		$byKategoriObjek = $this->M_LaporanTemuan->getTotalTemuanByKategoriObject();
 
 		$sidebarData = [
 			'link' => $this->uri->segment(1),
 		];
 		$data = [
-			'by_kategori_objek' => $byKategoriObjek,
+//			'by_kategori_objek' => $byKategoriObjek,
 			'data_temuan' => $dataTemuan
 		];
 		$this->load->view("template/sidebar", $sidebarData);
@@ -65,22 +70,10 @@ class Laporan_Temuan extends CI_Controller
 			->set_output(json_encode($result));
 	}
 
-	public function update_status_temuan()
-	{
-		$trans_detail_id = $this->input->post("trans_detail_id");
-		$catatan_tindakan = $this->input->post("catatan_tindakan");
-		$data = [
-			'deskripsi_tindakan' => $catatan_tindakan,
-			'status_temuan' => 1
-		];
-		$update = $this->M_LaporanTemuan->updateData('admisecsgp_trans_details', $data, 'trans_detail_id', $trans_detail_id);
-		if ($update) {
-			$this->session->set_flashdata('info', '<i class="icon fas fa-check"></i> Berhasil update data temuan');
-		} else {
-			$this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal update data temuan');
-		}
-//		var_dump($update);
-		redirect('Laporan_Temuan');
+	function sendEmailPIC(){
+		$this->load->model(['M_restPatrol']);
+		$result = $this->M_restPatrol->sendEmailPIC('ADMJP0610225cd4adNme');
+		var_dump($result);
 	}
 
 }

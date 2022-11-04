@@ -39,44 +39,44 @@
 			<div class="col-md-12">
 				<div class="row justify-content-center">
 
-				<div class="card col-6 "><!-- /.card-header -->
-					<div class="card-body p-4">
-						<div class="row justify-content-center">
-							<div class="col-lg-4">
-								<div class="form-group">
-									<label for="">PLANT</label>
-									<select name="plant" class="form-control" id="plant">
-										<option value="">--- Pilih Plant ---</option>
-										<?php foreach ($plant->result() as $pl) :
-											if ($pl->plant_id == $plant_id) { ?>
-												<option selected
-														value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
-											<?php } else { ?>
-												<option value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
-											<?php }
-										endforeach ?>
-									</select>
+					<div class="card col-6 "><!-- /.card-header -->
+						<div class="card-body p-4">
+							<div class="row justify-content-center">
+								<div class="col-lg-4">
+									<div class="form-group">
+										<label for="">PLANT</label>
+										<select name="plant" class="form-control" id="plant">
+											<option value="">--- Pilih Plant ---</option>
+											<?php foreach ($plant->result() as $pl) :
+												if ($pl->plant_id == $plant_id) { ?>
+													<option selected
+															value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
+												<?php } else { ?>
+													<option value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
+												<?php }
+											endforeach ?>
+										</select>
+									</div>
 								</div>
-							</div>
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label for="reportrange">TANGGAL</label>
-									<input type="text" id="reportrange" class="form-control">
-									<!--										<input type="text" class="form-control" id="date-range">-->
+								<div class="col-lg-6">
+									<div class="form-group">
+										<label for="reportrange">TANGGAL</label>
+										<input type="text" id="reportrange" class="form-control">
+										<!--										<input type="text" class="form-control" id="date-range">-->
+									</div>
 								</div>
-							</div>
 
-							<div class="col-lg-2">
-								<div style="margin-top: 10px;position:absolute" class="form-group">
-									<button name="filter" id="filter" class="btn btn-primary btn-sm mt-4"><i
-												class="fa fa-search"></i> FILTER
-									</button>
+								<div class="col-lg-2">
+									<div style="margin-top: 10px;position:absolute" class="form-group">
+										<button name="filter" id="filter" class="btn btn-primary btn-sm mt-4"><i
+													class="fa fa-search"></i> FILTER
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
+						<!-- /.card-footer -->
 					</div>
-					<!-- /.card-footer -->
-				</div>
 				</div>
 
 				<div class="card">
@@ -136,7 +136,8 @@
 					<!-- /.card-header -->
 					<div class="card-body p-4">
 						<div class="table-responsive ">
-							<table class="table table-sm m-0 table-hover" id="tablePatroliDiluarJadwal" style="width: 100%">
+							<table class="table table-sm m-0 table-hover" id="tablePatroliDiluarJadwal"
+								   style="width: 100%">
 								<thead>
 								<tr>
 									<th>Tgl Patroli</th>
@@ -243,8 +244,6 @@
 			return param
 		}
 
-
-
 		let tablePatroli = $('#tablePatroli').DataTable({
 			paging: true,
 			scrollX: true,
@@ -278,18 +277,18 @@
 				{data: 'name'},
 				{
 					data: 'start_at', render: function (data, type, row) {
-						if(data){
+						if (data) {
 							return moment(data).format('lll')
-						}else {
+						} else {
 							return '-'
 						}
 					}
 				},
 				{
 					data: 'end_at', render: function (data, type, row) {
-						if(data){
+						if (data) {
 							return moment(data).format('lll')
-						}else{
+						} else {
 							return '-'
 						}
 					}
@@ -327,7 +326,8 @@
 						}
 						return '<span class="bg-danger d-block text-center">' + row.chekpoint_patroli + '/' + row.total_ckp + '</span>'
 					}
-				}, {
+				},
+				{
 					data: null,
 					render: function (data, type, row) {
 						let persentage = 0
@@ -348,10 +348,11 @@
 
 						return '<span class="bg-danger d-block text-center">' + persentage + '%</span>'
 					}
-				}, {
+				},
+				{
 					data: null,
 					render: function (data, type, row) {
-						return '<a href="<?=base_url('Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk='+row.npk+'&type=0" class="btn btn-sm btn-info">Detail</a>'
+						return '<a href="<?=base_url('Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=0" class="btn btn-sm btn-info">Detail</a>'
 					}
 				},
 			],
@@ -395,18 +396,18 @@
 				{data: 'name'},
 				{
 					data: 'start_at', render: function (data, type, row) {
-						if(data){
+						if (data) {
 							return moment(data).format('lll')
-						}else {
+						} else {
 							return '-'
 						}
 					}
 				},
 				{
 					data: 'end_at', render: function (data, type, row) {
-						if(data){
+						if (data) {
 							return moment(data).format('lll')
-						}else{
+						} else {
 							return '-'
 						}
 					}
@@ -468,7 +469,10 @@
 				}, {
 					data: null,
 					render: function (data, type, row) {
-						return '<a href="<?=base_url('Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk='+row.npk+'&type=1" class="btn btn-sm btn-info">Detail</a>'
+						if (data.start_at == null || data.end_at == null) {
+							return ''
+						}
+						return '<a href="<?=base_url('Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=1" class="btn btn-sm btn-info">Detail</a>'
 					}
 				},
 			],
@@ -481,14 +485,31 @@
 		new $.fn.dataTable.Buttons(tablePatroli, {
 			buttons: [
 				{
+					text: '<i class="fa fa-files-o"></i> XLSX',
+					titleAttr: 'EXCEL',
+					className: 'btn btn-default btn-sm',
+					action: function (e, dt, node, config) {
+						var drp = $('#reportrange').data('daterangepicker');
+						let start = drp.startDate.format('YYYY-MM-DD')
+						let end = drp.endDate.format('YYYY-MM-DD')
+						let plantId = $('#plant').find(":selected").val()
+						let type = 0
+
+						window.open(
+							'<?=base_url('Laporan_patroli/downloadLaporanPatroli?')?>plantId='+plantId+'&start='+start+'&end='+end+'&type='+type,
+							'_blank'
+						);
+					}
+				},
+				{
 					extend: 'csv',
 					text: '<i class="fa fa-files-o"></i> CSV',
 					titleAttr: 'CSV',
 					className: 'btn btn-default btn-sm',
 					exportOptions: {
-						columns: ':visible'
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 					},
-					filename: function(){
+					filename: function () {
 						var d = new Date();
 						return 'laporan_patroli_' + d.getTime();
 					},
@@ -499,7 +520,7 @@
 					titleAttr: 'Print',
 					className: 'btn btn-default btn-sm',
 					exportOptions: {
-						columns: ':visible'
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 					},
 
 				},
@@ -511,17 +532,35 @@
 		new $.fn.dataTable.Buttons(tablePatroliDiluarJadwal, {
 			buttons: [
 				{
+					text: '<i class="fa fa-files-o"></i> XLSX',
+					titleAttr: 'EXCEL',
+					className: 'btn btn-default btn-sm',
+					action: function (e, dt, node, config) {
+						var drp = $('#reportrange').data('daterangepicker');
+						let start = drp.startDate.format('YYYY-MM-DD')
+						let end = drp.endDate.format('YYYY-MM-DD')
+						let plantId = $('#plant').find(":selected").val()
+						let type = 1
+
+						window.open(
+							'<?=base_url('Laporan_patroli/downloadLaporanPatroli?')?>plantId='+plantId+'&start='+start+'&end='+end+'&type='+type,
+							'_blank'
+						);
+					}
+				},
+				{
 					extend: 'csv',
 					text: '<i class="fa fa-files-o"></i> CSV',
 					titleAttr: 'CSV',
 					className: 'btn btn-default btn-sm',
 					exportOptions: {
-						columns: ':visible'
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 					},
-					filename: function(){
+					filename: function () {
 						var d = new Date();
-						return 'laporan_patroli_' + d.getTime();
+						return 'laporan_patroli_diluar_jadwal_' + d.getTime();
 					},
+
 				},
 				{
 					extend: 'print',
@@ -529,7 +568,7 @@
 					titleAttr: 'Print',
 					className: 'btn btn-default btn-sm',
 					exportOptions: {
-						columns: ':visible'
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 					},
 
 				},

@@ -23,13 +23,16 @@
        <!-- AdminLTE for demo purposes -->
        <script src="<?= base_url('assets') ?>/dist/js/demo.js"></script>
        <!-- DataTables  & Plugins -->
-       <script src="<?= base_url('assets') ?>/dist/js/jquery.dataTables.min.js"></script>
-       <script src="<?= base_url('assets') ?>/dist/js/dataTables.bootstrap4.min.js"></script>
-       <script src="<?= base_url('assets') ?>/dist/js/dataTables.responsive.min.js"></script>
-       <script src="<?= base_url('assets') ?>/dist/js/responsive.bootstrap4.min.js"></script>
-       <script src="<?= base_url('assets') ?>/dist/js/dataTables.buttons.min.js"></script>
-       <script src="<?= base_url('assets') ?>/dist/js/buttons.bootstrap4.min.js"></script>
-       <!-- Select2 -->
+	   <script src="<?= base_url('assets') ?>/dist/js/vendor/jszip/jszip.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/jquery.dataTables.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/dataTables.bootstrap4.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/dataTables.responsive.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/responsive.bootstrap4.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/dataTables.buttons.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/buttons.bootstrap4.min.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/buttons.print.js"></script>
+	   <script src="<?= base_url('assets') ?>/dist/js/buttons.html5.js"></script>
+	   <!-- Select2 -->
        <script src="<?= base_url('assets') ?>/dist/select2/js/select2.full.min.js"></script>
        <!-- date-range-picker -->
        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
@@ -129,6 +132,14 @@
                dateFormat: 'yy-mm-dd',
                autoclose: true
            });
+		   $.ajax({
+			   url: "<?=base_url('Admin/Laporan_Abnormal/total_temuan')?>",
+			   type: 'GET',
+			   dataType: 'json', // added data type
+			   success: function(res) {
+				   $('#badge_total_temuan').text(res['total_temuan'])
+			   }
+		   });
        </script>
 
        </html>
