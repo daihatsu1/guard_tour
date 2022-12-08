@@ -123,29 +123,62 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<div class="card">
 					<div class="card-body">
-						<div class="row mb-5">
-							<div class="col-md-12">
-								<p class="text-center mb-2">
-									<strong>Temuan Group Per Plant
-									</strong>
-								</p>
-								<div class="d-flex justify-content-center mb-2 month-picker"
-									 data-chart="chartTemuanByUser" data-action="ajaxListPatroliByUser">
-								</div>
+						<p class="text-center mb-2">
+							<strong>Temuan Group Per Plant
+							</strong>
+						</p>
+						<div class="d-flex justify-content-center mb-2 month-picker"
+							 data-chart="chartTemuanByUser" data-action="ajaxListPatroliByUser">
+						</div>
 
-								<div class="chart">
-									<canvas id="chartTemuanByUser" style="height: 300px;"></canvas>
-								</div>
-								<!-- /.chart-responsive -->
-							</div>
-							<!-- /.col -->
+						<div class="chart">
+							<canvas id="chartTemuanByUser" style="height: 300px;"></canvas>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<p class="text-center mb-2">
+							<strong>Patroli Group Per Plant
+							</strong>
+						</p>
+						<div class="d-flex justify-content-center mb-2 month-picker"
+							 data-chart="chartPatroliByUser" data-action="ajaxListPatroliByUser">
+						</div>
+
+						<div class="chart">
+							<canvas id="chartPatroliByUser" style="height: 300px;"></canvas>
+						</div>
+						<!-- /.chart-responsive -->
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<p class="text-center mb-2">
+							<strong>Temuan Berdasarkan Plant
+							</strong>
+						</p>
+						<div class="d-flex justify-content-center mb-2 month-picker"
+							 data-chart="chartTemuanbyPlant" data-action="ajaxTemuanbyPlant">
+						</div>
+
+						<div class="chart">
+							<canvas id="chartTemuanbyPlant" style="height: 300px;"></canvas>
+						</div>
+					</div>
+				</div>
+				<!-- /.chart-responsive -->
+			</div>
+
+		</div>
+		<div class="row">
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -436,8 +469,8 @@
 	}
 
 	//   PATROL GROUP
-	const ctxChartTemuanByUser = document.getElementById('chartTemuanByUser').getContext('2d');
-	const chartTemuanByUser = new Chart(ctxChartTemuanByUser, {
+	const ctxChartPatroliByUser = document.getElementById('chartPatroliByUser').getContext('2d');
+	const chartPatroliByUser = new Chart(ctxChartPatroliByUser, {
 		type: 'bar',
 		data: {},
 		options: {
@@ -478,8 +511,110 @@
 			method: "GET",
 			data: params,
 			success: function (data) {
+				chartPatroliByUser.data = data
+				chartPatroliByUser.update()
+			}
+		});
+	}
+
+	const ctxChartTemuanByUser = document.getElementById('chartTemuanByUser').getContext('2d');
+	const chartTemuanByUser = new Chart(ctxChartTemuanByUser, {
+		type: 'bar',
+		data: {},
+		options: {
+			maintainAspectRatio: false,
+			responsive: true,
+			legend: {
+				display: true,
+			},
+			scales: {
+				xAxes: [{
+					stacked: true,
+					gridLines: {
+						display: true
+					}
+				}],
+				yAxes: [{
+					stacked: true,
+					gridLines: {
+						display: false
+					},
+					ticks: {
+						beginAtZero: true,
+						stepSize: 1
+					}
+				}]
+			},
+			plugins: {
+				colorschemes: {
+					scheme: 'brewer.DarkTwo5',
+				},
+			}
+		}
+	});
+
+	function ajaxListTemuanByUser(params) {
+		$.ajax({
+			url: "<?=base_url('Dashboard/listTemuanByUser') ?>",
+			method: "GET",
+			data: params,
+			success: function (data) {
 				chartTemuanByUser.data = data
 				chartTemuanByUser.update()
+			}
+		});
+	}
+
+	// PLANT
+	const ctxChartTemuanbyPlant = document.getElementById('chartTemuanbyPlant').getContext('2d');
+	const chartTemuanbyPlant = new Chart(ctxChartTemuanbyPlant, {
+		type: 'bar',
+		data: {},
+		options: {
+			maintainAspectRatio: false,
+			responsive: true,
+			legend: {
+				display: true
+			},
+			scales: {
+				xAxes: [{
+					gridLines: {
+						display: true
+					}
+				}],
+				yAxes: [{
+					gridLines: {
+						display: false
+					},
+					ticks: {
+						beginAtZero: true,
+						stepSize: 1
+					}
+				}]
+			},
+			tooltips: {
+				callbacks: {
+					title: function (tooltipItem, data) {
+						return data.datasets[tooltipItem[0].datasetIndex].data[0].x;
+					}
+				}
+			},
+			plugins: {
+				colorschemes: {
+					scheme: 'brewer.DarkTwo5',
+				},
+			}
+		}
+	});
+
+	function ajaxTemuanByPlant(params) {
+		$.ajax({
+			url: "<?=base_url('Dashboard/temuanTindakanPlant') ?>",
+			method: "GET",
+			data: params,
+			success: function (data) {
+				chartTemuanbyPlant.data = data
+				chartTemuanbyPlant.update()
 			}
 		});
 	}
@@ -615,7 +750,8 @@
 					},
 					ticks: {
 						beginAtZero: true,
-						stepSize: 1
+						// stepSize: 1,
+						// min: 10,
 					}
 				}]
 			},
@@ -682,6 +818,7 @@
 			}
 		}
 	});
+
 	function ajaxTrenPatroli(params) {
 		$.ajax({
 			url: "<?=base_url('Dashboard/tren_patroli') ?>",
@@ -767,6 +904,9 @@
 			ajaxTemuanPlant()
 			ajaxPatroliPlant()
 			ajaxListPatroliByUser(defaultParams)
+			ajaxTemuanPlant(defaultParams)
+			ajaxTemuanByPlant(defaultParams)
+			ajaxListTemuanByUser(defaultParams)
 			ajaxTemuanKategori(defaultParams)
 			ajaxTemuanZone(defaultParams)
 			ajaxTrenTemuan(defaultParams)

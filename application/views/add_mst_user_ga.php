@@ -64,6 +64,13 @@
 								<label for="email">EMAIL</label>
 								<input type="text" name="email" autocomplete="off" id="email" class="form-control" required>
 							</div>
+							<div class="form-group">
+								<label for="">TYPE</label>
+								<select name="type" class="form-control" id="" required>
+									<option value="1">GA</option>
+									<option value="0">CC</option>
+								</select>
+							</div>
                             <div class="form-group">
                                 <label for="">STATUS</label>
                                 <select name="status" class="form-control" id="" required>

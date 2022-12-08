@@ -51,6 +51,7 @@
 								<th>EMAIL</th>
 								<th>PLANT</th>
 								<th>STATUS</th>
+								<th>TYPE</th>
 								<th>ACTION</th>
 							</tr>
 							</thead>
@@ -63,6 +64,7 @@
 									<td><?= strtoupper($zn->email) ?></td>
 									<td><?= $zn->admisecsgp_mstplant_plant_id ?></td>
 									<td><?= $zn->status == 1 ? 'ACTIVE' : 'INACTIVE' ?></td>
+									<td><?= $zn->type == 1 ? 'GA' : 'CC' ?></td>
 									<td>
 										<a href="<?= base_url('Mst_user_ga/hapus/' . $zn->id) ?>"
 										   onclick="return confirm('Yakin Hapus ?')" class='text-danger'

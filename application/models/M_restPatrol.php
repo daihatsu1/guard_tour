@@ -10,6 +10,8 @@ class M_restPatrol extends CI_Model
 		$this->table = 'admisecsgp_trans_jadwal_patroli';
 		$ci = get_instance();
 		$ci->load->helper(['date_time', 'db_settings']);
+		$ci->load->model(['M_LaporanTemuan']);
+
 	}
 
 	function getCurrentShift($dateTime)
@@ -33,14 +35,17 @@ class M_restPatrol extends CI_Model
 	function getShift($date)
 	{
 		$date = $date->format('Y-m-d');
-		$sql = "select *
+		$settings = get_setting('end_patrol_time_threshold');
+		$threshold = $settings->nilai_setting;
+		$sql = "select shift_id, nama_shift, jam_masuk, DATEADD(MINUTE, ".$threshold.", shift.jam_pulang) as jam_pulang
 				from (
 						select shift_id,
 							 nama_shift,
 							 CAST('" . $date . "' AS DATETIME) + CAST(jam_masuk AS DATETIME)       as jam_masuk,
 							 IIF(s.jam_masuk > s.jam_pulang,
 								 DATEADD(day, 1, CAST('" . $date . "' AS DATETIME) + CAST(jam_pulang AS DATETIME)),
-								 CAST('" . $date . "' AS DATETIME) + CAST(jam_pulang AS DATETIME)) as jam_pulang
+								 CAST('" . $date . "' AS DATETIME) + CAST(jam_pulang AS DATETIME))
+								 as jam_pulang
 					  	from admisecsgp_mstshift s
 					  	where nama_shift != 'LIBUR') as shift";
 		return $this->db->query($sql)->result();
@@ -51,12 +56,13 @@ class M_restPatrol extends CI_Model
 	{
 		$date = $dateTime->format('Y-m-d');
 		$settings = get_setting('end_patrol_time_threshold');
+		$threshold = $settings->nilai_setting;
 		$sql = "select id_jadwal_patroli,
     					s.nama_shift                                                                 as shift,
 					   	s.shift_id,
 					   	CONVERT(varchar,s.jam_masuk, 24) as jam_masuk,
 						IIF(s.nama_shift = 'LIBUR', CONVERT(varchar, s.jam_pulang, 24),
-						   CONVERT(varchar, DATEADD(MINUTE, -29, s.jam_pulang), 24)) as jam_pulang,
+						   CONVERT(varchar, DATEADD(MINUTE, ".$threshold.", s.jam_pulang), 24)) as jam_pulang,
 					   	p.plant_name,
 					   	p.plant_id                                                                   as plant_id
 				from admisecsgp_trans_jadwal_patroli,
@@ -231,7 +237,7 @@ class M_restPatrol extends CI_Model
 	public function sendEmailPIC($idJadwalPatroli)
 	{
 		$this->load->helper('email');
-		$activity = $this->db->select('distinct (usr.email), pl.plant_name')->from('admisecsgp_trans_jadwal_patroli jp')
+		$activity = $this->db->select('distinct (usr.email), pl.plant_name, pl.plant_id')->from('admisecsgp_trans_jadwal_patroli jp')
 			->join('admisecsgp_mstusr_ga as usr', 'usr.admisecsgp_mstplant_plant_id = jp.admisecsgp_mstplant_plant_id')
 			->join('admisecsgp_mstplant as pl', 'pl.plant_id = jp.admisecsgp_mstplant_plant_id')
 			->join('admisecsgp_mstzone as zn', 'pl.plant_id = zn.admisecsgp_mstplant_plant_id')
@@ -240,26 +246,44 @@ class M_restPatrol extends CI_Model
 			->where("usr.status = 1")
 			->where("usr.email IS NOT NULL")
 			->where("atd.laporkan_pic =  1")
-			->where('jp.id_jadwal_patroli', $idJadwalPatroli)->get();
+			->where('jp.id_jadwal_patroli',
+				$idJadwalPatroli)->get();
+
+		$dataTemuan = $this->M_LaporanTemuan->getDataTemuanPICByJadwal($idJadwalPatroli);
 
 		$PICEmail = $activity->result_array();
-		foreach ($PICEmail as $pic) {
-			if ($pic['email'] != null) {
-				$params = [
-					'plant_name' => $pic['plant_name']
-				];
-				$to = $pic['email'];
-				$subject = 'TEMUAN PATROLI DI ' . strtoupper($pic['plant_name']);
-				$body = $this->load->view('template/email/email_laporkan_pic', $params, true);
-				if (sendMail($to, $subject, $body)) {
-					echo "email sent successfully";
+		if (count($PICEmail) > 0) {
+			$plantId = $PICEmail[0]['plant_id'];
+			$sql = $this->db->select('email')
+				->from('admisecsgp_mstusr_ga')
+				->where('type', 0)
+				->where('status', 1)
+				->where('admisecsgp_mstplant_plant_id', $plantId)
+				->get()
+				->result_array();
+			$cc = array_column($sql, "email");
+			foreach ($PICEmail as $pic) {
+				if ($pic['email'] != null) {
+					$params = [
+						'plant_name' => $pic['plant_name'],
+						'dataTemuan' => $dataTemuan
+					];
+					$to = $pic['email'];
+					$subject = 'TEMUAN PATROLI DI ' . strtoupper($pic['plant_name']);
+					$body = $this->load->view('template/email/email_pic', $params, true);
+					if (sendMail($to, $cc, $subject, $body)) {
+						echo "Email sent successfully.";
+					} else {
+						echo "Failed sent email.";
+					}
 				} else {
-					echo "Failed sent email";
+					var_dump($pic);
+					log_message('error', 'PIC Tidak memiliki email');
+
 				}
-			} else {
-				var_dump($pic);
 			}
+			return $PICEmail;
 		}
-		return $PICEmail;
+		return 'Tidak ada tindakan pic';
 	}
 }

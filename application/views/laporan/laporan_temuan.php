@@ -52,9 +52,9 @@
 									<th data-filter="select">Chekpoint</th>
 									<th data-filter="input">Nama Objek</th>
 									<th data-filter="input">Deskripsi Temuan</th>
+									<th data-filter="input">Deskripsi Tindakan</th>
 									<th data-filter="select">Status</th>
 									<th>Waktu Tindakan</th>
-									<th>Deskripsi Tindakan</th>
 								</tr>
 								</thead>
 								<tbody>
@@ -130,6 +130,16 @@
 				{data: 'nama_objek'},
 				{data: 'description'},
 				{
+					data: 'deskripsi_tindakan',
+					visible: true,
+					render: function (data, type, row) {
+						if (data === 'null') {
+							return '<span class="text-center">-</span>'
+						}
+						return data
+					}
+				},
+				{
 					data: 'status_temuan',
 					render: function (data, type, row) {
 						if (data === 1) {
@@ -149,16 +159,7 @@
 						return data
 					}
 				},
-				{
-					data: 'deskripsi_tindakan',
-					visible: false,
-					render: function (data, type, row) {
-						if (data == null) {
-							return '-'
-						}
-						return data
-					}
-				},
+
 
 			],
 			initComplete: function () {

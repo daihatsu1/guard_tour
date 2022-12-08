@@ -70,9 +70,10 @@ class Laporan_Temuan extends CI_Controller
 			->set_output(json_encode($result));
 	}
 
-	function sendEmailPIC(){
+	function sendEmailPIC()
+	{
 		$this->load->model(['M_restPatrol']);
-		$result = $this->M_restPatrol->sendEmailPIC('ADMJP0610225cd4adNme');
+		$result = $this->M_restPatrol->sendEmailPIC('ADMJP311022976239qJx');
 		var_dump($result);
 	}
 

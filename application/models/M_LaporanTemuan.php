@@ -22,9 +22,13 @@ class M_LaporanTemuan extends CI_Model
 		return $this->db->update($table, $data);
 	}
 
-	public function list_plants()
+	public function list_plants($plantId = null)
 	{
-		$query = $this->db->query('select plant_name from admisecsgp_mstplant where status =1')->result_array();
+		$where = '';
+		if ($plantId != null) {
+			$where = "and plant_id ='" . $plantId . "'";
+		}
+		$query = $this->db->query('select plant_name from admisecsgp_mstplant where status =1 ' . $where)->result_array();
 		return array_column($query, "plant_name");
 	}
 
@@ -120,7 +124,7 @@ class M_LaporanTemuan extends CI_Model
 							   image_1,
 							   image_2,
 							   image_3,							   
-							   atd.created_at                      as date_patroli,
+							   ath.date_patroli                      as date_patroli,
 							   atd.trans_detail_id,
 							   atd.status,
 							   atd.status_temuan,
@@ -165,7 +169,7 @@ class M_LaporanTemuan extends CI_Model
 							   image_1,
 							   image_2,
 							   image_3,							   
-							   atd.created_at                      as date_patroli,
+							   ath.date_patroli                      as date_patroli,
 							   atd.trans_detail_id,
 							   atd.status,
 							   atd.status_temuan,
@@ -233,6 +237,44 @@ class M_LaporanTemuan extends CI_Model
 					  from admisecsgp_mstkobj kobj
 					  where status = 1) as k order by kategori_name";
 		return $this->db->query($sql)->result();
+	}
+
+	public function getTemuanByPlant($year, $month)
+	{
+		$sql = "select count(distinct atd.trans_detail_id) as total_temuan,
+					   m.plant_name                        as plant_name,
+					   m.plant_id                          as plant_id
+				from admisecsgp_mstusr usr
+						 join admisecsgp_trans_headers ath on ath.admisecsgp_mstusr_npk = usr.npk
+						 join admisecsgp_trans_details atd
+							  on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
+						 join admisecsgp_mstzone az on ath.admisecsgp_mstzone_zone_id = az.zone_id
+						 join admisecsgp_mstplant m on az.admisecsgp_mstplant_plant_id = m.plant_id
+				where status_temuan = 0
+				  and ath.status = 1
+				  and MONTH(ath.date_patroli) = " . $month . "
+				  and YEAR(ath.date_patroli) = " . $year . "
+				group by m.plant_name, m.plant_id";
+		return $this->db->query($sql)->result();
+	}
+
+	public function getTindakanByPlant()
+	{
+		$sql = "select count(trans_detail_id) as total_tindakan, plant_name
+				from (select atd.trans_detail_id, plant_name
+					  from admisecsgp_trans_details atd
+							   left join admisecsgp_trans_headers ath
+										 on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
+							   left join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+							   left join admisecsgp_mstplant pl on zn.admisecsgp_mstplant_plant_id = pl.plant_id
+							   left join admisecsgp_mstusr usr on usr.npk = ath.admisecsgp_mstusr_npk
+					  where atd.status = 0
+						and atd.status_temuan = 1
+						and MONTH(ath.date_patroli) = 11
+						and YEAR(ath.date_patroli) = 2022) as d
+				group by plant_name";
+		return $this->db->query($sql)->result();
+
 	}
 
 	public function getTemuanByUser($year, $month, $plant_id = null)
@@ -387,5 +429,53 @@ class M_LaporanTemuan extends CI_Model
 						order by ath.date_patroli desc;";
 		return $this->db->query($sqlDetail)->result();
 	}
+
+	public function getDataTemuanPICByJadwal($jadwalPatroli)
+	{
+		$sqlDetail = "select usr.name                            as pelaksana,
+						   pl.plant_name,
+						   pl.plant_id,
+						   zn.zone_name,
+						   zn.zone_id,
+						   ckp.checkpoint_id,
+						   ckp.check_name                      as checkpoint_name,
+						   sh.shift_id,
+						   sh.nama_shift,
+						   admisecsgp_mstobj_objek_id          as object_id,
+						   am.nama_objek,
+						   ath.admisecsgp_mstckp_checkpoint_id as chekpoint_id,
+						   description,
+						   image_1,
+						   image_2,
+						   image_3,
+						   atd.created_at                      as date_patroli,
+						   atd.trans_detail_id,
+						   atd.status,
+						   atd.status_temuan,
+						   atd.note_tindakan_cepat,
+						   atd.deskripsi_tindakan,
+						   atd.updated_at,
+						   id_jadwal_patroli
+					from admisecsgp_trans_details atd
+							 left join admisecsgp_trans_headers ath
+									   on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
+							 left join admisecsgp_mstshift sh on sh.shift_id = ath.admisecsgp_mstshift_shift_id
+							 left join admisecsgp_mstobj am on atd.admisecsgp_mstobj_objek_id = am.objek_id
+							 left join admisecsgp_mstckp ckp on ath.admisecsgp_mstckp_checkpoint_id = ckp.checkpoint_id
+							 left join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+							 left join admisecsgp_mstplant pl on zn.admisecsgp_mstplant_plant_id = pl.plant_id
+							 left join admisecsgp_mstusr usr on usr.npk = ath.admisecsgp_mstusr_npk
+							 left join admisecsgp_trans_jadwal_patroli jp on
+								jp.admisecsgp_mstshift_shift_id = sh.shift_id and
+								jp.admisecsgp_mstplant_plant_id = pl.plant_id and
+								usr.npk = jp.admisecsgp_mstusr_npk and
+								jp.date_patroli = ath.date_patroli
+					where atd.status = 0
+					  and atd.laporkan_pic = 1
+					and jp.id_jadwal_patroli ='".$jadwalPatroli."'
+					order by atd.status_temuan, atd.created_at desc";
+		return $this->db->query($sqlDetail)->result();
+	}
+
 
 }

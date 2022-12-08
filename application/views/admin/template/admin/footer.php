@@ -14,11 +14,13 @@
        </div>
        <!-- ./wrapper -->
 
-
-       <!-- Bootstrap 4 -->
+	   <!-- Bootstrap 4 -->
        <script src="<?= base_url('assets') ?>/dist/js/bootstrap.min.js"></script>
+	   <script>
+		   var bsTooltip = $.fn.tooltip;
+	   </script>
        <!--<script src="<?= base_url('assets') ?>/dist/js/bootstrap.bundle.min.js"></script>-->
-       <!-- AdminLTE App -->
+	   <!-- AdminLTE App -->
        <script src="<?= base_url('assets') ?>/dist/js/adminlte.min.js"></script>
        <!-- AdminLTE for demo purposes -->
        <script src="<?= base_url('assets') ?>/dist/js/demo.js"></script>
@@ -29,8 +31,10 @@
        <script src="<?= base_url('assets') ?>/dist/js/responsive.bootstrap4.min.js"></script>
        <script src="<?= base_url('assets') ?>/dist/js/dataTables.buttons.min.js"></script>
        <script src="<?= base_url('assets') ?>/dist/js/buttons.bootstrap4.min.js"></script>
-       <!-- date-range-picker -->
-       <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+	   <!-- date-range-picker -->
+	   <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
        </body>
        <script>
            $("#example2").DataTable({

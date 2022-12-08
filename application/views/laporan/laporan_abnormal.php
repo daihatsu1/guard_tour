@@ -45,14 +45,14 @@
 								<thead>
 								<tr>
 									<th>Foto</th>
-									<th>Tanggal Patroli</th>
-									<th>Shift</th>
-									<th>Plant</th>
-									<th>Zona</th>
-									<th>Chekpoint</th>
-									<th>Nama Objek</th>
-									<th>Deskripsi Temuan</th>
-									<th>Status</th>
+									<th data-filter="input">Tanggal Patroli</th>
+									<th data-filter="select">Shift</th>
+									<th data-filter="select">Plant</th>
+									<th data-filter="select">Zona</th>
+									<th data-filter="input">Chekpoint</th>
+									<th data-filter="input">Nama Objek</th>
+									<th data-filter="input">Deskripsi Temuan</th>
+									<th data-filter="select">Status</th>
 									<th>Action</th>
 								</tr>
 								</thead>
@@ -90,12 +90,12 @@
 								<tr>
 									<th>Foto</th>
 									<th>Tanggal Patroli</th>
-									<th>Shift</th>
-									<th>Plant</th>
-									<th>Zona</th>
-									<th>Chekpoint</th>
-									<th>Nama Objek</th>
-									<th>Deskripsi Temuan</th>
+									<th data-filter="select">Shift</th>
+									<th data-filter="select">Plant</th>
+									<th data-filter="input">Zona</th>
+									<th data-filter="input">Chekpoint</th>
+									<th data-filter="input">Nama Objek</th>
+									<th data-filter="input">Deskripsi Temuan</th>
 								</tr>
 								</thead>
 								<tbody>
@@ -127,12 +127,24 @@
 </style>
 <script>
 	$(function () {
+		$('#tableTemuan thead tr')
+			.clone(true)
+			.addClass('filters')
+			.appendTo('#tableTemuan thead');
+
+		$('#tableTemuanTindakanCepat thead tr')
+			.clone(true)
+			.addClass('filters')
+			.appendTo('#tableTemuanTindakanCepat thead');
+
 		let table = $('#tableTemuan').DataTable({
 			paging: true,
+			orderCellsTop: true,
+			fixedHeader: true,
 			lengthChange: true,
 			searching: true,
 			ordering: true,
-			info: true,
+			info: false,
 			autoWidth: false,
 			responsive: true,
 			processing: true,
@@ -235,19 +247,56 @@
 				}
 			],
 			initComplete: function () {
-				this.api().columns([3, 5, 6, 8]).every(function () {
-					let column = this;
+				var api = this.api();
+
+				function initFilterInput(api, cell, colIdx) {
+					var title = $(cell).text();
+					$(cell).html('<input type="text"  class="form-control form-control-sm" placeholder="' + title + '" />');
+					// On every keypress in this input
+					$(
+						'input',
+						$('.filters th').eq($(api.column(colIdx).header()).index())
+					)
+						.off('keyup change')
+						.on('change', function (e) {
+							// Get the search value
+							$(this).attr('title', $(this).val());
+							var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+							var cursorPosition = this.selectionStart;
+							// Search the column for that value
+							api
+								.column(colIdx)
+								.search(
+									this.value !== ''
+										? regexr.replace('{search}', '(((' + this.value + ')))')
+										: '',
+									this.value !== '',
+									this.value === ''
+								)
+								.draw();
+						})
+						.on('keyup', function (e) {
+							e.stopPropagation();
+
+							$(this).trigger('change');
+							$(this)
+								.focus()[0]
+								.setSelectionRange(cursorPosition, cursorPosition);
+						});
+				}
+
+				function initFilterSelect(api, cell, colIdx) {
 					let select = $('<select class="form-control form-control-sm"><option value=""> -- Filter -- </option></select>')
-						.appendTo($(column.header()))
 						.on('change', function () {
 							const val = $.fn.dataTable.util.escapeRegex($(this).val());
-							column
+							api.column(colIdx)
 								.search(val ? '^' + val + '$' : '', true, false)
 								.draw();
 						});
-
-					column.data().unique().sort().each(function (d, j) {
-						let cols = column.selector.cols
+					$(cell).html(select);
+					api.column(colIdx).data().unique().sort().each(function (d, j) {
+						let cols = api.column(colIdx).selector.cols
 						if (cols === 8) {
 							if (d === 1) {
 								select.append('<option value="CLOSE">CLOSE</option>')
@@ -258,7 +307,33 @@
 							select.append('<option value="' + d + '">' + d + '</option>')
 						}
 					});
-				});
+				}
+
+				// For each column
+				api
+					.columns()
+					.eq(0)
+					.each(function (colIdx) {
+						// Set the header cell to contain the input element
+						var cell = $('#tableTemuan .filters th').eq(
+							$(api.column(colIdx).header()).index()
+						);
+						console.log()
+						let filterType = $(cell).data("filter");
+						switch (filterType) {
+							case 'select':
+								initFilterSelect(api, cell, colIdx)
+								break;
+
+							case 'input':
+								initFilterInput(api, cell, colIdx)
+								break
+							default:
+								console.log(colIdx, 'no filter')
+								$(cell).html('')
+								break;
+						}
+					});
 			}
 		});
 		new $.fn.dataTable.Buttons(table, {
@@ -310,12 +385,16 @@
 		});
 		table.buttons().container().appendTo('#tableTemuan_filter');
 
+
+
 		let tableTemuanTindakanCepat = $('#tableTemuanTindakanCepat').DataTable({
 			paging: true,
+			orderCellsTop: true,
+			fixedHeader: true,
 			lengthChange: true,
 			searching: true,
 			ordering: true,
-			info: true,
+			info: false,
 			autoWidth: false,
 			responsive: true,
 			processing: true,
@@ -346,30 +425,86 @@
 				{data: 'description'}
 			],
 			initComplete: function () {
-				this.api().columns([3, 5, 6]).every(function () {
-					let column = this;
+				var api = this.api();
+				console.log(this)
+
+				function initFilterInput(api, cell, colIdx) {
+					var title = $(cell).text();
+					$(cell).html('<input type="text"  class="form-control form-control-sm" placeholder="' + title + '" />');
+					// On every keypress in this input
+					$(
+						'input',
+						$('.filters th').eq($(api.column(colIdx).header()).index())
+					)
+						.off('keyup change')
+						.on('change', function (e) {
+							// Get the search value
+							$(this).attr('title', $(this).val());
+							var regexr = '({search})'; //$(this).parents('th').find('select').val();
+
+							var cursorPosition = this.selectionStart;
+							// Search the column for that value
+							api
+								.column(colIdx)
+								.search(
+									this.value !== ''
+										? regexr.replace('{search}', '(((' + this.value + ')))')
+										: '',
+									this.value !== '',
+									this.value === ''
+								)
+								.draw();
+						})
+						.on('keyup', function (e) {
+							e.stopPropagation();
+
+							$(this).trigger('change');
+							$(this)
+								.focus()[0]
+								.setSelectionRange(cursorPosition, cursorPosition);
+						});
+				}
+
+				function initFilterSelect(api, cell, colIdx) {
 					let select = $('<select class="form-control form-control-sm"><option value=""> -- Filter -- </option></select>')
-						.appendTo($(column.header()))
 						.on('change', function () {
 							const val = $.fn.dataTable.util.escapeRegex($(this).val());
-							column
+							api.column(colIdx)
 								.search(val ? '^' + val + '$' : '', true, false)
 								.draw();
 						});
+					$(cell).html(select);
+					console.log(cell, select)
+					api.column(colIdx).data().unique().sort().each(function (d, j) {
+						let cols = api.column(colIdx).selector.cols
+						select.append('<option value="' + d + '">' + d + '</option>')
+					});
+				}
 
-					column.data().unique().sort().each(function (d, j) {
-						let cols = column.selector.cols
-						if (cols === 8) {
-							if (d === 1) {
-								select.append('<option value="CLOSE">CLOSE</option>')
-							} else {
-								select.append('<option value="OPEN">OPEN</option>')
-							}
-						} else {
-							select.append('<option value="' + d + '">' + d + '</option>')
+				// For each column
+				api
+					.columns()
+					.eq(0)
+					.each(function (colIdx) {
+						// Set the header cell to contain the input element
+						var cell = $('#tableTemuanTindakanCepat .filters th').eq(
+							$(api.column(colIdx).header()).index()
+						);
+						let filterType = $(cell).data("filter");
+						switch (filterType) {
+							case 'select':
+								initFilterSelect(api, cell, colIdx)
+								break;
+
+							case 'input':
+								initFilterInput(api, cell, colIdx)
+								break
+							default:
+								console.log(colIdx, 'no filter')
+								$(cell).html('')
+								break;
 						}
 					});
-				});
 			}
 		});
 		new $.fn.dataTable.Buttons(tableTemuanTindakanCepat, {

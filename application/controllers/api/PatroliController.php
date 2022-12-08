@@ -86,7 +86,7 @@ class PatroliController extends RestController
 			'admisecsgp_mstckp_checkpoint_id' => $this->post('admisecsgp_mstckp_checkpoint_id'),
 			'admisecsgp_mstshift_shift_id' => $this->post('admisecsgp_mstshift_shift_id'),
 			'admisecsgp_mstzone_zone_id' => $this->post('admisecsgp_mstzone_zone_id'),
-			'date_patroli' => $this->post('date_patroli'),
+			'date_patroli' => $this->dateNow->format('Y-m-d'),
 			'checkin_checkpoint' => $this->post('checkin_checkpoint'),
 			'checkout_checkpoint' => $this->post('checkout_checkpoint'),
 			'type_patrol' => $this->post('type_patrol'),
@@ -245,7 +245,7 @@ class PatroliController extends RestController
 
 	public function getPatrolActivity_get()
 	{
-		$activity = $this->db->get_where('admisecsgp_patrol_activity', array(
+		$activity = $this->db->order_by("activity_id", "desc")->get_where('admisecsgp_patrol_activity', array(
 			'admisecsgp_trans_jadwal_patroli_id_jadwal_patroli' => $this->get('id_jadwal_patroli')
 		), 1, 0);
 		$count = $activity->num_rows();

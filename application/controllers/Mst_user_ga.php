@@ -47,12 +47,14 @@ class Mst_user_ga extends CI_Controller
 	{
 		$name = strtoupper($this->input->post("nama"));
 		$email = $this->input->post("email");
+		$type = $this->input->post("type");
 		$id_plant = $this->input->post("plant_id");
 		$status = $this->input->post("status");
 
 		$data = [
 			'name' => $name,
 			'email' => $email,
+			'type' => $type,
 			'admisecsgp_mstplant_plant_id' => $id_plant,
 			'status' => $status,
 			'created_at' => date('Y-m-d H:i:s'),
@@ -94,6 +96,7 @@ class Mst_user_ga extends CI_Controller
 	{
 		$id = $this->input->post("id");
 		$name = strtoupper($this->input->post("nama"));
+		$type = $this->input->post("type");
 		$email = $this->input->post("email");
 		$id_plant = $this->input->post("plant_id");
 		$status = $this->input->post("status");
@@ -101,6 +104,7 @@ class Mst_user_ga extends CI_Controller
 		$data = [
 			'name' => $name,
 			'email' => $email,
+			'type' => $type,
 			'admisecsgp_mstplant_plant_id' => $id_plant,
 			'updated_at' => date('Y-m-d H:i:s'),
 			'updated_by' => $this->session->userdata('id_token'),

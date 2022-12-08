@@ -14,7 +14,7 @@ class M_LaporanPatroli extends CI_Model
 	public function getDataPatroli($plantId, $start, $end, $type)
 	{
 		$join = '';
-		if ($type==0){
+		if ($type == 0) {
 			$join = 'left';
 		}
 
@@ -35,39 +35,40 @@ class M_LaporanPatroli extends CI_Model
 						 join admisecsgp_mstshift sh on sh.shift_id = jp.admisecsgp_mstshift_shift_id
 						 join admisecsgp_mstplant pl on jp.admisecsgp_mstplant_plant_id = pl.plant_id
 						 join admisecsgp_mstusr usr on jp.admisecsgp_mstusr_npk = usr.npk
-						 ".$join." join (select ath.date_patroli,
-										   ath.admisecsgp_mstusr_npk                             as npk,
-										   pl.plant_id,
-										   min(ALL ath.checkin_checkpoint)                       as start_at,
-										   max(ath.checkout_checkpoint)                          as end_at,
-										   sh.shift_id,
-										   count(atd.admisecsgp_mstobj_objek_id)                 as target_object,
-										   SUM(IIF(atd.status = 0, 1, 0))                        as total_object_temuan,
-										   SUM(IIF(atd.status = 1, 1, 0))                        as total_object_normal,
-										   (select count(am.checkpoint_id) as co
-											from admisecsgp_trans_zona_patroli zp
-													 join admisecsgp_mstzone z on z.zone_id = zp.admisecsgp_mstzone_zone_id
-													 join admisecsgp_mstplant mp on mp.plant_id = zp.admisecsgp_mstplant_plant_id
-													 join admisecsgp_mstckp am on z.zone_id = am.admisecsgp_mstzone_zone_id
-											where zp.status_zona = 1
-											  and ath.date_patroli = zp.date_patroli
-											  and mp.plant_id = pl.plant_id
-											  and sh.shift_id = zp.admisecsgp_mstshift_shift_id) as total_ckp,
-										   count(distinct ath.admisecsgp_mstckp_checkpoint_id)   as chekpoint_patroli,
-										   ath.type_patrol
-									from admisecsgp_trans_headers ath
-											 left join admisecsgp_trans_details atd
-													   on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
-											 left join admisecsgp_mstshift sh on sh.shift_id = ath.admisecsgp_mstshift_shift_id
-											 left join admisecsgp_mstobj am on atd.admisecsgp_mstobj_objek_id = am.objek_id
-											 left join admisecsgp_mstckp ckp on ath.admisecsgp_mstckp_checkpoint_id = ckp.checkpoint_id
-											 left join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
-											 left join admisecsgp_mstplant pl on zn.admisecsgp_mstplant_plant_id = pl.plant_id
-									where pl.plant_id = '" . $plantId . "'
-									  AND ath.date_patroli BETWEEN '" . $start . "' AND ' ". $end ." '
+						 " . $join . " join (select *,
+									  (select count(am.checkpoint_id) as co
+									   from admisecsgp_trans_zona_patroli zp
+												join admisecsgp_mstzone z on z.zone_id = zp.admisecsgp_mstzone_zone_id
+												join admisecsgp_mstplant mp on mp.plant_id = zp.admisecsgp_mstplant_plant_id
+												join admisecsgp_mstckp am on z.zone_id = am.admisecsgp_mstzone_zone_id
+									   where zp.status_zona = 1
+										 and s.date_patroli = zp.date_patroli
+										 and mp.plant_id = s.plant_id
+										 and s.shift_id = zp.admisecsgp_mstshift_shift_id) as total_ckp
+							   from (select ath.admisecsgp_mstusr_npk                           as npk,
+											pl.plant_id,
+											min(ALL ath.checkin_checkpoint)                     as start_at,
+											max(ath.checkout_checkpoint)                        as end_at,
+											sh.shift_id,
+											count(atd.admisecsgp_mstobj_objek_id)               as target_object,
+											SUM(IIF(atd.status = 0, 1, 0))                      as total_object_temuan,
+											SUM(IIF(atd.status = 1, 1, 0))                      as total_object_normal,
+											count(distinct ath.admisecsgp_mstckp_checkpoint_id) as chekpoint_patroli,
+											ath.type_patrol,
+											min(cast(ath.checkin_checkpoint as date))          as date_patroli
+									 from admisecsgp_trans_headers ath
+											  left join admisecsgp_trans_details atd
+														on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
+											  left join admisecsgp_mstshift sh on sh.shift_id = ath.admisecsgp_mstshift_shift_id
+											  left join admisecsgp_mstobj am on atd.admisecsgp_mstobj_objek_id = am.objek_id
+											  left join admisecsgp_mstckp ckp on ath.admisecsgp_mstckp_checkpoint_id = ckp.checkpoint_id
+											  left join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+											  left join admisecsgp_mstplant pl on zn.admisecsgp_mstplant_plant_id = pl.plant_id
+									 where pl.plant_id = '" . $plantId . "'
+									 AND ath.date_patroli BETWEEN '" . $start . "' AND ' ". $end ." '
 									  AND ath.type_patrol = ".$type."
-									group by ath.date_patroli, sh.nama_shift, pl.plant_name, ath.admisecsgp_mstusr_npk, pl.plant_id,
-											 shift_id, ath.type_patrol) as s
+									 group by sh.nama_shift, pl.plant_name, ath.admisecsgp_mstusr_npk, pl.plant_id,
+											  shift_id, ath.type_patrol) as s) as s
 								   on s.date_patroli = jp.date_patroli
 									   and s.shift_id = jp.admisecsgp_mstshift_shift_id
 									   and s.plant_id = jp.admisecsgp_mstplant_plant_id
@@ -127,9 +128,8 @@ class M_LaporanPatroli extends CI_Model
 											     on pl.plant_id = jp.admisecsgp_mstplant_plant_id
 											     and sh.shift_id = jp.admisecsgp_mstshift_shift_id 
 											            and ath.admisecsgp_mstusr_npk = jp.admisecsgp_mstusr_npk 
-											            and jp.admisecsgp_mstshift_shift_id = ath.admisecsgp_mstshift_shift_id
-						
-									where jp.id_jadwal_patroli = '" . $idJdawal . "' and ath.admisecsgp_mstusr_npk = '".$npk."' AND ath.type_patrol = ".$type."
+											            and jp.admisecsgp_mstshift_shift_id = ath.admisecsgp_mstshift_shift_id	
+									where jp.id_jadwal_patroli = '" . $idJdawal . "' and ath.admisecsgp_mstusr_npk = '" . $npk . "' AND ath.type_patrol = " . $type . "
 									group by ath.date_patroli, sh.nama_shift, pl.plant_name, ath.admisecsgp_mstusr_npk, pl.plant_id,
 											 shift_id) as s
 								   on s.date_patroli = jp.date_patroli
@@ -142,7 +142,7 @@ class M_LaporanPatroli extends CI_Model
 		return $this->db->query($sql)->row();
 	}
 
-	function timelineDetail($idJdawal,$npk, $type)
+	function timelineDetail($idJdawal, $npk, $type)
 	{
 		$sql = "select ath.checkin_checkpoint                                            as start_at,
 					   ath.checkout_checkpoint                                           as end_at,
@@ -164,7 +164,8 @@ class M_LaporanPatroli extends CI_Model
 									  sh.shift_id = jp.admisecsgp_mstshift_shift_id and
 									  ath.admisecsgp_mstusr_npk = jp.admisecsgp_mstusr_npk and
 									  jp.admisecsgp_mstshift_shift_id = ath.admisecsgp_mstshift_shift_id
-				where jp.id_jadwal_patroli = '".$idJdawal."' and ath.admisecsgp_mstusr_npk = '".$npk."' and ath.type_patrol = '".$type."'
+				             		  and ath.date_patroli = jp.date_patroli
+				where jp.id_jadwal_patroli = '" . $idJdawal . "' and ath.admisecsgp_mstusr_npk = '" . $npk . "' and ath.type_patrol = '" . $type . "'
 				order by ath.checkin_checkpoint";
 		return $this->db->query($sql)->result();
 
@@ -181,64 +182,101 @@ class M_LaporanPatroli extends CI_Model
 						  from admisecsgp_trans_headers ath
 								   join admisecsgp_mstzone am on ath.admisecsgp_mstzone_zone_id = am.zone_id
 								   join admisecsgp_mstplant a on am.admisecsgp_mstplant_plant_id = a.plant_id
-						  ".$where." 
+						  " . $where . " 
 						  group by ath.admisecsgp_mstusr_npk, ath.type_patrol, a.plant_id, plant_name, date_patroli) s
 					group by plant_name, plant_id, month;";
 		return $this->db->query($sql)->result();
 	}
+
+	public function getPatroliPlantByUser($year, $month, $plantId = null)
+	{
+		$where = '';
+		if ($plantId != null) {
+			$where = "and a.plant_id ='" . $plantId . "'";
+		}
+
+		$sql = "select count(p.patrol_group) as total_patroli,
+					   plant_name,
+					   p.patrol_group
+				from (select usr.patrol_group,
+							 pl.plant_id, plant_name
+					  from admisecsgp_trans_headers ath
+							   left join admisecsgp_trans_details atd on
+							  ath.trans_header_id =
+							  atd.admisecsgp_trans_headers_trans_headers_id
+							   left join admisecsgp_mstshift sh on
+						  sh.shift_id = ath.admisecsgp_mstshift_shift_id
+							   left join admisecsgp_mstzone zn on
+						  ath.admisecsgp_mstzone_zone_id = zn.zone_id
+							   left join admisecsgp_mstplant pl on
+						  zn.admisecsgp_mstplant_plant_id = pl.plant_id
+							   left join admisecsgp_mstusr usr on
+						  usr.npk = ath.admisecsgp_mstusr_npk
+					  where MONTH(ath.date_patroli) = " . $month . "
+						and YEAR(ath.date_patroli) = " . $year . "
+						" . $where . "
+					  group by sh.nama_shift,
+							   pl.plant_name,
+							   ath.admisecsgp_mstusr_npk,
+							   pl.plant_id,
+							   shift_id,
+							   ath.type_patrol,
+							   usr.patrol_group) as p
+				group by p.patrol_group, plant_name";
+
+		return $this->db->query($sql)->result();
+	}
+
 	public function getDataPatroliByMonth($year, $month, $plantId)
 	{
-
-		$sql = "select  DAY(jp.date_patroli) as day,
+		$sql = "select DAY(s.start_at)                as day,
 					   usr.patrol_group,
-					   ISNULL(pl.plant_name, '-')         as plant_name,
-					   ISNULL(s.total_ckp, 0)             as total_ckp,
-					   ISNULL(s.chekpoint_patroli, 0)     as chekpoint_patroli
+					   ISNULL(pl.plant_name, '-')     as plant_name,
+					   ISNULL(s.total_ckp, 0)         as total_ckp,
+					   ISNULL(s.chekpoint_patroli, 0) as chekpoint_patroli
 				from admisecsgp_trans_jadwal_patroli jp
 						 join admisecsgp_mstshift sh on sh.shift_id = jp.admisecsgp_mstshift_shift_id
 						 join admisecsgp_mstplant pl on jp.admisecsgp_mstplant_plant_id = pl.plant_id
 						 join admisecsgp_mstusr usr on jp.admisecsgp_mstusr_npk = usr.npk
-						join (select ath.date_patroli,
-										   ath.admisecsgp_mstusr_npk                             as npk,
-										   pl.plant_id,
-										   min(ALL ath.checkin_checkpoint)                       as start_at,
-										   max(ath.checkout_checkpoint)                          as end_at,
-										   sh.shift_id,
-										   count(atd.admisecsgp_mstobj_objek_id)                 as target_object,
-										   SUM(IIF(atd.status = 0, 1, 0))                        as total_object_temuan,
-										   SUM(IIF(atd.status = 1, 1, 0))                        as total_object_normal,
-										   (select count(am.checkpoint_id) as co
-											from admisecsgp_trans_zona_patroli zp
-													 join admisecsgp_mstzone z on z.zone_id = zp.admisecsgp_mstzone_zone_id
-													 join admisecsgp_mstplant mp on mp.plant_id = zp.admisecsgp_mstplant_plant_id
-													 join admisecsgp_mstckp am on z.zone_id = am.admisecsgp_mstzone_zone_id
-											where zp.status_zona = 1
-											  and ath.date_patroli = zp.date_patroli
-											  and mp.plant_id = pl.plant_id
-											  and sh.shift_id = zp.admisecsgp_mstshift_shift_id) as total_ckp,
-										   count(distinct ath.admisecsgp_mstckp_checkpoint_id)   as chekpoint_patroli,
-										   ath.type_patrol
-									from admisecsgp_trans_headers ath
-											 left join admisecsgp_trans_details atd
-													   on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
-											 left join admisecsgp_mstshift sh on sh.shift_id = ath.admisecsgp_mstshift_shift_id
-											 left join admisecsgp_mstobj am on atd.admisecsgp_mstobj_objek_id = am.objek_id
-											 left join admisecsgp_mstckp ckp on ath.admisecsgp_mstckp_checkpoint_id = ckp.checkpoint_id
-											 left join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
-											 left join admisecsgp_mstplant pl on zn.admisecsgp_mstplant_plant_id = pl.plant_id
-									where pl.plant_id = '" . $plantId . "'
-									and MONTH(ath.date_patroli) = " . $month . "
-									and YEAR(ath.date_patroli) = " . $year . "
-									AND ath.type_patrol = 1
-									group by ath.date_patroli, sh.nama_shift, pl.plant_name, ath.admisecsgp_mstusr_npk, pl.plant_id,
-											 shift_id, ath.type_patrol) as s
-								   on s.date_patroli = jp.date_patroli
-									   and s.shift_id = jp.admisecsgp_mstshift_shift_id
-									   and s.plant_id = jp.admisecsgp_mstplant_plant_id
-									   and s.npk = jp.admisecsgp_mstusr_npk
+						 join (select *,
+									  (select count(am.checkpoint_id) as co
+									   from admisecsgp_trans_zona_patroli zp
+												join admisecsgp_mstzone z on z.zone_id = zp.admisecsgp_mstzone_zone_id
+												join admisecsgp_mstplant mp on mp.plant_id = zp.admisecsgp_mstplant_plant_id
+												join admisecsgp_mstckp am on z.zone_id = am.admisecsgp_mstzone_zone_id
+									   where zp.status_zona = 1
+										 and s.date_patroli = zp.date_patroli
+										 and mp.plant_id = s.plant_id
+										 and s.shift_id = zp.admisecsgp_mstshift_shift_id) as total_ckp
+							   from (select ath.admisecsgp_mstusr_npk                           as npk,
+											pl.plant_id,
+											min(ALL ath.checkin_checkpoint)                     as start_at,
+											max(ath.checkout_checkpoint)                        as end_at,
+											sh.shift_id,
+											count(atd.admisecsgp_mstobj_objek_id)               as target_object,
+											SUM(IIF(atd.status = 0, 1, 0))                      as total_object_temuan,
+											SUM(IIF(atd.status = 1, 1, 0))                      as total_object_normal,
+											count(distinct ath.admisecsgp_mstckp_checkpoint_id) as chekpoint_patroli,
+											ath.type_patrol,
+											min(cast(ath.checkin_checkpoint as date))          as date_patroli
+									 from admisecsgp_trans_headers ath
+											  left join admisecsgp_trans_details atd
+														on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
+											  left join admisecsgp_mstshift sh on sh.shift_id = ath.admisecsgp_mstshift_shift_id
+											  left join admisecsgp_mstobj am on atd.admisecsgp_mstobj_objek_id = am.objek_id
+											  left join admisecsgp_mstckp ckp on ath.admisecsgp_mstckp_checkpoint_id = ckp.checkpoint_id
+											  left join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
+											  left join admisecsgp_mstplant pl on zn.admisecsgp_mstplant_plant_id = pl.plant_id
+									 where pl.plant_id = '" . $plantId . "'
+									   and MONTH(ath.date_patroli) = " . $month . "
+									   and YEAR(ath.date_patroli) = " . $year . "
+									 group by sh.nama_shift, pl.plant_name, ath.admisecsgp_mstusr_npk, pl.plant_id,
+											  shift_id, ath.type_patrol) as s) as s
+							  on s.date_patroli = jp.date_patroli and s.shift_id = jp.admisecsgp_mstshift_shift_id and
+								 s.plant_id = jp.admisecsgp_mstplant_plant_id and s.npk = jp.admisecsgp_mstusr_npk
 				where pl.plant_id = '" . $plantId . "'
-				and MONTH(jp.date_patroli) = " . $month . "
-				and YEAR(jp.date_patroli) = " . $year . "				
+				  and MONTH(jp.date_patroli) = " . $month . "
+				  and YEAR(jp.date_patroli) = " . $year . "
 				order by jp.admisecsgp_mstplant_plant_id, jp.date_patroli, jp.admisecsgp_mstshift_shift_id";
 		return $this->db->query($sql)->result();
 	}

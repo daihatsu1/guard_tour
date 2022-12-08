@@ -145,8 +145,8 @@
 									<th>Plant</th>
 									<th>NPK</th>
 									<th>Pelaksana</th>
-									<th>Mulai</th>
-									<th>Selesai</th>
+									<th>Mulai Patroli</th>
+									<th>Selesai Patroli</th>
 									<th>Total Temuan</th>
 									<th>Durasi</th>
 									<th>Total Checkpoint</th>
@@ -339,7 +339,7 @@
 							persentage = Math.round(row.chekpoint_patroli / row.total_ckp * 100)
 						}
 
-						if (persentage === 100) {
+						if (persentage >= 100) {
 							return '<span class="bg-success d-block text-center">' + persentage + '%</span>'
 						}
 						if (persentage === '-') {
@@ -352,7 +352,10 @@
 				{
 					data: null,
 					render: function (data, type, row) {
-						return '<a href="<?=base_url('Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=0" class="btn btn-sm btn-info">Detail</a>'
+						if (row.chekpoint_patroli !== 0) {
+							return '<a href="<?=base_url('Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=0" class="btn btn-sm btn-info">Detail</a>'
+						}
+						return ''
 					}
 				},
 			],
@@ -457,7 +460,7 @@
 							persentage = Math.round(row.chekpoint_patroli / row.total_ckp * 100)
 						}
 
-						if (persentage === 100) {
+						if (persentage >= 100) {
 							return '<span class="bg-success d-block text-center">' + persentage + '%</span>'
 						}
 						if (persentage === '-') {

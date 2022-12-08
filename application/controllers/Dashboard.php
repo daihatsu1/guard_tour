@@ -62,7 +62,7 @@ class Dashboard extends CI_Controller
 			'labels' => $labels,
 			'datasets' => [
 				[
-					'type' => 'line',
+					'type' => 'bar',
 					'label' => 'Total Temuan',
 					'data' => $dataTemuan
 				], [
@@ -99,15 +99,14 @@ class Dashboard extends CI_Controller
 	public function patroli_plant()
 	{
 		$result = array();
-
 		$data = $this->M_LaporanPatroli->getPatroliPlant();
-
 		foreach ($data as $item) {
 			$result[$item->plant_name][] = [
 				"x" => substr(convertbulanina($item->month), 0, 3),
 				"y" => $item->total_patroli
 			];
 		}
+
 		return $this->output
 			->set_content_type('application/json')
 			->set_status_header(200)
@@ -115,6 +114,102 @@ class Dashboard extends CI_Controller
 	}
 
 	public function listPatroliByUser()
+	{
+		$month = $this->input->get('month');
+		$year = $this->input->get('year');
+		$dataPatroli = $this->M_LaporanPatroli->getPatroliPlantByUser($year, $month);
+		$plants = $this->M_LaporanTemuan->list_plants();
+		$patrol_groups = explode(',', get_setting('patrol_group')->nilai_setting);
+		$datasets = [];
+		foreach ($patrol_groups as $i => $group) {
+			foreach ($dataPatroli as $k => $patroli) {
+				if (!array_key_exists($i, $datasets)) {
+					$datasets[$i] = [
+						'label' => $group,
+						'type' => "bar",
+						'data' => array(),
+						'barPercentage' => 0.2,
+						'minBarLength' => 2
+					];
+				}
+
+				foreach ($plants as $key => $plant) {
+					if ($plant == $patroli->plant_name and $group == $patroli->patrol_group) {
+						$datasets[$i]['data'][$key] = $patroli->total_patroli == null ? 0 : $patroli->total_patroli;
+					} else {
+						if (!array_key_exists($key, $datasets[$i]['data'])) {
+							$datasets[$i]['data'][$key] = 0;
+						}
+					}
+				}
+			}
+		}
+
+		$data = [
+			'labels' => $plants,
+			'datasets' => $datasets,
+		];
+
+		return $this->output
+			->set_content_type('application/json')
+			->set_status_header(200)
+			->set_output(json_encode($data));
+	}
+
+	public function temuanTindakanPlant()
+	{
+		$month = $this->input->get('month');
+		$year = $this->input->get('year');
+		$temuan = $this->M_LaporanTemuan->getTemuanByPlant($year, $month);
+		$tindakan = $this->M_LaporanTemuan->getTindakanByPlant($year, $month);
+		$plants = $this->M_LaporanTemuan->list_plants();
+		$datasets = [];
+		$dataTemuan = [];
+		$dataTindakan = [];
+
+		foreach ($plants as $i => $plant) {
+			$dataTemuan[$i] = 0;
+			$dataTindakan[$i] = 0;
+			foreach ($temuan as $t){
+				if ($t->plant_name == $plant){
+					$dataTemuan[$i] = $t->total_temuan;
+				}
+			}
+			foreach ($tindakan as $td){
+				if ($td->plant_name == $plant){
+					$dataTindakan[$i] = $td->total_tindakan;
+				}
+			}
+		}
+		$datasets = [
+			[
+				'label' => "Total Temuan",
+				'type' => "bar",
+				'data' => $dataTemuan,
+				'barPercentage' => 0.4,
+				'minBarLength' => 2,
+			],
+			[
+				'label' => "Total Tindakan",
+				'type' => "bar",
+				'barPercentage' => 0.4,
+				'data' => $dataTindakan,
+				'minBarLength' => 2,
+			]
+		];
+		$data = [
+			'labels' => $plants,
+			'datasets' => $datasets,
+		];
+		return $this->output
+			->set_content_type('application/json')
+			->set_status_header(200)
+			->set_output(json_encode($data));
+
+
+	}
+
+	public function listTemuanByUser()
 	{
 		$month = $this->input->get('month');
 		$year = $this->input->get('year');

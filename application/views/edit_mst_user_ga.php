@@ -87,6 +87,18 @@
 								</select>
 							</div>
 
+							<div class="form-group">
+								<label for="">TYPE</label>
+								<select name="type" class="form-control" id="" required>
+									<?php if ($data->status == 1) { ?>
+										<option selected value="<?= $data->status ?>">GA</option>
+										<option value="0">CC</option>
+									<?php } else if ($data->status == 0) { ?>
+										<option value="<?= $data->status ?>">CC</option>
+										<option value="1">GA</option>
+									<?php } ?>
+								</select>
+							</div>
 							<a href="<?= base_url('Mst_user_ga') ?>" class="btn btn-success btn-sm"><i
 										class="fas fa-arrow-left"></i> Kembali</a>
 							<button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Simpan Data

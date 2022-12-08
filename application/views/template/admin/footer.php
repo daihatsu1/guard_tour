@@ -17,6 +17,9 @@
 
        <!-- Bootstrap 4 -->
        <script src="<?= base_url('assets') ?>/dist/js/bootstrap.min.js"></script>
+	   <script>
+		   var bsTooltip = $.fn.tooltip;
+	   </script>
        <!--<script src="<?= base_url('assets') ?>/dist/js/bootstrap.bundle.min.js"></script>-->
        <!-- AdminLTE App -->
        <script src="<?= base_url('assets') ?>/dist/js/adminlte.min.js?<?= date('Y-m-d H:i:s') ?>"></script>

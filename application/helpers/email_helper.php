@@ -4,8 +4,9 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 if (!function_exists('sendMail')) {
 
-	function sendMail($to, $subject, $body)
+	function sendMail($to, $cc, $subject, $body)
 	{
+
 		$ci = get_instance();
 		$ci->load->helper('db_settings');
 		$settings = get_setting('email_config');
@@ -13,13 +14,14 @@ if (!function_exists('sendMail')) {
 		$ci->load->library('email', $emailConfig);
 		$ci->email->from($emailConfig['from'], $emailConfig['from_alias']);
 		$ci->email->to($to);
+		$ci->email->cc($cc);
 		$ci->email->subject($subject);
 		$ci->email->message($body);
 		if (!$ci->email->send()) {
 			log_message('error', $ci->email->print_debugger());
 			return false;
 		} else {
-			log_message("info", "mail was sent successfully to ".$to." !!!");
+			log_message("info", "mail was sent successfully to ".$to." !!!, ");
 			return true;
 		}
 
