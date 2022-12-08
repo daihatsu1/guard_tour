@@ -23,10 +23,10 @@ class Laporan_Abnormal extends CI_Controller
 	public function index()
 	{
 		$dataTemuan = $this->M_LaporanTemuan->getTotalTemuan();
-		$byKategoriObjek = $this->M_LaporanTemuan->getTotalTemuanByKategoriObject();
+		$byKategoriObjek = $this->M_LaporanTemuan->getTotalTemuanByKategoriObject($this->session->userdata('plant_id'), date('m'), date('Y'));
 
 		$sidebarData = [
-			'link' => $this->uri->segment(1),
+			'link' => $this->uri->segment(2),
 		];
 		$data = [
 			'by_kategori_objek' => $byKategoriObjek,
@@ -85,6 +85,4 @@ class Laporan_Abnormal extends CI_Controller
 		}
 		redirect('Admin/Laporan_Abnormal');
 	}
-
-
 }

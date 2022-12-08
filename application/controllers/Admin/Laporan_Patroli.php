@@ -1,4 +1,5 @@
 <?php
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
@@ -23,21 +24,20 @@ class Laporan_Patroli extends CI_Controller
 			redirect('Login');
 		}
 		$this->load->model(['M_LaporanPatroli', 'M_patrol']);
-
 	}
 
 	public function index()
 	{
 		$id_wil_user = $this->session->userdata("site_id");
 		$data = [
-			'link' => $this->uri->segment(1),
-			'plant' => $this->M_patrol->ambilData("admisecsgp_mstplant", "admisecsgp_mstsite_site_id='".$id_wil_user."'")->row()
-
+			'link' => $this->uri->segment(2),
+			'plant' => $this->M_patrol->ambilData("admisecsgp_mstplant", "admisecsgp_mstsite_site_id='" . $id_wil_user . "'"),
+			'plant_id' => $this->session->userdata("plant_id")
 		];
 
 		$this->load->view("template/admin/sidebar", $data);
 		$this->load->view("Admin/laporan/laporan_patroli", $data);
-		$this->load->view("template/footer");
+		$this->load->view("template/admin/footer");
 	}
 
 	public function detail()
@@ -55,7 +55,7 @@ class Laporan_Patroli extends CI_Controller
 		];
 		$this->load->view("template/admin/sidebar", $sidebarData);
 		$this->load->view("Admin/laporan/laporan_detail_patroli", $data);
-		$this->load->view("template/footer");
+		$this->load->view("template/admin/footer");
 	}
 	public function list_patroli()
 	{
@@ -107,9 +107,9 @@ class Laporan_Patroli extends CI_Controller
 		];
 
 		$sheet = $spreadsheet->getActiveSheet();
-		if ($type == 1){
+		if ($type == 1) {
 			$sheet->mergeCells('A1:D1')->setCellValue('A1', 'LAPORAN PATROLI DILUAR JADWAL');
-		}else{
+		} else {
 			$sheet->mergeCells('A1:D1')->setCellValue('A1', 'LAPORAN PATROLI ');
 		}
 		$sheet->setTitle('Data Patroli');
@@ -119,7 +119,7 @@ class Laporan_Patroli extends CI_Controller
 			->setSize(20)
 			->setBold(true);
 		$sheet->setCellValue('A3', 'Tanggal Patroli');
-		$sheet->setCellValue('B3', $start_at .' s/d '.$end_at);
+		$sheet->setCellValue('B3', $start_at . ' s/d ' . $end_at);
 		$sheet->setCellValue('A4', 'Plant');
 		$sheet->setCellValue('B4', $plantId);
 		$xrow = 5;
@@ -169,9 +169,9 @@ class Laporan_Patroli extends CI_Controller
 
 				$sheetDetail = $spreadsheet->createSheet();
 				$sheetDetail->setTitle('Timeline' . $row->date_patroli . ' Shift ' . $row->nama_shift);
-				if ($type==1){
+				if ($type == 1) {
 					$sheetDetail->mergeCells('A1:E1')->setCellValue('A1', 'DETAIL PATROLI DILUAR JADWAL');
-				}else{
+				} else {
 					$sheetDetail->mergeCells('A1:E1')->setCellValue('A1', 'DETAIL PATROLI ');
 				}
 				$sheetDetail->getStyle('A1:B1')
@@ -219,7 +219,6 @@ class Laporan_Patroli extends CI_Controller
 
 					//apply style
 					$sheetDetail->getStyle($excolDetail->get('detail_start_at', $dxrow) . ':' . $excolDetail->get('detail_total_temuan', $dxrow))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
 				}
 			}
 		}
@@ -236,5 +235,4 @@ class Laporan_Patroli extends CI_Controller
 		$writer = new Xlsx($spreadsheet);
 		$writer->save("php://output");
 	}
-
 }

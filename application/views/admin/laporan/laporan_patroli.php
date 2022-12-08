@@ -10,7 +10,7 @@
 
 	}
 </style>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 <!-- START SECTION HEADER -->
 <section class="content-header">
@@ -38,14 +38,36 @@
 			<!-- Left col -->
 			<div class="col-md-12">
 				<div class="row justify-content-center">
-					<div class="card col-4 "><!-- /.card-header -->
+					<div class="card col-6 ">
+						<!-- /.card-header -->
 						<div class="card-body p-4">
-							<div class="form-group row">
-								<label for="reportrange" class="col-sm-2 col-form-label">Tanggal</label>
-								<div class="col-sm-10 input-group ">
-									<input type="email" class="form-control" id="reportrange" placeholder="Email">
-									<div class="input-group-append">
-										<button class="btn btn-primary" type="button" name="filter" id="filter">Filter
+							<div class="row justify-content-center">
+								<div class="col-lg-4">
+									<div class="form-group">
+										<label for="">PLANT</label>
+										<select name="plant" class="form-control" id="plant">
+											<option value="">--- Pilih Plant ---</option>
+											<?php foreach ($plant->result() as $pl) :
+												if ($pl->plant_id == $plant_id) { ?>
+													<option selected value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
+												<?php } else { ?>
+													<option value="<?= $pl->plant_id ?>"><?= $pl->plant_name ?></option>
+											<?php }
+											endforeach ?>
+										</select>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group">
+										<label for="reportrange">TANGGAL</label>
+										<input type="text" id="reportrange" class="form-control">
+										<!--										<input type="text" class="form-control" id="date-range">-->
+									</div>
+								</div>
+
+								<div class="col-lg-2">
+									<div style="margin-top: 10px;position:absolute" class="form-group">
+										<button name="filter" id="filter" class="btn btn-primary btn-sm mt-4"><i class="fa fa-search"></i> FILTER
 										</button>
 									</div>
 								</div>
@@ -72,20 +94,20 @@
 						<div class="table-responsive ">
 							<table class="table m-0 table-hover" id="tablePatroli" style="width: 100%">
 								<thead>
-								<tr>
-									<th>Tgl Patroli</th>
-									<th>Shift</th>
-									<th>Plant</th>
-									<th>NPK</th>
-									<th>Pelaksana</th>
-									<th>Mulai</th>
-									<th>Selesai</th>
-									<th>Total Temuan</th>
-									<th>Durasi</th>
-									<th>Total Checkpoint</th>
-									<th>Completion</th>
-									<th>Detail</th>
-								</tr>
+									<tr>
+										<th>Tgl Patroli</th>
+										<th>Shift</th>
+										<th>Plant</th>
+										<th>NPK</th>
+										<th>Pelaksana</th>
+										<th>Mulai</th>
+										<th>Selesai</th>
+										<th>Total Temuan</th>
+										<th>Durasi</th>
+										<th>Total Checkpoint</th>
+										<th>Completion</th>
+										<th>Detail</th>
+									</tr>
 								</thead>
 								<tbody>
 
@@ -112,23 +134,22 @@
 					<!-- /.card-header -->
 					<div class="card-body p-4">
 						<div class="table-responsive ">
-							<table class="table table-sm m-0 table-hover" id="tablePatroliDiluarJadwal"
-								   style="width: 100%">
+							<table class="table table-sm m-0 table-hover" id="tablePatroliDiluarJadwal" style="width: 100%">
 								<thead>
-								<tr>
-									<th>Tgl Patroli</th>
-									<th>Shift</th>
-									<th>Plant</th>
-									<th>NPK</th>
-									<th>Pelaksana</th>
-									<th>Mulai</th>
-									<th>Selesai</th>
-									<th>Total Temuan</th>
-									<th>Durasi</th>
-									<th>Total Checkpoint</th>
-									<th>Completion</th>
-									<th>Detail</th>
-								</tr>
+									<tr>
+										<th>Tgl Patroli</th>
+										<th>Shift</th>
+										<th>Plant</th>
+										<th>NPK</th>
+										<th>Pelaksana</th>
+										<th>Mulai</th>
+										<th>Selesai</th>
+										<th>Total Temuan</th>
+										<th>Durasi</th>
+										<th>Total Checkpoint</th>
+										<th>Completion</th>
+										<th>Detail</th>
+									</tr>
 								</thead>
 								<tbody>
 
@@ -147,14 +168,12 @@
 	</div>
 </section>
 <!--END SECTION CONTENT-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
-		integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
-		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-	$(function () {
-		moment.locale('id');         // id
+	$(function() {
+		moment.locale('id'); // id
 		var start = moment().subtract(2, 'days');
 		var end = moment();
 
@@ -231,29 +250,41 @@
 			processing: true,
 			serverSide: false,
 			ajax: {
-				url: "<?=base_url('Admin/Laporan_patroli/list_patroli')?>",
+				url: "<?= base_url('Admin/Laporan_patroli/list_patroli') ?>",
 				dataSrc: '',
-				data: function () {
+				data: function() {
 					var drp = $('#reportrange').data('daterangepicker');
 					var param = {
 						'start': drp.startDate.format('YYYY-MM-DD'),
 						'end': drp.endDate.format('YYYY-MM-DD'),
-						'plantId': '<?=$plant->plant_id?>',
+						'plantId': $('#plant').find(":selected").val(),
 						'type': 0
 					}
 					return param
 				}
 			},
-			order: [[5, 'desc']],
+			order: [
+				[5, 'desc']
+			],
 			pageLength: 25,
-			columns: [
-				{data: 'date_patroli'},
-				{data: 'nama_shift'},
-				{data: 'plant_name'},
-				{data: 'npk'},
-				{data: 'name'},
+			columns: [{
+					data: 'date_patroli'
+				},
 				{
-					data: 'start_at', render: function (data, type, row) {
+					data: 'nama_shift'
+				},
+				{
+					data: 'plant_name'
+				},
+				{
+					data: 'npk'
+				},
+				{
+					data: 'name'
+				},
+				{
+					data: 'start_at',
+					render: function(data, type, row) {
 						if (data) {
 							return moment(data).format('lll')
 						} else {
@@ -262,7 +293,8 @@
 					}
 				},
 				{
-					data: 'end_at', render: function (data, type, row) {
+					data: 'end_at',
+					render: function(data, type, row) {
 						if (data) {
 							return moment(data).format('lll')
 						} else {
@@ -272,7 +304,7 @@
 				},
 				{
 					data: 'total_object_temuan',
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if (data > 0) {
 							return '<span class="d-block bg-danger text-center">' + data + '</span>'
 						}
@@ -281,7 +313,7 @@
 				},
 				{
 					data: null,
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if (data.start_at == null || data.end_at == null) {
 							return '-'
 						}
@@ -294,7 +326,7 @@
 				},
 				{
 					data: null,
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if ((row.chekpoint_patroli !== 0) && (row.chekpoint_patroli === row.total_ckp)) {
 							return '<span class="bg-success d-block text-center">' + row.chekpoint_patroli + '/' + row.total_ckp + '</span>'
 						}
@@ -305,7 +337,7 @@
 					}
 				}, {
 					data: null,
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						let persentage = 0
 						if (row.chekpoint_patroli === 0) {
 							persentage = 0
@@ -326,15 +358,15 @@
 					}
 				}, {
 					data: null,
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if (data.start_at == null || data.end_at == null) {
 							return ''
 						}
-						return '<a href="<?=base_url('Admin/Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=0" class="btn btn-sm btn-info">Detail</a>'
+						return '<a href="<?= base_url('Admin/Laporan_Patroli/detail?idJadwal=') ?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=0" class="btn btn-sm btn-info">Detail</a>'
 					}
 				},
 			],
-			createdRow: function (row, data, dataIndex) {
+			createdRow: function(row, data, dataIndex) {
 				if (data.start_at === null) {
 					$(row).find('td').addClass('text-danger');
 				}
@@ -351,9 +383,9 @@
 			processing: true,
 			serverSide: false,
 			ajax: {
-				url: "<?=base_url('Admin/Laporan_patroli/list_patroli')?>",
+				url: "<?= base_url('Admin/Laporan_patroli/list_patroli') ?>",
 				dataSrc: '',
-				data: function () {
+				data: function() {
 					var drp = $('#reportrange').data('daterangepicker');
 					var param = {
 						'start': drp.startDate.format('YYYY-MM-DD'),
@@ -364,16 +396,28 @@
 					return param
 				}
 			},
-			order: [[5, 'desc']],
+			order: [
+				[5, 'desc']
+			],
 			pageLength: 25,
-			columns: [
-				{data: 'date_patroli'},
-				{data: 'nama_shift'},
-				{data: 'plant_name'},
-				{data: 'npk'},
-				{data: 'name'},
+			columns: [{
+					data: 'date_patroli'
+				},
 				{
-					data: 'start_at', render: function (data, type, row) {
+					data: 'nama_shift'
+				},
+				{
+					data: 'plant_name'
+				},
+				{
+					data: 'npk'
+				},
+				{
+					data: 'name'
+				},
+				{
+					data: 'start_at',
+					render: function(data, type, row) {
 						if (data) {
 							return moment(data).format('lll')
 						} else {
@@ -382,7 +426,8 @@
 					}
 				},
 				{
-					data: 'end_at', render: function (data, type, row) {
+					data: 'end_at',
+					render: function(data, type, row) {
 						if (data) {
 							return moment(data).format('lll')
 						} else {
@@ -392,7 +437,7 @@
 				},
 				{
 					data: 'total_object_temuan',
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if (data > 0) {
 							return '<span class="d-block bg-danger text-center">' + data + '</span>'
 						}
@@ -401,7 +446,7 @@
 				},
 				{
 					data: null,
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if (data.start_at == null || data.end_at == null) {
 							return '-'
 						}
@@ -414,7 +459,7 @@
 				},
 				{
 					data: null,
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if ((row.chekpoint_patroli !== 0) && (row.chekpoint_patroli === row.total_ckp)) {
 							return '<span class="bg-success d-block text-center">' + row.chekpoint_patroli + '/' + row.total_ckp + '</span>'
 						}
@@ -425,7 +470,7 @@
 					}
 				}, {
 					data: null,
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						let persentage = 0
 						if (row.chekpoint_patroli === 0) {
 							persentage = 0
@@ -446,31 +491,30 @@
 					}
 				}, {
 					data: null,
-					render: function (data, type, row) {
-						return '<a href="<?=base_url('Admin/Laporan_Patroli/detail?idJadwal=')?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=1" class="btn btn-sm btn-info">Detail</a>'
+					render: function(data, type, row) {
+						return '<a href="<?= base_url('Admin/Laporan_Patroli/detail?idJadwal=') ?>' + row.id_jadwal_patroli + '&npk=' + row.npk + '&type=1" class="btn btn-sm btn-info">Detail</a>'
 					}
 				},
 			],
-			createdRow: function (row, data, dataIndex) {
+			createdRow: function(row, data, dataIndex) {
 				if (data.start_at === null) {
 					$(row).find('td').addClass('text-danger');
 				}
 			}
 		});
 		new $.fn.dataTable.Buttons(tablePatroli, {
-			buttons: [
-				{
+			buttons: [{
 					text: '<i class="fa fa-files-o"></i> XLSX',
 					titleAttr: 'EXCEL',
 					className: 'btn btn-default btn-sm',
-					action: function (e, dt, node, config) {
+					action: function(e, dt, node, config) {
 						var drp = $('#reportrange').data('daterangepicker');
 						let start = drp.startDate.format('YYYY-MM-DD')
 						let end = drp.endDate.format('YYYY-MM-DD')
 						let type = 0
 
 						window.open(
-							'<?=base_url('Admin/Laporan_patroli/downloadLaporanPatroli?')?>start='+start+'&end='+end+'&type='+type,
+							'<?= base_url('Admin/Laporan_patroli/downloadLaporanPatroli?') ?>start=' + start + '&end=' + end + '&type=' + type,
 							'_blank'
 						);
 					}
@@ -483,7 +527,7 @@
 					exportOptions: {
 						columns: ':visible'
 					},
-					filename: function () {
+					filename: function() {
 						var d = new Date();
 						return 'laporan_patroli_' + d.getTime();
 					},
@@ -502,19 +546,18 @@
 		});
 		tablePatroli.buttons().container().appendTo('#tablePatroli_filter');
 		new $.fn.dataTable.Buttons(tablePatroliDiluarJadwal, {
-			buttons: [
-				{
+			buttons: [{
 					text: '<i class="fa fa-files-o"></i> XLSX',
 					titleAttr: 'EXCEL',
 					className: 'btn btn-default btn-sm',
-					action: function (e, dt, node, config) {
+					action: function(e, dt, node, config) {
 						var drp = $('#reportrange').data('daterangepicker');
 						let start = drp.startDate.format('YYYY-MM-DD')
 						let end = drp.endDate.format('YYYY-MM-DD')
 						let type = 1
 
 						window.open(
-							'<?=base_url('Admin/Laporan_patroli/downloadLaporanPatroli?')?>start='+start+'&end='+end+'&type='+type,
+							'<?= base_url('Admin/Laporan_patroli/downloadLaporanPatroli?') ?>start=' + start + '&end=' + end + '&type=' + type,
 							'_blank'
 						);
 					}
@@ -527,7 +570,7 @@
 					exportOptions: {
 						columns: ':visible'
 					},
-					filename: function () {
+					filename: function() {
 						var d = new Date();
 						return 'laporan_patroli_diluarjadwal' + d.getTime();
 					},
@@ -547,10 +590,9 @@
 		tablePatroliDiluarJadwal.buttons().container().appendTo('#tablePatroliDiluarJadwal_filter');
 
 
-		$('#filter').click(function () {
+		$('#filter').click(function() {
 			tablePatroli.ajax.reload();
 			tablePatroliDiluarJadwal.ajax.reload();
 		})
-	})
-	;
+	});
 </script>

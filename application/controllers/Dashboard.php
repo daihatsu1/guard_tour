@@ -20,7 +20,6 @@ class Dashboard extends CI_Controller
 		$this->load->model(['M_LaporanTemuan', 'M_LaporanPatroli', 'M_patrol']);
 		$this->dateNow = new DateTimeImmutable('now', new DateTimeZone('Asia/Jakarta'));
 		$this->load->helper(['convertbulanina', 'db_settings']);
-
 	}
 
 	public function index()
@@ -170,13 +169,13 @@ class Dashboard extends CI_Controller
 		foreach ($plants as $i => $plant) {
 			$dataTemuan[$i] = 0;
 			$dataTindakan[$i] = 0;
-			foreach ($temuan as $t){
-				if ($t->plant_name == $plant){
+			foreach ($temuan as $t) {
+				if ($t->plant_name == $plant) {
 					$dataTemuan[$i] = $t->total_temuan;
 				}
 			}
-			foreach ($tindakan as $td){
-				if ($td->plant_name == $plant){
+			foreach ($tindakan as $td) {
+				if ($td->plant_name == $plant) {
 					$dataTindakan[$i] = $td->total_tindakan;
 				}
 			}
@@ -205,8 +204,6 @@ class Dashboard extends CI_Controller
 			->set_content_type('application/json')
 			->set_status_header(200)
 			->set_output(json_encode($data));
-
-
 	}
 
 	public function listTemuanByUser()
@@ -421,5 +418,4 @@ class Dashboard extends CI_Controller
 			->set_status_header(200)
 			->set_output(json_encode($data));
 	}
-
 }

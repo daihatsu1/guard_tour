@@ -32,7 +32,7 @@
        <!-- date-range-picker -->
        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 
-	   </body>
+       </body>
        <script>
            $("#example2").DataTable({
                "paging": true,
@@ -119,6 +119,15 @@
            $('#tgl23').datepicker({
                dateFormat: 'yy-mm-dd',
                autoclose: true
+           });
+
+           $.ajax({
+               url: "<?= base_url('Admin') ?>/Laporan_Abnormal/total_temuan",
+               type: 'GET',
+               dataType: 'json', // added data type
+               success: function(res) {
+                   $('#badge_total_temuan').text(res['total_temuan'])
+               }
            });
        </script>
 

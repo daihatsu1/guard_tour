@@ -23,10 +23,9 @@ class Laporan_Temuan extends CI_Controller
 	public function index()
 	{
 		$sidebarData = [
-			'link' => $this->uri->segment(1),
+			'link' => $this->uri->segment(2),
 		];
-		$data = [
-			];
+		$data = [];
 		$this->load->view("template/admin/sidebar", $sidebarData);
 		$this->load->view("Admin/laporan/laporan_temuan", $data);
 		$this->load->view("template/footer");
@@ -74,8 +73,7 @@ class Laporan_Temuan extends CI_Controller
 		} else {
 			$this->session->set_flashdata('fail', '<i class="icon fas fa-exclamation-triangle"></i> Gagal update data temuan');
 		}
-//		var_dump($update);
+		//		var_dump($update);
 		redirect('Admin/Laporan_Temuan');
 	}
-
 }

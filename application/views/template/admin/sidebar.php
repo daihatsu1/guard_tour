@@ -121,17 +121,17 @@
                                 </p>
                             </a>
                         </li>
-						<li class="nav-item ">
-							<a href="<?= base_url('Admin/Laporan_Abnormal') ?>" class="nav-link
+                        <li class="nav-item ">
+                            <a href="<?= base_url('Admin/Laporan_Abnormal') ?>" class="nav-link
                             <?php if ($link == 'Laporan_Abnormal' || $link == '') {
-								echo 'active';
-							} ?>">
-								<i class="nav-icon fas fa-exclamation-circle"></i>
-								<p>
-									Abnormality <span class="right badge badge-danger" id="badge_total_temuan">0</span>
-								</p>
-							</a>
-						</li>
+                                echo 'active';
+                            } ?>">
+                                <i class="nav-icon fas fa-exclamation-circle"></i>
+                                <p>
+                                    Abnormality <span class="right badge badge-danger" id="badge_total_temuan">0</span>
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="<?= base_url('Admin/Mst_Company') ?>" class="nav-link
                             <?php if ($link == 'Mst_Company') {
@@ -315,7 +315,10 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item 
+                        <?php if (($link == 'Laporan_Temuan') || ($link == 'Laporan_Patroli')) {
+                            echo 'menu-is-opening menu-open';
+                        } ?>">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
@@ -324,24 +327,24 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-								<li class="nav-item">
-									<a href="<?= base_url('Admin/Laporan_Patroli') ?>"
-									   class="nav-link <?php if ($link == 'Laporan_Patroli') {
-										   echo 'active';
-									   } ?>">
-										<i class="far fa-circle nav-icon"></i>
-										<p>Laporan Patroli</p>
-									</a>
-								</li>
-								<li class="nav-item">
-									<a href="<?= base_url('Admin/Laporan_Temuan') ?>"
-									   class="nav-link <?php if ($link == 'Laporan_Temuan') {
-										   echo 'active';
-									   } ?>">
-										<i class="far fa-circle nav-icon"></i>
-										<p>Laporan Temuan</p>
-									</a>
-								</li>
+                                <li class="nav-item">
+                                    <a href="<?= base_url('Admin/Laporan_Patroli') ?>" class="nav-link 
+                                       <?php if ($link == 'Laporan_Patroli') {
+                                            echo 'active';
+                                        } ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Laporan Patroli</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?= base_url('Admin/Laporan_Temuan') ?>" class="nav-link
+                                     <?php if ($link == 'Laporan_Temuan') {
+                                            echo 'active';
+                                        } ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Laporan Temuan</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
