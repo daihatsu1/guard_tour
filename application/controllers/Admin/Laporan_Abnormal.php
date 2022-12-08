@@ -39,7 +39,7 @@ class Laporan_Abnormal extends CI_Controller
 
 	public function list_temuan()
 	{
-		$plant_id = $this->session->userdata("plant_id");
+		$plant_id = $this->session->userdata("site_id");
 		$data = $this->M_LaporanTemuan->getDataTemuan($plant_id, 'open');
 		return $this->output
 			->set_content_type('application/json')
@@ -49,7 +49,7 @@ class Laporan_Abnormal extends CI_Controller
 
 	public function total_temuan()
 	{
-		$plant_id = $this->session->userdata("plant_id");
+		$plant_id = $this->session->userdata("site_id");
 		$data['total_temuan'] = count($this->M_LaporanTemuan->getDataTemuan($plant_id, 'open'));
 		return $this->output
 			->set_content_type('application/json')
@@ -59,7 +59,7 @@ class Laporan_Abnormal extends CI_Controller
 
 	public function list_temuan_tindakan_cepat()
 	{
-		$plant_id = $this->session->userdata("plant_id");
+		$plant_id = $this->session->userdata("site_id");
 		$data = $this->M_LaporanTemuan->getDataTemuanTindakanCepat($plant_id);
 		return $this->output
 			->set_content_type('application/json')

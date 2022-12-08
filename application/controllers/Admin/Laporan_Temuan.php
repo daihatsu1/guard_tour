@@ -33,7 +33,7 @@ class Laporan_Temuan extends CI_Controller
 
 	public function list_temuan()
 	{
-		$plant_id = $this->session->userdata("plant_id");
+		$plant_id = $this->session->userdata("site_id");
 		$data = $this->M_LaporanTemuan->getDataTemuan($plant_id);
 		return $this->output
 			->set_content_type('application/json')
