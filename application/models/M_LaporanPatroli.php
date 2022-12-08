@@ -55,7 +55,7 @@ class M_LaporanPatroli extends CI_Model
 											SUM(IIF(atd.status = 1, 1, 0))                      as total_object_normal,
 											count(distinct ath.admisecsgp_mstckp_checkpoint_id) as chekpoint_patroli,
 											ath.type_patrol,
-											min(cast(ath.checkin_checkpoint as date))          as date_patroli
+											ath.date_patroli           as date_patroli
 									 from admisecsgp_trans_headers ath
 											  left join admisecsgp_trans_details atd
 														on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
@@ -68,7 +68,7 @@ class M_LaporanPatroli extends CI_Model
 									 AND ath.date_patroli BETWEEN '" . $start . "' AND ' ". $end ." '
 									  AND ath.type_patrol = ".$type."
 									 group by sh.nama_shift, pl.plant_name, ath.admisecsgp_mstusr_npk, pl.plant_id,
-											  shift_id, ath.type_patrol) as s) as s
+											  shift_id, ath.type_patrol, date_patroli) as s) as s
 								   on s.date_patroli = jp.date_patroli
 									   and s.shift_id = jp.admisecsgp_mstshift_shift_id
 									   and s.plant_id = jp.admisecsgp_mstplant_plant_id
