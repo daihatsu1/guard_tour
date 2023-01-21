@@ -43,18 +43,18 @@
 						<div class="table-responsive ">
 							<table class="table table-sm m-0 table-hover" id="tableTemuan">
 								<thead>
-								<tr>
-									<th>Foto</th>
-									<th>Tanggal Patroli</th>
-									<th>Shift</th>
-									<th>Plant</th>
-									<th>Zona</th>
-									<th>Chekpoint</th>
-									<th>Nama Objek</th>
-									<th>Deskripsi Temuan</th>
-									<th>Status</th>
-									<th>Action</th>
-								</tr>
+									<tr>
+										<th>Foto</th>
+										<th>Tanggal Patroli</th>
+										<th>Shift</th>
+										<th>Plant</th>
+										<th>Zona</th>
+										<th>Chekpoint</th>
+										<th>Nama Objek</th>
+										<th>Deskripsi Temuan</th>
+										<th>Status</th>
+										<th>Action</th>
+									</tr>
 								</thead>
 								<tbody>
 								</tbody>
@@ -87,16 +87,16 @@
 						<div class="table-responsive ">
 							<table class="table table-sm m-0 table-hover" id="tableTemuanTindakanCepat">
 								<thead>
-								<tr>
-									<th>Foto</th>
-									<th>Tanggal Patroli</th>
-									<th>Shift</th>
-									<th>Plant</th>
-									<th>Zona</th>
-									<th>Chekpoint</th>
-									<th>Nama Objek</th>
-									<th>Deskripsi Temuan</th>
-								</tr>
+									<tr>
+										<th>Foto</th>
+										<th>Tanggal Patroli</th>
+										<th>Shift</th>
+										<th>Plant</th>
+										<th>Zona</th>
+										<th>Chekpoint</th>
+										<th>Nama Objek</th>
+										<th>Deskripsi Temuan</th>
+									</tr>
 								</thead>
 								<tbody>
 								</tbody>
@@ -126,7 +126,7 @@
 	}
 </style>
 <script>
-	$(function () {
+	$(function() {
 		let table = $('#tableTemuan').DataTable({
 			paging: true,
 			lengthChange: true,
@@ -139,31 +139,46 @@
 			serverSide: false,
 			pageLength: 25,
 			ajax: {
-				url: "<?=base_url('Admin/Laporan_Abnormal/list_temuan') ?>",
+				url: "<?= base_url('Admin/Laporan_Abnormal/list_temuan') ?>",
 				dataSrc: '',
 			},
-			columns: [
-				{
+			columns: [{
 					data: 'image_1',
-					"render": function (data, type, row) {
+					"render": function(data, type, row) {
 						if (data === null) {
-							data = "<?=base_url('assets') . '/dist/img/img-not-found.png'?>";
+							var ln = "<?= base_url('assets') . '/dist/img/img-not-found.png' ?>";
+						} else {
+							ln = "<?= base_url() ?>" + data;
 						}
-						return '<a href="' + data + '"  data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '">' +
-							'<img src="' + data + '" class="img-thumbnail" data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '" width="50px" alt="' + row.nama_objek + '">' +
+						return '<a href="' + ln + '"  data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '">' +
+							'<img src="' + ln + '" class="img-thumbnail" data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '" width="50px" alt="' + row.nama_objek + '">' +
 							'</a>'
 					}
 				},
-				{data: 'date_patroli'},
-				{data: 'nama_shift'},
-				{data: 'plant_name'},
-				{data: 'zone_name'},
-				{data: 'checkpoint_name'},
-				{data: 'nama_objek'},
-				{data: 'description'},
+				{
+					data: 'date_patroli'
+				},
+				{
+					data: 'nama_shift'
+				},
+				{
+					data: 'plant_name'
+				},
+				{
+					data: 'zone_name'
+				},
+				{
+					data: 'checkpoint_name'
+				},
+				{
+					data: 'nama_objek'
+				},
+				{
+					data: 'description'
+				},
 				{
 					data: 'status_temuan',
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if (data === 1) {
 							return '<span class="badge badge-success">CLOSE</span>'
 						} else {
@@ -173,11 +188,11 @@
 				},
 				{
 					data: null,
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if (row.status_temuan === 1) {
 							return '';
 						}
-						const actionURL = "<?=base_url('Admin/Laporan_Abnormal/update_status_temuan') ?>";
+						const actionURL = "<?= base_url('Admin/Laporan_Abnormal/update_status_temuan') ?>";
 						let img = '<a href="' + row.image_1 + '"  data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '">';
 
 						if (row.image_1 !== null) {
@@ -234,19 +249,19 @@
 					}
 				}
 			],
-			initComplete: function () {
-				this.api().columns([3, 5, 6, 8]).every(function () {
+			initComplete: function() {
+				this.api().columns([3, 5, 6, 8]).every(function() {
 					let column = this;
 					let select = $('<select class="form-control form-control-sm"><option value=""> -- Filter -- </option></select>')
 						.appendTo($(column.header()))
-						.on('change', function () {
+						.on('change', function() {
 							const val = $.fn.dataTable.util.escapeRegex($(this).val());
 							column
 								.search(val ? '^' + val + '$' : '', true, false)
 								.draw();
 						});
 
-					column.data().unique().sort().each(function (d, j) {
+					column.data().unique().sort().each(function(d, j) {
 						let cols = column.selector.cols
 						if (cols === 8) {
 							if (d === 1) {
@@ -262,8 +277,7 @@
 			}
 		});
 		new $.fn.dataTable.Buttons(table, {
-			buttons: [
-				{
+			buttons: [{
 					extend: 'excelHtml5',
 					title: 'Data export',
 					text: '<i class="fa fa-files-o"></i> XLSX',
@@ -272,11 +286,11 @@
 					exportOptions: {
 						columns: [0, 1, 2, 3, 4, 5, 6, 7]
 					},
-					filename: function () {
+					filename: function() {
 						var d = new Date();
 						return 'laporan_temuan_' + d.getTime();
 					},
-					customize: function (xlsx) {
+					customize: function(xlsx) {
 						var sheet = xlsx.xl.worksheets['sheet1.xml'];
 
 						$('row c', sheet).attr('s', '25');
@@ -292,7 +306,7 @@
 					exportOptions: {
 						columns: [0, 1, 2, 3, 4, 5, 6, 7]
 					},
-					filename: function () {
+					filename: function() {
 						var d = new Date();
 						return 'laporan_temuan_' + d.getTime();
 					},
@@ -322,42 +336,57 @@
 			serverSide: false,
 			pageLength: 25,
 			ajax: {
-				url: "<?=base_url('Admin/Laporan_Abnormal/list_temuan_tindakan_cepat') ?>",
+				url: "<?= base_url('Admin/Laporan_Abnormal/list_temuan_tindakan_cepat') ?>",
 				dataSrc: '',
 			},
-			columns: [
-				{
+			columns: [{
 					data: 'image_1',
-					"render": function (data, type, row) {
+					"render": function(data, type, row) {
 						if (data === null) {
-							data = "<?=base_url('assets') . '/dist/img/img-not-found.png'?>";
+							var ln = "<?= base_url('assets') . '/dist/img/img-not-found.png' ?>";
+						} else {
+							ln = "<?= base_url() ?>" + data;
 						}
-						return '<a href="' + data + '"  data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '">' +
-							'<img src="' + data + '" class="img-thumbnail" data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '" width="50px" alt="' + row.nama_objek + '">' +
+						return '<a href="' + ln + '"  data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '">' +
+							'<img src="' + ln + '" class="img-thumbnail" data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '" width="50px" alt="' + row.nama_objek + '">' +
 							'</a>'
 					}
 				},
-				{data: 'date_patroli'},
-				{data: 'nama_shift'},
-				{data: 'plant_name'},
-				{data: 'zone_name'},
-				{data: 'checkpoint_name'},
-				{data: 'nama_objek'},
-				{data: 'description'}
+				{
+					data: 'date_patroli'
+				},
+				{
+					data: 'nama_shift'
+				},
+				{
+					data: 'plant_name'
+				},
+				{
+					data: 'zone_name'
+				},
+				{
+					data: 'checkpoint_name'
+				},
+				{
+					data: 'nama_objek'
+				},
+				{
+					data: 'description'
+				}
 			],
-			initComplete: function () {
-				this.api().columns([3, 5, 6]).every(function () {
+			initComplete: function() {
+				this.api().columns([3, 5, 6]).every(function() {
 					let column = this;
 					let select = $('<select class="form-control form-control-sm"><option value=""> -- Filter -- </option></select>')
 						.appendTo($(column.header()))
-						.on('change', function () {
+						.on('change', function() {
 							const val = $.fn.dataTable.util.escapeRegex($(this).val());
 							column
 								.search(val ? '^' + val + '$' : '', true, false)
 								.draw();
 						});
 
-					column.data().unique().sort().each(function (d, j) {
+					column.data().unique().sort().each(function(d, j) {
 						let cols = column.selector.cols
 						if (cols === 8) {
 							if (d === 1) {
@@ -373,8 +402,7 @@
 			}
 		});
 		new $.fn.dataTable.Buttons(tableTemuanTindakanCepat, {
-			buttons: [
-				{
+			buttons: [{
 					extend: 'excelHtml5',
 					title: 'Data export',
 					text: '<i class="fa fa-files-o"></i> XLSX',
@@ -383,11 +411,11 @@
 					exportOptions: {
 						columns: [0, 1, 2, 3, 4, 5, 6, 7]
 					},
-					filename: function () {
+					filename: function() {
 						var d = new Date();
 						return 'laporan_temuan_' + d.getTime();
 					},
-					customize: function (xlsx) {
+					customize: function(xlsx) {
 						var sheet = xlsx.xl.worksheets['sheet1.xml'];
 
 						$('row c', sheet).attr('s', '25');
@@ -403,7 +431,7 @@
 					exportOptions: {
 						columns: [0, 1, 2, 3, 4, 5, 6, 7]
 					},
-					filename: function () {
+					filename: function() {
 						var d = new Date();
 						return 'laporan_temuan_tindakan_cepat_' + d.getTime();
 					},

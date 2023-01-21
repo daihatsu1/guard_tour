@@ -84,7 +84,7 @@
 		text-transform: uppercase;
 	}
 
-	.timeline .timeline-wrapper .timeline-panel .timeline-body p + p {
+	.timeline .timeline-wrapper .timeline-panel .timeline-body p+p {
 		margin-top: 5px;
 	}
 
@@ -118,7 +118,7 @@
 	}
 
 	.timeline-badge.timeline-duration {
-		/*margin-top: 100px;*/
+		margin-top: 20px;
 		background: #fff !important;
 		border: 2px solid #28a745 !important;
 		width: 115px !important;
@@ -131,7 +131,7 @@
 	}
 
 	.timeline-inverted .timeline-badge.timeline-duration {
-		left: calc(39% - 16px) !important;
+		left: calc(36% - 16px) !important;
 		font-size: 12px;
 	}
 
@@ -238,7 +238,7 @@
 		background: #001737;
 	}
 </style>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 <!-- START SECTION HEADER -->
 <section class="content-header">
@@ -282,46 +282,46 @@
 					<div class="card-body p-4">
 						<table class="table table-sm table-striped">
 							<tbody>
-							<tr>
-								<th scope="row">Tanggal Patroli</th>
-								<td><?= $detail->date_patroli ?></td>
-							</tr>
-							<tr>
-								<th scope="row">Plant</th>
-								<td><?= $detail->plant_name ?></td>
-							</tr>
-							<tr>
-								<th scope="row">Shift</th>
-								<td><?= $detail->nama_shift ?></td>
-							</tr>
-							<tr>
-								<th scope="row">Pelaksana</th>
-								<td><?= $detail->name ?></td>
-							</tr>
-							<tr>
-								<th scope="row">Target Object</th>
-								<td><?= $detail->target_object ?></td>
-							</tr>
-							<tr>
-								<th scope="row">Total Object Normal</th>
-								<td><?= $detail->total_object_normal ?></td>
-							</tr>
-							<tr>
-								<th scope="row">Total Object Temuan</th>
-								<td><?= $detail->total_object_temuan ?></td>
-							</tr>
-							<tr>
-								<th scope="row">Target Checkpoint</th>
-								<td><?= $detail->total_ckp ?></td>
-							</tr>
-							<tr>
-								<th scope="row">Checkpoint Dipatroli</th>
-								<td><?= $detail->chekpoint_patroli ?></td>
-							</tr>
-							<tr>
-								<th scope="row">Persentase</th>
-								<td><?= round($detail->chekpoint_patroli / $detail->total_ckp, 2) * 100 ?>%</td>
-							</tr>
+								<tr>
+									<th scope="row">Tanggal Patroli</th>
+									<td><?= $detail->date_patroli ?></td>
+								</tr>
+								<tr>
+									<th scope="row">Plant</th>
+									<td><?= $detail->plant_name ?></td>
+								</tr>
+								<tr>
+									<th scope="row">Shift</th>
+									<td><?= $detail->nama_shift ?></td>
+								</tr>
+								<tr>
+									<th scope="row">Pelaksana</th>
+									<td><?= $detail->name ?></td>
+								</tr>
+								<tr>
+									<th scope="row">Target Object</th>
+									<td><?= $detail->target_object ?></td>
+								</tr>
+								<tr>
+									<th scope="row">Total Object Normal</th>
+									<td><?= $detail->total_object_normal ?></td>
+								</tr>
+								<tr>
+									<th scope="row">Total Object Temuan</th>
+									<td><?= $detail->total_object_temuan ?></td>
+								</tr>
+								<tr>
+									<th scope="row">Target Checkpoint</th>
+									<td><?= $detail->total_ckp ?></td>
+								</tr>
+								<tr>
+									<th scope="row">Checkpoint Dipatroli</th>
+									<td><?= $detail->chekpoint_patroli ?></td>
+								</tr>
+								<tr>
+									<th scope="row">Persentase</th>
+									<td><?= round($detail->chekpoint_patroli / $detail->total_ckp, 2) * 100 ?>%</td>
+								</tr>
 							</tbody>
 						</table>
 						<!-- /.table-responsive -->
@@ -348,89 +348,86 @@
 					<div class="card-body p-4 overflow-auto" style="height: 75vh">
 						<div class="timeline">
 							<?php foreach ($timeline as $key => $value) {
-							$number = $key + 1;
-							$timelineClass = 'timeline-wrapper-success';
-							if ($value->total_temuan > 0) {
-								$timelineClass = 'timeline-wrapper-danger';
-							}
-							$tooltipPosition = 'left'
+								$number = $key + 1;
+								$timelineClass = 'timeline-wrapper-success';
+								if ($value->total_temuan > 0) {
+									$timelineClass = 'timeline-wrapper-danger';
+								}
+								$tooltipPosition = 'left'
 							?>
-							<?php if (fmod($key, 2) == 0) {
-							$tooltipPosition = 'right';
-							?>
-							<div class="timeline-wrapper <?= $timelineClass ?>">
-								<?php } else { ?>
-								<div class="timeline-wrapper timeline-inverted <?= $timelineClass ?>">
-									<?php } ?>
-									<div class="timeline-badge">
-										<a data-toggle="collapse" href="#collapse_<?= $number ?>"
-										   class="text-white"
-										   role="button"
-										   aria-expanded="false"
-										   aria-controls="collapse_<?= $number
-										   ?>"><?= $number ?></a></div>
-									<div class="timeline-panel collapse" id="collapse_<?= $number ?>">
-										<div class="timeline-heading">
-											<h6 class="timeline-title text-bold"><?= $value->check_name ?></h6>
+								<?php if (fmod($key, 2) == 0) {
+									$tooltipPosition = 'right';
+								?>
+									<div class="timeline-wrapper <?= $timelineClass ?>">
+									<?php } else { ?>
+										<div class="timeline-wrapper timeline-inverted <?= $timelineClass ?>">
+										<?php } ?>
+										<div class="timeline-badge">
+											<a data-toggle="collapse" href="#collapse_<?= $number ?>" class="text-white" role="button" aria-expanded="false" aria-controls="collapse_<?= $number
+																																														?>"><?= $number ?></a>
+										</div>
+										<div class="timeline-panel collapse" id="collapse_<?= $number ?>">
+											<div class="timeline-heading">
+												<h6 class="timeline-title text-bold"><?= $value->check_name ?></h6>
+											</div>
+											<?php
+											$durationCheckpoint = '0 Menit';
+											$startCheckpoint = new DateTime($value->start_at);
+											$endCheckpoint = new DateTime($value->end_at);
+											$intervalCheckpoint = $startCheckpoint->diff($endCheckpoint);
+											if ($intervalCheckpoint->i != 0) {
+												$duration_minute = $intervalCheckpoint->format('%i');
+												$durationCheckpoint = $intervalCheckpoint->format('%i Menit');
+											}
+											if ($intervalCheckpoint->s) {
+												$duration_second = $intervalCheckpoint->format('%s');
+												$durationCheckpoint = $durationCheckpoint . $intervalCheckpoint->format(' %s Detik');
+											}
+											?>
+											<div class="timeline-body">
+												<table class="table table-sm mb-0">
+													<tbody>
+														<tr>
+															<th scope="row">Waktu Check In</th>
+															<td>: <span class="date-format"><?= $value->start_at ?></span></td>
+														</tr>
+														<tr>
+															<th scope="row">Waktu Check Out</th>
+															<td>: <span class="date-format"><?= $value->end_at ?></span></td>
+														</tr>
+														<tr>
+															<th scope="row">Durasi</th>
+															<td>: <?= $durationCheckpoint ?></td>
+														</tr>
+														<tr>
+															<th scope="row">Total Temuan</th>
+															<td>: <?= $value->total_temuan ?></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
 										</div>
 										<?php
-										$durationCheckpoint = '0 Menit';
-										$startCheckpoint = new DateTime($value->start_at);
-										$endCheckpoint = new DateTime($value->end_at);
-										$intervalCheckpoint = $startCheckpoint->diff($endCheckpoint);
-										if ($intervalCheckpoint->i != 0) {
-											$duration_minute = $intervalCheckpoint->format('%i');
-											$durationCheckpoint = $intervalCheckpoint->format('%i Menit');
-										}
-										if ($intervalCheckpoint->s) {
-											$duration_second = $intervalCheckpoint->format('%s');
-											$durationCheckpoint = $durationCheckpoint . $intervalCheckpoint->format(' %s Detik');
-										}
-										?>
-										<div class="timeline-body">
-											<table class="table table-sm mb-0">
-												<tbody>
-												<tr>
-													<th scope="row">Waktu Check In</th>
-													<td>: <span class="date-format"><?= $value->start_at ?></span></td>
-												</tr>
-												<tr>
-													<th scope="row">Waktu Check Out</th>
-													<td>: <span class="date-format"><?= $value->end_at ?></span></td>
-												</tr>
-												<tr>
-													<th scope="row">Durasi</th>
-													<td>: <?= $durationCheckpoint ?></td>
-												</tr>
-												<tr>
-													<th scope="row">Total Temuan</th>
-													<td>: <?= $value->total_temuan ?></td>
-												</tr>
-												</tbody>
-											</table>
-										</div>
-									</div>
-									<?php
-									$durationNextCheckpoint = '0 Menit';
-									if ($key < count($timeline) - 1) {
-										$next = new DateTime($timeline[$key + 1]->start_at);
-										$current = new DateTime($value->end_at);
-										$interval = $next->diff($current);
-										if ($interval->i != 0) {
-											$duration_minute = $interval->format('%i');
-											$durationNextCheckpoint = $interval->format('%i Menit');
-										}
-										if ($interval->s) {
-											$duration_second = $interval->format('%s');
-											$durationNextCheckpoint = $durationNextCheckpoint . $interval->format(' %s Detik');
-										} ?>
-										<div class="timeline-badge timeline-duration" data-toggle="tooltip" data-placement="<?=$tooltipPosition?>" title="Durasi Perpindahan checkpoint <?=$durationNextCheckpoint?>"><?= $durationNextCheckpoint ?></div>
-									<?php } ?>
+										$durationNextCheckpoint = '0 Menit';
+										if ($key < count($timeline) - 1) {
+											$next = new DateTime($timeline[$key + 1]->start_at);
+											$current = new DateTime($value->end_at);
+											$interval = $next->diff($current);
+											if ($interval->i != 0) {
+												$duration_minute = $interval->format('%i');
+												$durationNextCheckpoint = $interval->format('%i Menit');
+											}
+											if ($interval->s) {
+												$duration_second = $interval->format('%s');
+												$durationNextCheckpoint = $durationNextCheckpoint . $interval->format(' %s Detik');
+											} ?>
+											<div class="timeline-badge timeline-duration" data-toggle="tooltip" data-placement="<?= $tooltipPosition ?>" title="Durasi Perpindahan checkpoint <?= $durationNextCheckpoint ?>"><?= $durationNextCheckpoint ?></div>
+										<?php } ?>
 
-								</div>
-								<?php } ?>
-							</div>
-							<!-- /.table-responsive -->
+										</div>
+									<?php } ?>
+									</div>
+									<!-- /.table-responsive -->
 						</div>
 						<!-- /.card-footer -->
 					</div>
@@ -442,19 +439,17 @@
 		</div>
 </section>
 <!--END SECTION CONTENT-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
-		integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
-		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-	$(document).ready(function(){
-		bsTooltip.call( $( "[data-toggle='tooltip']" ) );
+	$(document).ready(function() {
+		bsTooltip.call($("[data-toggle='tooltip']"));
 
 	});
-	$(function () {
-		moment.locale('id');         // id
-		$(".date-format").html(function (index, value) {
+	$(function() {
+		moment.locale('id'); // id
+		$(".date-format").html(function(index, value) {
 			return moment(value, "YYYY-MM-DD HH:mm:ss").format("DD-MM-YYYY, h:mm:ss ");
 		});
 	});

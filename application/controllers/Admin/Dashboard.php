@@ -47,9 +47,9 @@ class Dashboard extends CI_Controller
 			'plants' => $this->M_patrol->ambilData("admisecsgp_mstplant")
 		];
 
-		$this->load->view("template/sidebar", $sidebarData);
+		$this->load->view("template/admin/sidebar", $sidebarData);
 		$this->load->view("admin/dashboard", $data);
-		$this->load->view("template/footer");
+		$this->load->view("template/admin/footer");
 	}
 
 	public function temuan_kategori()
@@ -212,8 +212,6 @@ class Dashboard extends CI_Controller
 			->set_content_type('application/json')
 			->set_status_header(200)
 			->set_output(json_encode($data));
-
-
 	}
 
 	public function listTemuanByUser()
@@ -428,5 +426,4 @@ class Dashboard extends CI_Controller
 			->set_status_header(200)
 			->set_output(json_encode($data));
 	}
-
 }

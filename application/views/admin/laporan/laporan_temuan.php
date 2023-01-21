@@ -43,19 +43,19 @@
 						<div class="table-responsive ">
 							<table class="table table-sm m-0 table-hover" id="tableTemuan">
 								<thead>
-								<tr>
-									<th>Foto</th>
-									<th data-filter="input">Tanggal Patroli</th>
-									<th data-filter="select">Shift</th>
-									<th data-filter="select">Plant</th>
-									<th data-filter="select">Zona</th>
-									<th data-filter="select">Chekpoint</th>
-									<th data-filter="input">Nama Objek</th>
-									<th data-filter="input">Deskripsi Temuan</th>
-									<th data-filter="select">Status</th>
-									<th>Waktu Tindakan</th>
-									<th>Deskripsi Tindakan</th>
-								</tr>
+									<tr>
+										<th>Foto</th>
+										<th data-filter="input">Tanggal Patroli</th>
+										<th data-filter="select">Shift</th>
+										<th data-filter="select">Plant</th>
+										<th data-filter="select">Zona</th>
+										<th data-filter="select">Chekpoint</th>
+										<th data-filter="input">Nama Objek</th>
+										<th data-filter="input">Deskripsi Temuan</th>
+										<th data-filter="select">Status</th>
+										<th>Waktu Tindakan</th>
+										<th>Deskripsi Tindakan</th>
+									</tr>
 								</thead>
 								<tbody>
 								</tbody>
@@ -87,7 +87,7 @@
 	}
 </style>
 <script>
-	$(function () {
+	$(function() {
 		$('#tableTemuan thead tr')
 			.clone(true)
 			.addClass('filters')
@@ -107,31 +107,46 @@
 			serverSide: false,
 			pageLength: 25,
 			ajax: {
-				url: "<?=base_url('Admin/Laporan_Temuan/list_temuan') ?>",
+				url: "<?= base_url('Admin/Laporan_Temuan/list_temuan') ?>",
 				dataSrc: '',
 			},
-			columns: [
-				{
+			columns: [{
 					data: 'image_1',
-					"render": function (data, type, row) {
+					"render": function(data, type, row) {
 						if (data === null) {
-							data = "<?=base_url('assets') . '/dist/img/img-not-found.png'?>";
+							var ln = "<?= base_url('assets') . '/dist/img/img-not-found.png' ?>";
+						} else {
+							ln = "<?= base_url() ?>" + data;
 						}
-						return '<a href="' + data + '"  data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '">' +
-							'<img src="' + data + '" class="img-thumbnail" data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '" width="50px" alt="' + row.nama_objek + '">' +
+						return '<a href="' + ln + '"  data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '">' +
+							'<img src="' + ln + '" class="img-thumbnail" data-lightbox="' + row.object_id + '" data-title="' + row.nama_objek + '" width="50px" alt="' + row.nama_objek + '">' +
 							'</a>'
 					}
 				},
-				{data: 'date_patroli'},
-				{data: 'nama_shift'},
-				{data: 'plant_name'},
-				{data: 'zone_name'},
-				{data: 'checkpoint_name'},
-				{data: 'nama_objek'},
-				{data: 'description'},
+				{
+					data: 'date_patroli'
+				},
+				{
+					data: 'nama_shift'
+				},
+				{
+					data: 'plant_name'
+				},
+				{
+					data: 'zone_name'
+				},
+				{
+					data: 'checkpoint_name'
+				},
+				{
+					data: 'nama_objek'
+				},
+				{
+					data: 'description'
+				},
 				{
 					data: 'status_temuan',
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if (data === 1) {
 							return '<span class="badge badge-success">CLOSE</span>'
 						} else {
@@ -142,7 +157,7 @@
 				{
 					data: 'updated_at',
 					visible: false,
-					render: function (data, type, row) {
+					render: function(data, type, row) {
 						if (row.deskripsi_tindakan === 'null') {
 							return '-'
 						}
@@ -152,8 +167,8 @@
 				{
 					data: 'deskripsi_tindakan',
 					visible: false,
-					render: function (data, type, row) {
-						if (data ==='null') {
+					render: function(data, type, row) {
+						if (data === 'null') {
 							return '-'
 						}
 						return data
@@ -161,7 +176,7 @@
 				},
 
 			],
-			initComplete: function () {
+			initComplete: function() {
 				var api = this.api();
 
 				function initFilterInput(api, cell, colIdx) {
@@ -169,11 +184,11 @@
 					$(cell).html('<input type="text"  class="form-control form-control-sm" placeholder="' + title + '" />');
 					// On every keypress in this input
 					$(
-						'input',
-						$('.filters th').eq($(api.column(colIdx).header()).index())
-					)
+							'input',
+							$('.filters th').eq($(api.column(colIdx).header()).index())
+						)
 						.off('keyup change')
-						.on('change', function (e) {
+						.on('change', function(e) {
 							// Get the search value
 							$(this).attr('title', $(this).val());
 							var regexr = '({search})'; //$(this).parents('th').find('select').val();
@@ -183,15 +198,15 @@
 							api
 								.column(colIdx)
 								.search(
-									this.value !== ''
-										? regexr.replace('{search}', '(((' + this.value + ')))')
-										: '',
+									this.value !== '' ?
+									regexr.replace('{search}', '(((' + this.value + ')))') :
+									'',
 									this.value !== '',
 									this.value === ''
 								)
 								.draw();
 						})
-						.on('keyup', function (e) {
+						.on('keyup', function(e) {
 							e.stopPropagation();
 
 							$(this).trigger('change');
@@ -203,14 +218,14 @@
 
 				function initFilterSelect(api, cell, colIdx) {
 					let select = $('<select class="form-control form-control-sm"><option value=""> -- Filter -- </option></select>')
-						.on('change', function () {
+						.on('change', function() {
 							const val = $.fn.dataTable.util.escapeRegex($(this).val());
 							api.column(colIdx)
 								.search(val ? '^' + val + '$' : '', true, false)
 								.draw();
 						});
 					$(cell).html(select);
-					api.column(colIdx).data().unique().sort().each(function (d, j) {
+					api.column(colIdx).data().unique().sort().each(function(d, j) {
 						let cols = api.column(colIdx).selector.cols
 						if (cols === 8) {
 							if (d === 1) {
@@ -227,7 +242,7 @@
 				api
 					.columns()
 					.eq(0)
-					.each(function (colIdx) {
+					.each(function(colIdx) {
 						// Set the header cell to contain the input element
 						var cell = $('.filters th').eq(
 							$(api.column(colIdx).header()).index()
@@ -251,8 +266,7 @@
 			}
 		});
 		new $.fn.dataTable.Buttons(table, {
-			buttons: [
-				{
+			buttons: [{
 					extend: 'excelHtml5',
 					title: 'Data export',
 					text: '<i class="fa fa-files-o"></i> XLSX',
@@ -261,11 +275,11 @@
 					exportOptions: {
 						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 					},
-					filename: function () {
+					filename: function() {
 						var d = new Date();
 						return 'laporan_temuan_' + d.getTime();
 					},
-					customize: function (xlsx) {
+					customize: function(xlsx) {
 						var sheet = xlsx.xl.worksheets['sheet1.xml'];
 
 						$('row c', sheet).attr('s', '25');
@@ -281,7 +295,7 @@
 					exportOptions: {
 						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 					},
-					filename: function () {
+					filename: function() {
 						var d = new Date();
 						return 'laporan_temuan_' + d.getTime();
 					},

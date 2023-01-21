@@ -97,14 +97,13 @@ class M_LaporanTemuan extends CI_Model
 	{
 		$where = '';
 		if ($plant_id != null) {
-			$where .= "and pl.plant_id ='" . $plant_id . "' ";
+			$where .= "and pl.admisecsgp_mstsite_site_id ='" . $plant_id . "' ";
 		}
 		if ($status_temuan != null) {
 			if ($status_temuan == 'open') {
 				$where .= "and atd.status_temuan !=1";
 			} else {
 				$where .= "and atd.status_temuan = 1";
-
 			}
 		}
 
@@ -149,7 +148,7 @@ class M_LaporanTemuan extends CI_Model
 	{
 		$where = '';
 		if ($plant_id != null) {
-			$where = "and pl.plant_id ='" . $plant_id . "'";
+			$where = "and pl.admisecsgp_mstsite_site_id ='" . $plant_id . "'";
 		}
 
 
@@ -274,7 +273,6 @@ class M_LaporanTemuan extends CI_Model
 						and YEAR(ath.date_patroli) = 2022) as d
 				group by plant_name";
 		return $this->db->query($sql)->result();
-
 	}
 
 	public function getTemuanByUser($year, $month, $plant_id = null)
@@ -309,7 +307,6 @@ class M_LaporanTemuan extends CI_Model
 				on pgroup.patrol_group = u.patrol_group and pgroup.plant_id = u.plant_id
 				order by pgroup.plant_id";
 		return $this->db->query($sql)->result();
-
 	}
 
 	function getTemuanZone($year, $month, $plant_id)
@@ -340,7 +337,6 @@ class M_LaporanTemuan extends CI_Model
 								   on zplant.plant_id = u.plant_id and zplant.zone_id = u.zone_id
 				order by plant_id, zone_name";
 		return $this->db->query($sql)->result();
-
 	}
 
 	public function getDataTemuanByMonth($year, $month, $plant_id = null)
@@ -472,10 +468,8 @@ class M_LaporanTemuan extends CI_Model
 								jp.date_patroli = ath.date_patroli
 					where atd.status = 0
 					  and atd.laporkan_pic = 1
-					and jp.id_jadwal_patroli ='".$jadwalPatroli."'
+					and jp.id_jadwal_patroli ='" . $jadwalPatroli . "'
 					order by atd.status_temuan, atd.created_at desc";
 		return $this->db->query($sqlDetail)->result();
 	}
-
-
 }
