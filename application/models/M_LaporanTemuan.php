@@ -77,7 +77,7 @@ class M_LaporanTemuan extends CI_Model
 								 join admisecsgp_trans_headers ath on ath.trans_header_id = td.admisecsgp_trans_headers_trans_headers_id
 								 join admisecsgp_mstzone zn on ath.admisecsgp_mstzone_zone_id = zn.zone_id
 						where td.status = 0
-						  and date_patroli = cast(getdate() as date) " . $where . ")                         as temuan_hari_ini,
+						  and ath.date_patroli = cast(getdate() as date) " . $where . ")                         as temuan_hari_ini,
 					   (select count(*)
 						from admisecsgp_trans_details td
 								 join admisecsgp_trans_headers ath on ath.trans_header_id = td.admisecsgp_trans_headers_trans_headers_id

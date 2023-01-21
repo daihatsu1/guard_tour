@@ -105,6 +105,7 @@ class PatroliController extends RestController
 			$dataHeader = $header->row();
 			$id = $dataHeader->trans_header_id;
 			$this->M_restPatrol->updateData('admisecsgp_trans_headers', $data, 'trans_header_id', $id);
+
 		} else {
 			$id = $this->M_restPatrol->saveData('admisecsgp_trans_headers', $data);
 		}
@@ -187,8 +188,7 @@ class PatroliController extends RestController
 				}
 
 				$headerDetail = $this->db->get_where('admisecsgp_trans_details', array(
-					'sync_token' => $detail['sync_token']
-				), 1, 0);
+					'sync_token' => $detail['sync_token']), 1, 0);
 				$countDetail = $headerDetail->num_rows();
 				if ($countDetail > 0) {
 					$existingDataDetail = $headerDetail->row();
@@ -196,7 +196,6 @@ class PatroliController extends RestController
 					$this->M_restPatrol->updateData('admisecsgp_trans_details', $dataDetail, 'trans_detail_id', $idDetail);
 				} else {
 					$this->M_restPatrol->saveData('admisecsgp_trans_details', $dataDetail);
-
 				}
 
 			}

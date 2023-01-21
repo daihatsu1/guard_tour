@@ -66,7 +66,7 @@ class Dashboard extends CI_Controller
 					'label' => 'Total Temuan',
 					'data' => $dataTemuan
 				], [
-					'type' => 'line',
+					'type' => 'bar',
 					'label' => 'Total Objek',
 					'data' => $dataTotal,
 				]
@@ -99,7 +99,8 @@ class Dashboard extends CI_Controller
 	public function patroli_plant()
 	{
 		$result = array();
-		$data = $this->M_LaporanPatroli->getPatroliPlant();
+		$year = $this->dateNow->format('Y');
+		$data = $this->M_LaporanPatroli->getPatroliPlant($year);
 		foreach ($data as $item) {
 			$result[$item->plant_name][] = [
 				"x" => substr(convertbulanina($item->month), 0, 3),
@@ -342,27 +343,27 @@ class Dashboard extends CI_Controller
 		$datasets = [
 			[
 				'label' => "Total Temuan",
-				'type' => "line",
+				'type' => "bar",
 				'fill' => false,
 				'data' => $datesTemuan,
 				'minBarLength' => 2,
 			], [
 				'label' => "Total Tindakan",
-				'type' => "line",
+				'type' => "bar",
 				'fill' => false,
 				'data' => $datesTindakan,
 				'minBarLength' => 2,
 			],
 			[
 				'label' => "Tindakan PIC",
-				'type' => "line",
+				'type' => "bar",
 				'data' => $datesTindakanPIC,
 				'fill' => false,
 				'minBarLength' => 2,
 			],
 			[
 				'label' => "Tindakan Cepat",
-				'type' => "line",
+				'type' => "bar",
 				'fill' => false,
 				'data' => $datesTindakanCepat,
 				'minBarLength' => 2,
@@ -404,7 +405,7 @@ class Dashboard extends CI_Controller
 			}
 			$datasets[] = [
 				'label' => $group,
-				'type' => "line",
+				'type' => "bar",
 				'fill' => false,
 				'data' => $datesPatroliGroup,
 				'minBarLength' => 2,

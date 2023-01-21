@@ -171,19 +171,23 @@ class M_LaporanPatroli extends CI_Model
 
 	}
 
-	public function getPatroliPlant($plant_id = null)
+	public function getPatroliPlant($year, $plant_id = null)
 	{
 		$where = '';
 		if ($plant_id != null) {
-			$where = "where a.plant_id ='" . $plant_id . "'";
+			$where = " a.plant_id ='" . $plant_id . "'";
 		}
+
 		$sql = "select plant_name, plant_id, count(plant_name) total_patroli, month
 					from (select a.plant_id, plant_name, FORMAT(ath.date_patroli, 'MM') as month
 						  from admisecsgp_trans_headers ath
 								   join admisecsgp_mstzone am on ath.admisecsgp_mstzone_zone_id = am.zone_id
 								   join admisecsgp_mstplant a on am.admisecsgp_mstplant_plant_id = a.plant_id
+						  where   YEAR(ath.date_patroli) = " . $year . ".
 						  " . $where . " 
-						  group by ath.admisecsgp_mstusr_npk, ath.type_patrol, a.plant_id, plant_name, date_patroli) s
+						  group by ath.admisecsgp_mstusr_npk, 
+						  ath.type_patrol, a.plant_id, plant_name, 
+						  date_patroli) s
 					group by plant_name, plant_id, month;";
 		return $this->db->query($sql)->result();
 	}
