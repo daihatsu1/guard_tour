@@ -101,6 +101,9 @@
 							<!-- /.chart-responsive -->
 						</div>
 					</div>
+					<div class="overlay" style="display:none" id="chartTemuan_overlay">
+						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -118,6 +121,9 @@
 							<!-- /.chart-responsive -->
 						</div>
 					</div>
+					<div class="overlay" style="display:none" id="chartPatroli_overlay">
+						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
+					</div>
 				</div>
 
 			</div>
@@ -129,11 +135,11 @@
 						<div class="row">
 							<div class="col-md-12">
 								<p class="text-center mb-2">
-									<strong>Temuan Group Per Plant
+									<strong>Temuan per Group
 									</strong>
 								</p>
 								<div class="d-flex justify-content-center mb-2 month-picker"
-									 data-chart="chartTemuanByUser" data-action="ajaxListPatroliByUser">
+									 data-chart="chartTemuanByUser" data-action="ajaxListTemuanByUser">
 								</div>
 
 								<div class="chart">
@@ -144,6 +150,9 @@
 							<!-- /.col -->
 						</div>
 					</div>
+					<div class="overlay" style="display:none" id="chartTemuanByUser_overlay">
+						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -152,7 +161,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<p class="text-center mb-2">
-									<strong>Patroli Group Per Plant
+									<strong>Patroli Per Group
 									</strong>
 								</p>
 								<div class="d-flex justify-content-center mb-2 month-picker"
@@ -167,22 +176,28 @@
 							<!-- /.col -->
 						</div>
 					</div>
+					<div class="overlay" style="display:none" id="chartPatroliByUser_overlay">
+						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="card">
 					<div class="card-body">
 						<p class="text-center mb-2">
-							<strong>Temuan Berdasarkan Plant
+							<strong>Temuan & Tindakan
 							</strong>
 						</p>
 						<div class="d-flex justify-content-center mb-2 month-picker"
-							 data-chart="chartTemuanbyPlant" data-action="ajaxTemuanbyPlant">
+							 data-chart="chartTemuanbyPlant" data-action="ajaxTemuanByPlant">
 						</div>
 
 						<div class="chart">
 							<canvas id="chartTemuanbyPlant" style="height: 300px;"></canvas>
 						</div>
+					</div>
+					<div class="overlay" style="display:none" id="chartTemuanbyPlant_overlay">
+						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 				</div>
 				<!-- /.chart-responsive -->
@@ -208,6 +223,9 @@
 							<canvas id="chartTemuanByKategori" style="height: 300px;"></canvas>
 						</div>
 					</div>
+					<div class="overlay" style="display:none" id="chartTemuanByKategori_overlay">
+						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
+					</div>
 				</div>
 				<!-- /.chart-responsive -->
 			</div>
@@ -230,6 +248,9 @@
 						</div>
 						<!-- /.chart-responsive -->
 					</div>
+					<div class="overlay" style="display:none" id="chartTemuanZone_overlay">
+						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -250,6 +271,9 @@
 							<canvas id="chartTrenTemuan" style="height: 300px;"></canvas>
 						</div>
 						<!-- /.chart-responsive -->
+					</div>
+					<div class="overlay" style="display:none" id="chartTrenTemuan_overlay">
+						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 				</div>
 			</div>
@@ -272,54 +296,13 @@
 						</div>
 						<!-- /.chart-responsive -->
 					</div>
+					<div class="overlay" style="display:none" id="chartTrenPatroli_overlay">
+						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
+					</div>
 				</div>
 			</div>
 		</div>
 		<!-- /.row -->
-	</div>
-	<!-- ./card-body -->
-	<div class="card-footer">
-		<div class="row">
-			<div class="col-sm-3 col-6">
-				<div class="description-block border-right">
-					<h5 class="description-header"><?= $data_temuan->temuan_selesai ?></h5>
-					<span class="description-text">TEMUAN SELESAI</span>
-				</div>
-				<!-- /.description-block -->
-			</div>
-			<!-- /.col -->
-			<div class="col-sm-3 col-6">
-				<div class="description-block border-right">
-					<h5 class="description-header"><?= $data_temuan->temuan_belum_selesai ?></h5>
-					<span class="description-text">TEMUAN BELUM SELESAI</span>
-				</div>
-				<!-- /.description-block -->
-			</div>
-			<!-- /.col -->
-			<div class="col-sm-3 col-6">
-				<div class="description-block border-right">
-					<h5 class="description-header">0</h5>
-					<span class="description-text">TOTAL </span>
-				</div>
-				<!-- /.description-block -->
-			</div>
-			<!-- /.col -->
-			<div class="col-sm-3 col-6">
-				<div class="description-block">
-					<h5 class="description-header">0</h5>
-					<span class="description-text">TOTAL</span>
-				</div>
-				<!-- /.description-block -->
-			</div>
-		</div>
-		<!-- /.row -->
-	</div>
-	<!-- /.card-footer -->
-	</div>
-	<!-- /.card -->
-	</div>
-	<!-- /.col -->
-	</div>
 	</div>
 </section>
 
@@ -350,72 +333,7 @@
 	ctxChartTemuan.height = 300;
 
 	const chartTemuan = new Chart(ctxChartTemuan, {
-		type: 'line',
-		data: {},
-		options: {
-			maintainAspectRatio: true,
-			responsive: true,
-			legend: {
-				display: true
-			},
-			scales: {
-				xAxes: [{
-					gridLines: {
-						display: true
-					}
-				}],
-				yAxes: [{
-					gridLines: {
-						display: false
-					},
-					ticks: {
-						beginAtZero: true,
-						// stepSize: 1
-					}
-				}]
-			},
-			tooltips: {
-				callbacks: {
-					title: function (tooltipItem, data) {
-						return data.datasets[tooltipItem[0].datasetIndex].data[0].x;
-					}
-				}
-			},
-			plugins: {
-				colorschemes: {
-					scheme: 'brewer.DarkTwo5',
-				}
-
-			}
-		}
-	});
-
-	function ajaxTemuanPlant() {
-		$.ajax({
-			url: "<?=base_url('Admin/Dashboard/temuan_plant') ?>",
-			method: "GET",
-			success: function (data) {
-				if (data) {
-					let dataset_ = []
-					Object.keys(data).forEach(plant_name => {
-						let ds = {
-							label: 'TOTAL TEMUAN',
-							data: data[plant_name],
-						}
-						dataset_.push(ds)
-					});
-					chartTemuan.data = {datasets: dataset_, labels: MONTHS}
-					chartTemuan.update()
-				}
-			}
-		});
-
-	}
-
-	// PATROLI
-	const ctxChartPatroli = document.getElementById('chartPatroli').getContext('2d');
-	const chartPatroli = new Chart(ctxChartPatroli, {
-		type: 'line',
+		type: 'bar',
 		data: {},
 		options: {
 			maintainAspectRatio: true,
@@ -449,6 +367,80 @@
 			plugins: {
 				colorschemes: {
 					scheme: 'brewer.DarkTwo5',
+				}
+
+			}
+		}
+	});
+
+	function ajaxTemuanPlant() {
+		$.ajax({
+			url: "<?=base_url('Admin/Dashboard/temuan_plant') ?>",
+			method: "GET",
+			beforeSend: function(){
+				// Handle the beforeSend event
+				$('#chartTemuan_overlay').fadeIn()
+
+			},
+			complete: function(){
+				// Handle the complete event
+				$('#chartTemuan_overlay').fadeOut()
+			},
+			success: function (data) {
+				if (data) {
+					let dataset_ = []
+					Object.keys(data).forEach(plant_name => {
+						let ds = {
+							label: 'TOTAL TEMUAN',
+							data: data[plant_name],
+						}
+						dataset_.push(ds)
+					});
+					chartTemuan.data = {datasets: dataset_, labels: MONTHS}
+					chartTemuan.update()
+				}
+			}
+		});
+
+	}
+
+	// PATROLI
+	const ctxChartPatroli = document.getElementById('chartPatroli').getContext('2d');
+	const chartPatroli = new Chart(ctxChartPatroli, {
+		type: 'bar',
+		data: {},
+		options: {
+			maintainAspectRatio: true,
+			responsive: true,
+			legend: {
+				display: true
+			},
+			scales: {
+				xAxes: [{
+					gridLines: {
+						display: true
+					}
+				}],
+				yAxes: [{
+					gridLines: {
+						display: false
+					},
+					ticks: {
+						beginAtZero: true,
+						stepSize: 5
+					}
+				}]
+			},
+			tooltips: {
+				callbacks: {
+					title: function (tooltipItem, data) {
+						return data.datasets[tooltipItem[0].datasetIndex].data[0].x;
+					}
+				}
+			},
+			plugins: {
+				colorschemes: {
+					scheme: 'brewer.DarkTwo5',
 				},
 			}
 		}
@@ -458,6 +450,15 @@
 		$.ajax({
 			url: "<?=base_url('Admin/Dashboard/patroli_plant') ?>",
 			method: "GET",
+			beforeSend: function(){
+				// Handle the beforeSend event
+				$('#chartPatroli_overlay').fadeIn()
+
+			},
+			complete: function(){
+				// Handle the complete event
+				$('#chartPatroli_overlay').fadeOut()
+			},
 			success: function (data) {
 				if (data) {
 					let label = [];
@@ -492,13 +493,13 @@
 			},
 			scales: {
 				xAxes: [{
-					stacked: true,
+					stacked: false,
 					gridLines: {
 						display: true
 					}
 				}],
 				yAxes: [{
-					stacked: true,
+					stacked: false,
 					gridLines: {
 						display: false
 					},
@@ -521,6 +522,15 @@
 			url: "<?=base_url('Admin/Dashboard/listPatroliByUser') ?>",
 			method: "GET",
 			data: params,
+			beforeSend: function(){
+				// Handle the beforeSend event
+				$('#chartPatroliByUser_overlay').fadeIn()
+
+			},
+			complete: function(){
+				// Handle the complete event
+				$('#chartPatroliByUser_overlay').fadeOut()
+			},
 			success: function (data) {
 				chartPatroliByUser.data = data
 				chartPatroliByUser.update()
@@ -540,13 +550,13 @@
 			},
 			scales: {
 				xAxes: [{
-					stacked: true,
+					stacked: false,
 					gridLines: {
 						display: true
 					}
 				}],
 				yAxes: [{
-					stacked: true,
+					stacked: false,
 					gridLines: {
 						display: false
 					},
@@ -569,6 +579,15 @@
 			url: "<?=base_url('Admin/Dashboard/listTemuanByUser') ?>",
 			method: "GET",
 			data: params,
+			beforeSend: function(){
+				// Handle the beforeSend event
+				$('#chartTemuanByUser_overlay').fadeIn()
+
+			},
+			complete: function(){
+				// Handle the complete event
+				$('#chartTemuanByUser_overlay').fadeOut()
+			},
 			success: function (data) {
 				chartTemuanByUser.data = data
 				chartTemuanByUser.update()
@@ -623,6 +642,15 @@
 			url: "<?=base_url('Admin/Dashboard/temuanTindakanPlant') ?>",
 			method: "GET",
 			data: params,
+			beforeSend: function(){
+				// Handle the beforeSend event
+				$('#chartTemuanbyPlant_overlay').fadeIn()
+
+			},
+			complete: function(){
+				// Handle the complete event
+				$('#chartTemuanbyPlant_overlay').fadeOut()
+			},
 			success: function (data) {
 				chartTemuanbyPlant.data = data
 				chartTemuanbyPlant.update()
@@ -668,6 +696,15 @@
 			url: "<?=base_url('Admin/Dashboard/temuan_kategori') ?>",
 			method: "GET",
 			data: params,
+			beforeSend: function(){
+				// Handle the beforeSend event
+				$('#chartTemuanByKategori_overlay').fadeIn()
+
+			},
+			complete: function(){
+				// Handle the complete event
+				$('#chartTemuanByKategori_overlay').fadeOut()
+			},
 			success: function (data) {
 				chartTemuanByKategori.data = data
 				chartTemuanByKategori.update()
@@ -723,6 +760,15 @@
 			url: "<?=base_url('Admin/Dashboard/temuan_zone') ?>",
 			method: "GET",
 			data: params,
+			beforeSend: function(){
+				// Handle the beforeSend event
+				$('#chartTemuanZone_overlay').fadeIn()
+
+			},
+			complete: function(){
+				// Handle the complete event
+				$('#chartTemuanZone_overlay').fadeOut()
+			},
 			success: function (data) {
 				chartTemuanZone.data = data
 				chartTemuanZone.update()
@@ -778,6 +824,15 @@
 			url: "<?=base_url('Admin/Dashboard/tren_temuan') ?>",
 			method: "GET",
 			data: params,
+			beforeSend: function(){
+				// Handle the beforeSend event
+				$('#chartTrenTemuan_overlay').fadeIn()
+
+			},
+			complete: function(){
+				// Handle the complete event
+				$('#chartTrenTemuan_overlay').fadeOut()
+			},
 			success: function (data) {
 				chartTrenTemuan.data = data
 				chartTrenTemuan.update()
@@ -834,10 +889,18 @@
 			url: "<?=base_url('Admin/Dashboard/tren_patroli') ?>",
 			method: "GET",
 			data: params,
+			beforeSend: function(){
+				// Handle the beforeSend event
+				$('#chartTrenPatroli_overlay').fadeIn()
+
+			},
+			complete: function(){
+				// Handle the complete event
+				$('#chartTrenPatroli_overlay').fadeOut()
+			},
 			success: function (data) {
 				chartTrenPatroli.data = data
 				chartTrenPatroli.update()
-				console.log(chartTrenTemuan)
 			}
 		});
 	}

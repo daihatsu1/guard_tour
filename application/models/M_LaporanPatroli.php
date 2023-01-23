@@ -175,7 +175,7 @@ class M_LaporanPatroli extends CI_Model
 	{
 		$where = '';
 		if ($plant_id != null) {
-			$where = " a.plant_id ='" . $plant_id . "'";
+			$where = " and a.plant_id ='" . $plant_id . "'";
 		}
 
 		$sql = "select plant_name, plant_id, count(plant_name) total_patroli, month
@@ -183,7 +183,7 @@ class M_LaporanPatroli extends CI_Model
 						  from admisecsgp_trans_headers ath
 								   join admisecsgp_mstzone am on ath.admisecsgp_mstzone_zone_id = am.zone_id
 								   join admisecsgp_mstplant a on am.admisecsgp_mstplant_plant_id = a.plant_id
-						  where   YEAR(ath.date_patroli) = " . $year . ".
+						  where   YEAR(ath.date_patroli) = " . $year . "
 						  " . $where . " 
 						  group by ath.admisecsgp_mstusr_npk, 
 						  ath.type_patrol, a.plant_id, plant_name, 
@@ -262,7 +262,8 @@ class M_LaporanPatroli extends CI_Model
 											SUM(IIF(atd.status = 1, 1, 0))                      as total_object_normal,
 											count(distinct ath.admisecsgp_mstckp_checkpoint_id) as chekpoint_patroli,
 											ath.type_patrol,
-											min(cast(ath.checkin_checkpoint as date))          as date_patroli
+											-- min(cast(ath.checkin_checkpoint as date))          as date_patroli
+							         		date_patroli
 									 from admisecsgp_trans_headers ath
 											  left join admisecsgp_trans_details atd
 														on ath.trans_header_id = atd.admisecsgp_trans_headers_trans_headers_id
@@ -274,7 +275,7 @@ class M_LaporanPatroli extends CI_Model
 									 where pl.plant_id = '" . $plantId . "'
 									   and MONTH(ath.date_patroli) = " . $month . "
 									   and YEAR(ath.date_patroli) = " . $year . "
-									 group by sh.nama_shift, pl.plant_name, ath.admisecsgp_mstusr_npk, pl.plant_id,
+									 group by date_patroli, sh.nama_shift, pl.plant_name, ath.admisecsgp_mstusr_npk, pl.plant_id,
 											  shift_id, ath.type_patrol) as s) as s
 							  on s.date_patroli = jp.date_patroli and s.shift_id = jp.admisecsgp_mstshift_shift_id and
 								 s.plant_id = jp.admisecsgp_mstplant_plant_id and s.npk = jp.admisecsgp_mstusr_npk

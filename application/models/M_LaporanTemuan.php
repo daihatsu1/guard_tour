@@ -257,7 +257,7 @@ class M_LaporanTemuan extends CI_Model
 		return $this->db->query($sql)->result();
 	}
 
-	public function getTindakanByPlant()
+	public function getTindakanByPlant($year, $month)
 	{
 		$sql = "select count(trans_detail_id) as total_tindakan, plant_name
 				from (select atd.trans_detail_id, plant_name
@@ -269,8 +269,9 @@ class M_LaporanTemuan extends CI_Model
 							   left join admisecsgp_mstusr usr on usr.npk = ath.admisecsgp_mstusr_npk
 					  where atd.status = 0
 						and atd.status_temuan = 1
-						and MONTH(ath.date_patroli) = 11
-						and YEAR(ath.date_patroli) = 2022) as d
+						and MONTH(ath.date_patroli) = " . $month . "
+				  		and YEAR(ath.date_patroli) = " . $year . "
+				  ) as d
 				group by plant_name";
 		return $this->db->query($sql)->result();
 	}
