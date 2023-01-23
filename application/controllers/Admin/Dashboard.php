@@ -206,7 +206,7 @@ class Dashboard extends CI_Controller
 			]
 		];
 		$data = [
-			'labels' => ['REGU PATROLI'],
+			'labels' => ['Total Temuan & Tindakan'],
 			'datasets' => $datasets,
 		];
 		return $this->output
@@ -404,7 +404,7 @@ class Dashboard extends CI_Controller
 			$datesPatroliGroup = array_merge(array(), $datesPatroli);
 			foreach ($data as $item) {
 				if ($item->patrol_group === $group) {
-					$day = $item->day;
+					$day = $item->day - 1;
 					$datesPatroliGroup[$day] = round(($item->chekpoint_patroli / $item->total_ckp) * 100);
 				}
 			}
