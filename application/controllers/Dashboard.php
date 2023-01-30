@@ -80,7 +80,7 @@ class Dashboard extends CI_Controller
 	public function temuan_plant()
 	{
 		$result = array();
-		$year = $this->dateNow->format('Y');
+		$year = $this->input->get('year');
 		$data = $this->M_LaporanTemuan->getTemuanPlant($year);
 
 		foreach ($data as $item) {
@@ -98,7 +98,7 @@ class Dashboard extends CI_Controller
 	public function patroli_plant()
 	{
 		$result = array();
-		$year = $this->dateNow->format('Y');
+		$year = $this->input->get('year');
 		$data = $this->M_LaporanPatroli->getPatroliPlant($year);
 		foreach ($data as $item) {
 			$result[$item->plant_name][] = [

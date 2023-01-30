@@ -7,6 +7,10 @@
 		padding-bottom: 0.2em !important;
 		font-size: 10px;
 	}
+
+	.year-picker .ui-datepicker-month {
+		display: none;
+	}
 </style>
 <section class="content-header">
 	<div class="container-fluid">
@@ -94,6 +98,8 @@
 							<p class="text-center mb-2">
 								<strong>Grafik Temuan <br/>Periode Tahun <?= $year; ?></strong>
 							</p>
+							<div class="d-flex justify-content-center  year-picker" data-chart="chartTemuan"
+								 data-action="ajaxTemuanPlant"></div>
 
 							<div class="chart">
 								<canvas id="chartTemuan" style="height: 300px;"></canvas>
@@ -101,7 +107,7 @@
 							<!-- /.chart-responsive -->
 						</div>
 					</div>
-					<div class="overlay" style="display:none"  id="chartTemuan_overlay">
+					<div class="overlay" style="display:none" id="chartTemuan_overlay">
 						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 
@@ -111,10 +117,14 @@
 				<div class="card">
 					<div class="card-body">
 						<div class="">
-							<p class="text-center mb-2">
-								<strong>Performance Patroli <br/>Periode Tahun <?= $year; ?>
-								</strong>
-							</p>
+							<div class=" ">
+								<p class="text-center mb-2">
+									<strong>Performance Patroli <br/>Periode Tahun <?= $year; ?>
+									</strong>
+								</p>
+								<div class="d-flex justify-content-center year-picker" data-chart="chartPatroli"
+									 data-action="ajaxPatroliPlant"></div>
+							</div>
 
 							<div class="chart" style="">
 								<canvas id="chartPatroli" style="height: 300px;"></canvas>
@@ -122,7 +132,7 @@
 							<!-- /.chart-responsive -->
 						</div>
 					</div>
-					<div class="overlay" style="display:none"  id="chartPatroli_overlay">
+					<div class="overlay" style="display:none" id="chartPatroli_overlay">
 						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 
@@ -146,7 +156,7 @@
 							<canvas id="chartTemuanByUser" style="height: 300px;"></canvas>
 						</div>
 					</div>
-					<div class="overlay" style="display:none"  id="chartTemuanByUser_overlay">
+					<div class="overlay" style="display:none" id="chartTemuanByUser_overlay">
 						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 				</div>
@@ -167,7 +177,7 @@
 						</div>
 						<!-- /.chart-responsive -->
 					</div>
-					<div class="overlay" style="display:none"  id="chartPatroliByUser_overlay">
+					<div class="overlay" style="display:none" id="chartPatroliByUser_overlay">
 						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 				</div>
@@ -187,7 +197,7 @@
 							<canvas id="chartTemuanbyPlant" style="height: 300px;"></canvas>
 						</div>
 					</div>
-					<div class="overlay" style="display:none"  id="chartTemuanbyPlant_overlay">
+					<div class="overlay" style="display:none" id="chartTemuanbyPlant_overlay">
 						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 				</div>
@@ -214,7 +224,7 @@
 							<canvas id="chartTemuanByKategori" style="height: 300px;"></canvas>
 						</div>
 					</div>
-					<div class="overlay" style="display:none"  id="chartTemuanByKategori_overlay">
+					<div class="overlay" style="display:none" id="chartTemuanByKategori_overlay">
 						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 				</div>
@@ -239,7 +249,7 @@
 						</div>
 						<!-- /.chart-responsive -->
 					</div>
-					<div class="overlay" style="display:none"  id="chartTemuanZone_overlay">
+					<div class="overlay" style="display:none" id="chartTemuanZone_overlay">
 						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 				</div>
@@ -263,7 +273,7 @@
 						</div>
 						<!-- /.chart-responsive -->
 					</div>
-					<div class="overlay" style="display:none"  id="chartTrenTemuan_overlay">
+					<div class="overlay" style="display:none" id="chartTrenTemuan_overlay">
 						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 				</div>
@@ -287,7 +297,7 @@
 						</div>
 						<!-- /.chart-responsive -->
 					</div>
-					<div class="overlay" style="display:none"  id="chartTrenPatroli_overlay">
+					<div class="overlay" style="display:none" id="chartTrenPatroli_overlay">
 						<i class="fas fa-2x fa-sync-alt fa-spin"></i>
 					</div>
 				</div>
@@ -402,16 +412,17 @@
 		}
 	});
 
-	function ajaxTemuanPlant() {
+	function ajaxTemuanPlant(params) {
 		$.ajax({
 			url: "<?=base_url('Dashboard/temuan_plant') ?>",
 			method: "GET",
-			beforeSend: function(){
+			data: params,
+			beforeSend: function () {
 				// Handle the beforeSend event
 				$('#chartTemuan_overlay').fadeIn()
 
 			},
-			complete: function(){
+			complete: function () {
 				// Handle the complete event
 				$('#chartTemuan_overlay').fadeOut()
 			},
@@ -475,16 +486,17 @@
 		}
 	});
 
-	function ajaxPatroliPlant() {
+	function ajaxPatroliPlant(params) {
 		$.ajax({
 			url: "<?=base_url('Dashboard/patroli_plant') ?>",
 			method: "GET",
-			beforeSend: function(){
+			data: params,
+			beforeSend: function () {
 				// Handle the beforeSend event
 				$('#chartPatroli_overlay').fadeIn()
 
 			},
-			complete: function(){
+			complete: function () {
 				// Handle the complete event
 				$('#chartPatroli_overlay').fadeOut()
 			},
@@ -551,12 +563,12 @@
 			url: "<?=base_url('Dashboard/listPatroliByUser') ?>",
 			method: "GET",
 			data: params,
-			beforeSend: function(){
+			beforeSend: function () {
 				// Handle the beforeSend event
 				$('#chartPatroliByUser_overlay').fadeIn()
 
 			},
-			complete: function(){
+			complete: function () {
 				// Handle the complete event
 				$('#chartPatroliByUser_overlay').fadeOut()
 			},
@@ -608,12 +620,12 @@
 			url: "<?=base_url('Dashboard/listTemuanByUser') ?>",
 			method: "GET",
 			data: params,
-			beforeSend: function(){
+			beforeSend: function () {
 				// Handle the beforeSend event
 				$('#chartTemuanByUser_overlay').fadeIn()
 
 			},
-			complete: function(){
+			complete: function () {
 				// Handle the complete event
 				$('#chartTemuanByUser_overlay').fadeOut()
 			},
@@ -671,12 +683,12 @@
 			url: "<?=base_url('Dashboard/temuanTindakanPlant') ?>",
 			method: "GET",
 			data: params,
-			beforeSend: function(){
+			beforeSend: function () {
 				// Handle the beforeSend event
 				$('#chartTemuanbyPlant_overlay').fadeIn()
 
 			},
-			complete: function(){
+			complete: function () {
 				// Handle the complete event
 				$('#chartTemuanbyPlant_overlay').fadeOut()
 			},
@@ -725,12 +737,12 @@
 			url: "<?=base_url('Dashboard/temuan_kategori') ?>",
 			method: "GET",
 			data: params,
-			beforeSend: function(){
+			beforeSend: function () {
 				// Handle the beforeSend event
 				$('#chartTemuanByKategori_overlay').fadeIn()
 
 			},
-			complete: function(){
+			complete: function () {
 				// Handle the complete event
 				$('#chartTemuanByKategori_overlay').fadeOut()
 			},
@@ -789,11 +801,11 @@
 			url: "<?=base_url('Dashboard/temuan_zone') ?>",
 			method: "GET",
 			data: params,
-			beforeSend: function(){
+			beforeSend: function () {
 				// Handle the beforeSend event
 				$('#chartTemuanZone_overlay').fadeIn()
 			},
-			complete: function(){
+			complete: function () {
 				// Handle the complete event
 				$('#chartTemuanZone_overlay').fadeOut()
 			},
@@ -853,12 +865,12 @@
 			url: "<?=base_url('Dashboard/tren_temuan') ?>",
 			method: "GET",
 			data: params,
-			beforeSend: function(){
+			beforeSend: function () {
 				// Handle the beforeSend event
 				$('#chartTrenTemuan_overlay').fadeIn()
 
 			},
-			complete: function(){
+			complete: function () {
 				// Handle the complete event
 				$('#chartTrenTemuan_overlay').fadeOut()
 
@@ -919,12 +931,12 @@
 			url: "<?=base_url('Dashboard/tren_patroli') ?>",
 			method: "GET",
 			data: params,
-			beforeSend: function(){
+			beforeSend: function () {
 				// Handle the beforeSend event
 				$('#chartTrenPatroli_overlay').fadeIn()
 
 			},
-			complete: function(){
+			complete: function () {
 				// Handle the complete event
 				$('#chartTrenPatroli_overlay').fadeOut()
 
@@ -937,6 +949,55 @@
 	}
 
 	$(document).ready(function () {
+		$('.year-picker').each(function (i, v) {
+			let container = $(v)
+			let dataChartID = container.data('chart')
+			let filterPlant = container.data('filterplant')
+			let action = container.data('action')
+
+			let altField = $('<input>').attr({
+				type: 'hidden',
+				id: 'filter_input_' + dataChartID,
+				name: 'filter_input_' + dataChartID,
+			}).appendTo(container);
+
+			let pickerContainer = jQuery('<div>', {
+				id: 'filter_' + dataChartID,
+			})
+			pickerContainer.appendTo(container);
+
+			let picker = $(pickerContainer).datepicker({
+				changeYear: true,
+				inline: true,
+				showButtonPanel: false,
+				dateFormat: 'yy',
+				altField: altField,
+				onChangeMonthYear: function (year, month, inst) {
+					$(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+				}
+			})
+
+			let btnFilter = $('<button/>',
+				{
+					id: 'filter_btn_' + dataChartID,
+					class: 'btn btn-xs btn-secondary ml-2',
+					text: 'FILTER',
+					click: function () {
+						let ajaxParams = {
+							'year': $(picker).datepicker('getDate').getFullYear()
+						}
+						if (filterPlant) {
+							ajaxParams['year'] = $('#filter_btn_' + dataChartID).val()
+						}
+
+						if (action !== null) {
+							window[action](ajaxParams);
+						}
+					}
+				});
+			btnFilter.appendTo(container)
+		})
+
 		$('.month-picker').each(function (i, v) {
 			let container = $(v)
 			let dataChartID = container.data('chart')
@@ -1006,8 +1067,8 @@
 				'month': moment().format('MM'),
 				'plantId': '<?= $plants->result()[0]->plant_id?>'
 			}
-			ajaxTemuanPlant()
-			ajaxPatroliPlant()
+			ajaxTemuanPlant({'year': moment().format('Y')})
+			ajaxPatroliPlant({'year': moment().format('Y')})
 			ajaxListPatroliByUser(defaultParams)
 			ajaxTemuanPlant(defaultParams)
 			ajaxTemuanByPlant__(defaultParams)

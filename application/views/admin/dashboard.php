@@ -91,9 +91,11 @@
 					<!-- /.card-header -->
 					<div class="card-body">
 						<div class="">
-							<p class="text-center mb-2">
+							<p class="text-center mb-2 year-picker" data-chart="chartTemuan" data-action="ajaxTemuanPlant">
 								<strong>Grafik Temuan <br/>Periode Tahun <?= $year; ?></strong>
 							</p>
+							<div class="d-flex justify-content-center  year-picker" data-chart="chartTemuan"
+								 data-action="ajaxTemuanPlant"></div>
 
 							<div class="chart">
 								<canvas id="chartTemuan" style="height: 300px;"></canvas>
@@ -114,6 +116,8 @@
 								<strong>Performance Patroli <br/>Periode Tahun <?= $year; ?>
 								</strong>
 							</p>
+							<div class="d-flex justify-content-center  year-picker" data-chart="chartPatroli"
+								 data-action="ajaxPatroliPlant"></div>
 
 							<div class="chart" style="">
 								<canvas id="chartPatroli" style="height: 300px;"></canvas>
@@ -906,6 +910,55 @@
 	}
 
 	$(document).ready(function () {
+		$('.year-picker').each(function (i, v) {
+			let container = $(v)
+			let dataChartID = container.data('chart')
+			let filterPlant = container.data('filterplant')
+			let action = container.data('action')
+
+			let altField = $('<input>').attr({
+				type: 'hidden',
+				id: 'filter_input_' + dataChartID,
+				name: 'filter_input_' + dataChartID,
+			}).appendTo(container);
+
+			let pickerContainer = jQuery('<div>', {
+				id: 'filter_' + dataChartID,
+			})
+			pickerContainer.appendTo(container);
+
+			let picker = $(pickerContainer).datepicker({
+				changeYear: true,
+				inline: true,
+				showButtonPanel: false,
+				dateFormat: 'yy',
+				altField: altField,
+				onChangeMonthYear: function (year, month, inst) {
+					$(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+				}
+			})
+
+			let btnFilter = $('<button/>',
+				{
+					id: 'filter_btn_' + dataChartID,
+					class: 'btn btn-xs btn-secondary ml-2',
+					text: 'FILTER',
+					click: function () {
+						let ajaxParams = {
+							'year': $(picker).datepicker('getDate').getFullYear()
+						}
+						if (filterPlant) {
+							ajaxParams['year'] = $('#filter_btn_' + dataChartID).val()
+						}
+
+						if (action !== null) {
+							window[action](ajaxParams);
+						}
+					}
+				});
+			btnFilter.appendTo(container)
+		})
+
 		$('.month-picker').each(function (i, v) {
 			let container = $(v)
 			let dataChartID = container.data('chart')
@@ -973,8 +1026,8 @@
 				'year': moment().format('Y'),
 				'month': moment().format('MM'),
 			}
-			ajaxTemuanPlant()
-			ajaxPatroliPlant()
+			ajaxTemuanPlant({'year': moment().format('Y')})
+			ajaxPatroliPlant({'year': moment().format('Y')})
 			ajaxListPatroliByUser(defaultParams)
 			ajaxTemuanPlant(defaultParams)
 			ajaxTemuanByPlant(defaultParams)
